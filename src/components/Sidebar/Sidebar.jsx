@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ArrowUp, Home, Info, Briefcase, Mail, ChevronLeft, ChevronRight } from 'lucide-react';
+import { ArrowUp, Home, Info, Briefcase, Mail, ChevronLeft, ChevronRight, Rewind} from 'lucide-react';
 
 const sectionData = [
   { id: 'home', title: 'Home', description: 'Welcome to our site', icon: Home },
+  { id: 'timeline', title: 'Timeline', description: 'Check out my history', icon: Rewind },
   { id: 'about', title: 'About', description: 'Learn about our company', icon: Info },
   { id: 'services', title: 'Services', description: 'Explore our offerings', icon: Briefcase },
   { id: 'contact', title: 'Contact', description: 'Get in touch with us', icon: Mail },
@@ -71,7 +72,7 @@ const Sidebar = ({ onToggle }) => {
             animate={{ x: 0 }}
             exit={{ x: -192 }}
             transition={{ duration: 0.3 }}
-            className="fixed left-0 top-0 h-full w-48 bg-sagegreen bg-opacity-70 backdrop-blur-md p-4 shadow-lg overflow-y-auto z-40"
+            className="fixed left-0 top-0 h-full w-screen sm:w-48 bg-sagegreen bg-opacity-70 backdrop-blur-md p-4 shadow-lg overflow-y-auto z-40"
           >
             <button 
               onClick={scrollToTop}

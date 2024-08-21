@@ -79,7 +79,7 @@ const ImageCarousel = () => {
   };
 
   return (
-    <div className="relative w-full h-72 sm:w-96 sm:h-72 overflow-hidden rounded-lg shadow-xl" {...handlers}>
+    <div className=" relative w-full h-72 sm:w-96 sm:h-72 overflow-hidden rounded-lg shadow-xl" {...handlers}>
       <AnimatePresence initial={false} custom={direction}>
         <motion.img
           key={currentIndex}
@@ -117,6 +117,9 @@ const ImageCarousel = () => {
           />
         ))}
       </div>
+      {/* <span className="absolute inset-0 bg-gradient-to-r from-transparent via-white to-transparent
+                       -translate-x-full group-hover:animate-shine" 
+            style={{ '--shine-deg': '45deg' }} /> */}
     </div>
   );
 };
@@ -132,23 +135,23 @@ const Header = () => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
           >
-            Your Name
+            George Atkinson
           </motion.h1>
           <motion.h2 
-            className="text-2xl mb-4"
+            className="text-2xl mb-4 text-gray-100"
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.2 }}
           >
-            Your Position
+            Software Engineer, 21
           </motion.h2>
           <motion.p 
-            className="text-lg max-w-md"
+            className="text-lg max-w-md text-gray-200"
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.4 }}
           >
-            A brief sentence about yourself or your professional mission.
+            Computer Science graduate with a passion for complex problems.
           </motion.p>
         </div>
         <motion.div
