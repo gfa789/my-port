@@ -1,52 +1,122 @@
-import React, { useState } from 'react';
-import { motion } from 'framer-motion';
+import React, { useState, useEffect} from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { ChevronLeft, ChevronRight } from 'lucide-react';
+import { useSwipeable } from 'react-swipeable';
 
-const PhotoStack = () => {
-  const [isHovered, setIsHovered] = useState(false);
+const images = [
+  "https://images.unsplash.com/photo-1422565096762-bdb997a56a84?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+  "https://images.unsplash.com/photo-1518020382113-a7e8fc38eac9?q=80&w=2034&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+  "https://images.unsplash.com/photo-1517423440428-a5a00ad493e8?q=80&w=1949&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+];
 
-  const items = [
-    { type: 'photo', content: '/api/placeholder/200/200', alt: 'Placeholder 1' },
-    { type: 'text', content: 'Passionate about web development' },
-    { type: 'photo', content: '/api/placeholder/200/200', alt: 'Placeholder 2' },
-    { type: 'text', content: 'Experienced in React and Node.js' },
-    { type: 'photo', content: '/api/placeholder/200/200', alt: 'Placeholder 3' },
-  ];
+const ImageCarousel = () => {
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [direction, setDirection] = useState(0);
+  const [resetCount, setResetCount] = useState(0);
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setDirection(1);
+      setCurrentIndex((prevIndex) => (prevIndex + 1) % images.length);
+    }, 3000);
+
+    return () => clearInterval(timer);
+  }, [resetCount]);
+
+  const resetTimer = () => {
+    setResetCount(prev => prev + 1);
+  };
+
+  const goToIndex = (index) => {
+    setDirection(index > currentIndex ? 1 : -1);
+    setCurrentIndex(index);
+    resetTimer();
+  };
+
+  const goToPrevious = () => {
+    setDirection(-1);
+    setCurrentIndex((prevIndex) => (prevIndex - 1 + images.length) % images.length);
+    resetTimer();
+  };
+
+  const goToNext = () => {
+    setDirection(1);
+    setCurrentIndex((prevIndex) => (prevIndex + 1) % images.length);
+    resetTimer();
+  };
+
+  const handlers = useSwipeable({
+    onSwipedLeft: () => goToNext(),
+    onSwipedRight: () => goToPrevious(),
+    trackMouse: true
+  });
+
+  const slideVariants = {
+    hiddenRight: {
+      x: "100%",
+      opacity: 0,
+    },
+    hiddenLeft: {
+      x: "-100%",
+      opacity: 0,
+    },
+    visible: {
+      x: "0",
+      opacity: 1,
+      transition: {
+        type: "spring",
+        stiffness: 300,
+        damping: 30,
+      },
+    },
+    exit: {
+      opacity: 0,
+      scale: 0.8,
+      transition: {
+        duration: 0.2,
+      },
+    },
+  };
 
   return (
-    <div 
-      className="relative w-64 h-64 mx-auto mt-8 sm:mt-0"
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
-    >
-      {items.map((item, index) => (
-        <motion.div
-          key={index}
-          className={`absolute top-0 left-0 w-48 h-48 ${
-            item.type === 'photo' ? '' : 'bg-white p-4 shadow-md rounded'
-          }`}
-          initial={{ x: 0, y: 0, rotate: 0, scale: 1 }}
-          animate={isHovered ? {
-            x: `${(index - 2) * 30}px`,
-            y: `${(index - 2) * 30}px`,
-            rotate: (index - 2) * 5,
-            scale: 1,
-            zIndex: index,
-          } : {
-            x: 0,
-            y: 0,
-            rotate: (index - 2) * 2,
-            scale: 1 - index * 0.05,
-            zIndex: items.length - index,
-          }}
-          transition={{ type: 'spring', stiffness: 300, damping: 20 }}
-        >
-          {item.type === 'photo' ? (
-            <img src={item.content} alt={item.alt} className="w-full h-full object-cover rounded shadow-md" />
-          ) : (
-            <p className="text-sm">{item.content}</p>
-          )}
-        </motion.div>
-      ))}
+    <div className="relative w-full h-72 sm:w-96 sm:h-72 overflow-hidden rounded-lg shadow-xl" {...handlers}>
+      <AnimatePresence initial={false} custom={direction}>
+        <motion.img
+          key={currentIndex}
+          src={images[currentIndex]}
+          alt={`Image ${currentIndex + 1}`}
+          className="absolute w-full h-full object-cover"
+          variants={slideVariants}
+          initial={direction > 0 ? "hiddenRight" : "hiddenLeft"}
+          animate="visible"
+          exit="exit"
+        />
+      </AnimatePresence>
+
+      <button
+        className="absolute -left-16 top-1/2 transform -translate-y-1/2 bg-black bg-opacity-50 text-white p-2 rounded-full hidden sm:block hover:bg-opacity-75 transition-all"
+        onClick={goToPrevious}
+      >
+        <ChevronLeft size={24} />
+      </button>
+      <button
+        className="absolute -right-16 top-1/2 transform -translate-y-1/2 bg-black bg-opacity-50 text-white p-2 rounded-full hidden sm:block hover:bg-opacity-75 transition-all"
+        onClick={goToNext}
+      >
+        <ChevronRight size={24} />
+      </button>
+
+      <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex space-x-2">
+        {images.map((_, index) => (
+          <button
+            key={index}
+            onClick={() => goToIndex(index)}
+            className={`w-3 h-3 rounded-full transition-all ${
+              index === currentIndex ? 'bg-white scale-125' : 'bg-white bg-opacity-50 hover:bg-opacity-75'
+            }`}
+          />
+        ))}
+      </div>
     </div>
   );
 };
@@ -54,8 +124,8 @@ const PhotoStack = () => {
 const Header = () => {
   return (
     <header className="bg-gradient-to-r from-sagegreen to-puce text-white p-8 w-full">
-      <div className="container mx-auto flex flex-col sm:flex-row justify-between items-center">
-        <div>
+      <div className="container mx-auto grid grid-cols-1 sm:grid-cols-2 gap-8 items-center">
+        <div className="sm:ml-48">
           <motion.h1 
             className="text-4xl font-bold mb-2"
             initial={{ opacity: 0, y: -20 }}
@@ -85,8 +155,9 @@ const Header = () => {
           initial={{ opacity: 0, scale: 0.8 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.5, delay: 0.6 }}
+          className="sm:ml-8"
         >
-          <PhotoStack />
+          <ImageCarousel />
         </motion.div>
       </div>
     </header>
@@ -94,3 +165,4 @@ const Header = () => {
 };
 
 export default Header;
+

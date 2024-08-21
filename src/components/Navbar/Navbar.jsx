@@ -12,10 +12,10 @@ import Button from "../Button";
 
 const Navbar = () => {
     return (
-      <nav className="z-50 bg-sage p-4 flex justify-between items-center w-full">
+      <nav className="z-50 bg-sage p-4 flex justify-between items-center w-screen">
         {/* <ImageCarousel images={images} /> */}
         <Logo />
-        <div className="mr-8">
+        <div className="mr-8 hidden lg:block">
           {/* <a href="#contact" className="text-puce hover:text-nude transition-colors duration-300">
             Contact Me
           </a> */}

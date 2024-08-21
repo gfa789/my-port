@@ -7,15 +7,15 @@ import Header from './components/Header';
 import { useState } from 'react';
 
 function App() {
-  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+  const [, setIsSidebarOpen] = useState(true);
 
   return (
     <Router>
       <div className="flex flex-col min-h-screen">
         <Navbar />
-        <div className="flex flex-grow">
+        <div className="relative flex-grow">
           <Sidebar onToggle={(isOpen) => setIsSidebarOpen(isOpen)} />
-          <main className={`flex-grow transition-all duration-300 ${isSidebarOpen ? 'ml-0 sm:ml-48' : 'ml-0'}`}>
+          <main className="w-full">
             <Header />
             <div className="p-4">
               <section id="home"><Home /></section>
