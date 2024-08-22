@@ -1,5 +1,12 @@
 {
   "projects": {
     "default": "atki-portfolio"
-  }
+  },
+  "targets": {},
+  "etags": {
+    "atki-portfolio": {
+      "extensionInstances": {}
+    }
+  },
+  "dataconnectEmulatorConfig": {}
 }

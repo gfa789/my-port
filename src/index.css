@@ -26,3 +26,8 @@ code {
 html, body{
   overflow-x: hidden;
 }
+
+
+.grecaptcha-badge {
+  visibility: hidden !important;
+}

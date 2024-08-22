@@ -80,7 +80,7 @@ const ImageCarousel = () => {
 
   return (
     <div className=" relative w-full h-72 sm:w-96 sm:h-72 overflow-hidden rounded-lg shadow-xl" {...handlers}>
-      <AnimatePresence initial={false} custom={direction}>
+      <AnimatePresence initial={false} custom={direction} >
         <motion.img
           key={currentIndex}
           src={images[currentIndex]}
@@ -90,6 +90,7 @@ const ImageCarousel = () => {
           initial={direction > 0 ? "hiddenRight" : "hiddenLeft"}
           animate="visible"
           exit="exit"
+          onClick={goToNext}
         />
       </AnimatePresence>
 
@@ -127,8 +128,8 @@ const ImageCarousel = () => {
 const Header = () => {
   return (
     <header className="bg-gradient-to-r from-sagegreen to-puce text-white p-8 w-full">
-      <div className="container mx-auto grid grid-cols-1 sm:grid-cols-2 gap-8 items-center">
-        <div className="sm:ml-48">
+      <div className="container grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+        <div className="ml-24 md:ml-48">
           <motion.h1 
             className="text-4xl font-bold mb-2"
             initial={{ opacity: 0, y: -20 }}
@@ -158,7 +159,7 @@ const Header = () => {
           initial={{ opacity: 0, scale: 0.8 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.5, delay: 0.6 }}
-          className="sm:ml-8"
+          className="ml-24"
         >
           <ImageCarousel />
         </motion.div>

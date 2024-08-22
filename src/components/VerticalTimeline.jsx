@@ -1,4 +1,5 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useCallback} from "react";
+import { motion } from "framer-motion";
 
 
 const timelineItems = [
@@ -60,83 +61,93 @@ const timelineItems = [
         description: "Software Engineer",
         longDescription: "The latest step in my career. To be continued...",
         isActive: false,
-        image: "/photos/neptune.png",
+        image: "/photos/neptune2.png",
         icon: (
-            <svg className="fill-current" xmlns="http://www.w3.org/2000/svg" width="12" height="12">
-                <path d="M12 10v2H7V8.496a.5.5 0 0 0-.5-.5h-1a.5.5 0 0 0-.5.5V12H0V4.496a.5.5 0 0 1 .206-.4l5.5-4a.5.5 0 0 1 .588 0l5.5 4a.5.5 0 0 1 .206.4V10Z" />
-            </svg>
+            '...'
         )
     }
 ];
 
 const VerticalTimeline = () => {
-    const [activeItems, setActiveItems] = useState([]);
+    const [progress, setProgress] = useState(0);
     const timelineRef = useRef(null);
 
+    const handleScroll = useCallback(() => {
+        const timelineElement = timelineRef.current;
+        if (!timelineElement) return;
+
+        const rect = timelineElement.getBoundingClientRect();
+        const timelineStart = rect.top;
+        const timelineEnd = rect.bottom;
+        const viewportHeight = window.innerHeight;
+        const viewportMidpoint = viewportHeight / 2;
+
+        if (timelineStart <= viewportMidpoint && timelineEnd >= viewportMidpoint) {
+            const totalHeight = timelineEnd - timelineStart;
+            const currentProgress = (viewportMidpoint - timelineStart) / totalHeight;
+            setProgress(currentProgress * 100);
+        } else if (timelineEnd < viewportMidpoint) {
+            setProgress(100);
+        } else if (timelineStart > viewportMidpoint) {
+            setProgress(0);
+        }
+    }, []);
+
     useEffect(() => {
-        const handleScroll = () => {
-            const timelineElement = timelineRef.current;
-            if (!timelineElement) return;
-
-            const items = timelineElement.querySelectorAll('.timeline-item');
-            const viewportHeight = window.innerHeight;
-
-            const newActiveItems = Array.from(items).map((item, index) => {
-                const rect = item.getBoundingClientRect();
-                const isVisible = rect.top < viewportHeight * 0.75 && rect.bottom >= 0;
-                return isVisible || activeItems.includes(index);
-            });
-
-            setActiveItems(newActiveItems);
-        };
-
+        
         window.addEventListener('scroll', handleScroll);
         handleScroll(); // Initial call
 
         return () => window.removeEventListener('scroll', handleScroll);
-    }, [activeItems]);
+    }, [handleScroll]);
 
     return (
-        <div className="w-screen bg-gradient-to-r from-sagegreen to-puce pt-48 pb-48">
-            <div ref={timelineRef} className="max-w-6xl mx-auto relative px-4 sm:px-6 lg:px-8">
+        <div className="w-screen bg-gradient-to-r from-sagegreen to-puce pt-48">
+            <div ref={timelineRef} className="max-w-5xl mx-auto relative px-4 sm:px-6 lg:px-8">
                 {/* Progress bar */}
-                <div className="absolute left-8 md:left-1/2 top-0 bottom-0 w-0.5 md:-translate-x-1/2 bg-gradient-to-b from-transparent via-slate-300 to-transparent">
-                </div>
+                <div className="ml-2 sm:ml-4 md:ml-0 absolute left-8 md:left-1/2 top-0 bottom-0 w-0.5 md:-translate-x-1/2 bg-gradient-to-b from-transparent via-slate-300 to-transparent">
+                <div 
+                    className="absolute top-0 left-0 md:left-1/2 w-full bg-emerald-500 transition-all duration-200 ease-out"
+                    style={{ height: `${progress}%` }}
+                ></div>
+            </div>
 
-                {timelineItems.map((item, index) => (
-                    <div key={index} className={`timeline-item relative flex items-start mb-24 group ${activeItems[index] ? 'is-active' : ''}`}>
-                        <div className={`absolute left-4 md:left-1/2 flex items-center justify-center w-12 h-12 rounded-full border-2 border-white ${activeItems[index] ? 'bg-emerald-500 text-emerald-50' : 'bg-slate-300 text-slate-500'} shadow shrink-0 transform -translate-x-1/2 z-10 transition-colors duration-300`}>
+                {timelineItems.map((item, index) => {
+                    const itemProgress = (progress - (index / timelineItems.length) * 100) * timelineItems.length;
+                    const isActive = itemProgress > 0;
+                    return (
+                    <div key={index} className={`timeline-item relative flex items-start mb-24 group ${isActive ? 'is-active' : ''}`}>
+                        <div className={`ml-2 md:ml-0 absolute left-4 md:left-1/2 flex items-center justify-center w-16 h-16 rounded-full border-2 border-white ${isActive ? 'bg-emerald-500 text-emerald-50' : 'bg-slate-300 text-slate-500'} shadow shrink-0 transform -translate-x-1/2 z-10 transition-colors duration-300`}>
                             {item.icon}
                         </div>
-                        <div className={`ml-28 md:ml-0 md:w-[calc(50%-4rem)] ${index % 2 === 0 ? 'md:pr-16' : 'md:pl-16 md:ml-auto'}`}>
+                        <motion.div whileHover={{ scale: 1.05 }}
+                            whileTap={{ scale: 0.95 }}
+                            transition={{ type: "spring", stiffness: 300, damping: 15 }} className={`mr-5 md:mr-0 ml-28 md:ml-0 md:w-[calc(50%-4rem)] ${index % 2 === 0 ? 'md:pr-16' : 'md:pl-16 md:ml-auto'}`}>
                             <div className={`text-puce bg-gradient-to-br from-white to-sagegreen
                             ring-1 ring-puce focus:ring-2 rounded-lg shadow overflow-hidden
-                                ${activeItems[index] ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}
+                                ${isActive ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}
                                 transition-all duration-300 ease-in-out transform
-                                hover:-translate-y-1 hover:scale-[1.02] hover:shadow-lg`}>
+                                hover:shadow-lg`}>
 
                                 <div className="flex flex-col md:flex-row">
-                                    <div className="w-full md:w-1/3 h-48 md:h-auto relative overflow-hidden">
+                                    <div className="w-full pt-2 md:w-1/3 h-48 md:h-auto flex items-center justify-center overflow-hidden">
                                         <img 
                                             src={item.image} 
                                             alt={item.title}
-                                            className="absolute h-full w-auto md:h-auto md:w-full object-cover object-center"
+                                            className="w-full h-auto max-h-full object-contain"
                                         />
                                     </div>
                                     <div className="w-full md:w-2/3 p-6">
-                                        <div className="flex items-center justify-between space-x-2 mb-2">
-                                            <div className="font-bold text-xl text-slate-900">{item.title}</div>
-                                            <time className={`font-caveat font-medium text-lg ${activeItems[index] ? 'text-indigo-500' : 'text-amber-500'}`}>{item.date}</time>
-                                        </div>
-                                        <div className="text-slate-700 font-semibold mb-2">{item.role}</div>
-                                        <div className="text-slate-600 mb-4">{item.description}</div>
-                                        <div className="text-slate-500 text-sm">{item.longDescription}</div>
+                                        <div className="font-bold text-xl text-slate-900">{item.title}</div>
+                                        <div className="text-indigo-500 text-lg font-semibold">{item.description}</div>
+                                        <time className={`font-caveat font-medium text-sm text-slate-500`}>{item.date}</time>
+                                        <div className="text-slate-700 text-sm relative mt-2">{item.longDescription}</div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                    </div>
-                ))}
+                        </motion.div>
+                    </div>);}
+                )}
             </div>
         </div>
     );

@@ -66,7 +66,8 @@ const projects = [
       <motion.div whileHover={{ scale: 1.05 }}
       whileTap={{ scale: 0.95 }}
       transition={{ type: "spring", stiffness: 300, damping: 15 }} 
-      className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-xl h-[350px] flex flex-col">
+      className="text-puce bg-gradient-to-br from-white to-sagegreen
+                            ring-1 ring-puce focus:ring-2 rounded-lg shadow-md overflow-hidden hover:shadow-xl h-[350px] flex flex-col mr-4 md:mr-0">
         <div className="p-6 flex flex-col h-full">
           <div className="flex items-center justify-between mb-4">
             <span className="text-4xl">{project.icon}</span>
@@ -128,7 +129,7 @@ const projects = [
     };
   
     return (
-      <div className="container mx-auto px-4 py-8">
+      <div className="container mx-auto px-4 py-8 md:w-2/3">
         <h1 className="text-3xl font-bold mb-8 text-gray-100">My Projects</h1>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {projects.map((project, index) => (
