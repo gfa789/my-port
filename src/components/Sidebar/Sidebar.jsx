@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { motion, AnimatePresence, useMotionValue, useTransform } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { ArrowUp, Home, FolderGit, Mail, ChevronLeft, ChevronRight, Rewind} from 'lucide-react';
 
 const sectionData = [
@@ -9,12 +9,10 @@ const sectionData = [
   { id: 'contact', title: 'Contact', description: 'Get in touch with us', icon: Mail },
 ];
 
-const Sidebar = ({ isOpen, onToggle }) => {
+const Sidebar = ({ onToggle }) => {
   const [activeSection, setActiveSection] = useState('home');
   const [, setHoveredSection] = useState(null);
-
-  const x = useMotionValue(0);
-  const opacity = useTransform(x, [-192, 0], [0, 1]);
+  const [isOpen, setIsOpen] = useState(true);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -29,22 +27,22 @@ const Sidebar = ({ isOpen, onToggle }) => {
       }
     };
 
-    // const handleResize = () => {
-    //   if (window.innerWidth < 1024) {
-    //     setIsOpen(false);
-    //   } else {
-    //     setIsOpen(true);
-    //   }
-    // };
+    const handleResize = () => {
+      if (window.innerWidth < 1024) {
+        setIsOpen(false);
+      } else {
+        setIsOpen(true);
+      }
+    };
 
     window.addEventListener('scroll', handleScroll);
-    // window.addEventListener('resize', handleResize);
-    // handleResize();
+    window.addEventListener('resize', handleResize);
+    handleResize();
     handleScroll(); // Initial check for active section
 
     return () => {
       window.removeEventListener('scroll', handleScroll);
-      // window.removeEventListener('resize', handleResize);
+      window.removeEventListener('resize', handleResize);
     };
   }, []);
 
@@ -55,13 +53,13 @@ const Sidebar = ({ isOpen, onToggle }) => {
     }
   };
 
+  const toggleSidebar = (open) => {
+    setIsOpen(open);
+    onToggle(open);
+  };
+
   const scrollToTop = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
-  };
-  const handleDragEnd = (event, info) => {
-    if (info.offset.x < -50) {
-      onToggle(false);
-    }
   };
 
   return (
@@ -69,17 +67,12 @@ const Sidebar = ({ isOpen, onToggle }) => {
       <AnimatePresence>
         {isOpen && (
           <motion.nav
-          initial={{ x: -192 }}
-          animate={{ x: 0 }}
-          exit={{ x: -192 }}
-          transition={{ duration: 0.3 }}
-          drag="x"
-          dragConstraints={{ left: -192, right: 0 }}
-          dragElastic={0.2}
-          onDragEnd={handleDragEnd}
-          style={{ x, opacity }}
-          className="fixed left-0 top-0 h-full w-screen sm:w-48 bg-sagegreen bg-opacity-70 backdrop-blur-md p-4 shadow-lg overflow-y-auto z-40"
-        >
+            initial={{ x: -192 }}
+            animate={{ x: 0 }}
+            exit={{ x: -192 }}
+            transition={{ duration: 0.3 }}
+            className="fixed left-0 top-0 h-full w-screen sm:w-48 bg-sagegreen bg-opacity-70 backdrop-blur-md p-4 shadow-lg overflow-y-auto z-40"
+          >
             <button 
               onClick={scrollToTop}
               className="absolute top-4 left-4 text-puce hover:text-white transition-colors"
@@ -113,7 +106,7 @@ const Sidebar = ({ isOpen, onToggle }) => {
               ))}
             </ul>
             <button 
-              onClick={() => onToggle}
+              onClick={() => toggleSidebar(false)}
               className="absolute bottom-1/2 right-4 text-puce hover:text-white transition-colors"
             >
               <ChevronLeft size={24} />
@@ -123,7 +116,7 @@ const Sidebar = ({ isOpen, onToggle }) => {
       </AnimatePresence>
       {!isOpen && (
         <button
-          onClick={() => onToggle(true)}
+          onClick={() => toggleSidebar(true)}
           className="fixed z-30 left-4 top-32 bg-sagegreen bg-opacity-70 backdrop-blur-md p-2 rounded-full shadow-lg text-puce hover:text-white transition-colors"
         >
           <ChevronRight size={24} />
