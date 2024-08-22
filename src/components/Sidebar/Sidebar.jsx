@@ -1,12 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ArrowUp, Home, Info, Briefcase, Mail, ChevronLeft, ChevronRight, Rewind} from 'lucide-react';
+import { ArrowUp, Home, FolderGit, Mail, ChevronLeft, ChevronRight, Rewind} from 'lucide-react';
 
 const sectionData = [
   { id: 'home', title: 'Home', description: 'Welcome to our site', icon: Home },
   { id: 'timeline', title: 'Timeline', description: 'Check out my history', icon: Rewind },
-  { id: 'about', title: 'About', description: 'Learn about our company', icon: Info },
-  { id: 'services', title: 'Services', description: 'Explore our offerings', icon: Briefcase },
+  { id: 'projects', title: 'Projects', description: 'Check out my projects', icon: FolderGit },
   { id: 'contact', title: 'Contact', description: 'Get in touch with us', icon: Mail },
 ];
 

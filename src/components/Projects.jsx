@@ -6,49 +6,56 @@ const projects = [
     {
       id: 1,
       title: "Underwater Image Enhancement",
-      icon: "🚀",
-      date: "2024",
-      description: "University dissertation project in which I researched deep learning methods for obtaining enhanced underwater images.",
-      link: "#" // Replace with actual project link
+      icon: "🌊",
+      date: "Jan-May 2024",
+      description: "University dissertation project in which I created a rich dataset, and researched deep learning methods for obtaining enhanced underwater images using GANs in PyTorch.",
+      link: "https://drive.google.com/file/d/1n85HyTZDCYAQlW12iAW1lgoUPREGd93h/view?usp=sharing",
+      hasVisitButton: true
+      
     },
     {
       id: 2,
       title: "ML for Weather Forecasting",
-      icon: "🔧",
-      date: "2024",
-      description: "University group coursework set by the MET Office to wrangle time-series weather data, and use it to make weather forecasts using machine learning methods.",
-      link: "#" // Replace with actual project link
+      icon: "⛅",
+      date: "Jan-May 2024",
+      description: "University group coursework set by the MET Office to wrangle time-series weather data, and use it to make weather forecasts using machine learning methods in both sklearn and TensorFlow.",
+      link: "https://drive.google.com/file/d/111cPGMAF14W8wbxG88lhSIKxDMPB1ul9/view?usp=sharing",
+      hasVisitButton: true
     },
     {
       id: 3,
-      title: "Gamma Analytics",
-      icon: "📊",
-      date: "2023-04-20",
-      description: "Gamma Analytics is a comprehensive data analysis platform that helps businesses make sense of large datasets. It features machine learning algorithms, interactive visualizations, and real-time data processing capabilities.",
-      link: "#" // Replace with actual project link
+      title: "ML Model Analysis",
+      icon: "📈",
+      date: "Nov-Dec 2023",
+      description: "Coursework for my university module in Machine Learning. Explored a number of techniques for fitting models using sklearn, and analyzing their performance.",
+      link: "https://github.com/gfa789/ml-cw",
+      hasVisitButton: true
     },{
       id: 4,
-      title: "Project Alpha",
-      icon: "🚀",
-      date: "2023-08-15",
-      description: "Project Alpha is a cutting-edge task management application that utilizes AI to prioritize and organize your daily activities. It integrates seamlessly with your calendar and learns from your habits to provide personalized productivity suggestions.",
-      link: "#" // Replace with actual project link
+      title: "Dartboard Detector",
+      icon: "🎯",
+      date: "Nov-Dec 2023",
+      description: "Implemented an algorithm using Hough transforms and YOLO for detecting and locating dartboards in images. This was towards my university module in computer vision.",
+      link: "https://github.com/gfa789/darts-cw",
+      hasVisitButton: true
     },
     {
       id: 5,
-      title: "Beta Framework",
-      icon: "🔧",
-      date: "2023-06-01",
-      description: "Beta Framework is designed for developers who need a fast, efficient, and easy-to-use JavaScript framework. It offers a suite of powerful tools for building responsive and interactive web applications with minimal overhead.",
-      link: "#" // Replace with actual project link
+      title: "Stereo Vision",
+      icon: "🎥",
+      date: "Nov-Dec 2023",
+      description: "As part of my computer vision module at university, implemented an algorithm that detects objects from two viewpoints, and uses epipolar lines to reconstruct the scene in 3D.",
+      link: "https://github.com/gfa789/darts-cw",
+      hasVisitButton: true
     },
     {
       id: 6,
-      title: "Gamma Analytics",
+      title: "Veterinary Database",
       icon: "📊",
-      date: "2023-04-20",
-      description: "Gamma Analytics is a comprehensive data analysis platform that helps businesses make sense of large datasets. It features machine learning algorithms, interactive visualizations, and real-time data processing capabilities.",
-      link: "#" // Replace with actual project link
+      date: "Sept 2022 - May 2023",
+      description: "Worked in a team of 4 to develop a full stack project using React, Node.js, and MongoDB. The product was a self sustaining database with different authority levels for each user type. This was for the university vet school contributing towards our module in Software Engineering. Further details cannot be displayed due to an NDA.",
+      link: "#",
+      hasVisitButton: false
     },
     // Add more projects as needed
   ];
@@ -59,7 +66,7 @@ const projects = [
       <motion.div whileHover={{ scale: 1.05 }}
       whileTap={{ scale: 0.95 }}
       transition={{ type: "spring", stiffness: 300, damping: 15 }} 
-      className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-xl h-[400px] flex flex-col">
+      className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-xl h-[350px] flex flex-col">
         <div className="p-6 flex flex-col h-full">
           <div className="flex items-center justify-between mb-4">
             <span className="text-4xl">{project.icon}</span>
@@ -69,20 +76,22 @@ const projects = [
           <div className="flex-grow overflow-y-auto">
             <p className="text-gray-600 mb-4">{project.description}</p>
           </div>
+          {project.hasVisitButton && (
           <a
             href={project.link}
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center mt-4 text-blue-500 hover:text-blue-700 transition-colors duration-200"
+            className="inline-flex items-center mt-4 text-slate-500 hover:text-slate-700 transition-colors duration-200"
           >
             Visit Project <ExternalLink className="ml-1" size={16} />
           </a>
+        )}
         </div>
       </motion.div>
     );
   };
   
-  const ProjectShowcase = () => {
+  const Projects = () => {
     const rowRefs = useRef([]);
   
     useEffect(() => {
@@ -136,4 +145,4 @@ const projects = [
     );
   };
   
-  export default ProjectShowcase;
+  export default Projects;
