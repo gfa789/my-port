@@ -35,5 +35,10 @@
         "npm --prefix \"$RESOURCE_DIR\" run lint"
       ]
     }
-  ]
+  ],
+  "build": {
+    "environment": {
+      "REACT_APP_RECAPTCHA_SITE_KEY": "${param:react_app.recaptcha_site_key}"
+    }
+  }
 }
