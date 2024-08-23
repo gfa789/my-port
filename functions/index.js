@@ -15,6 +15,7 @@ const transporter = nodemailer.createTransport({
   },
 });
 
+
 exports.sendEmailNotification = functions.firestore
     .document("messages/{messageId}")
     .onCreate(async (snap, context) => {
