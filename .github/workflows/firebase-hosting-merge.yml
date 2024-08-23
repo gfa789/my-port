@@ -18,3 +18,21 @@ jobs:
           firebaseServiceAccount: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_ATKI_PORTFOLIO }}
           channelId: live
           projectId: atki-portfolio
+      - name: Deploy Firebase Functions
+        uses: w9jds/firebase-action@master
+        with:
+          args: deploy --only functions
+        env:
+          FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
+      - name: Set Firebase Functions Config
+        uses: w9jds/firebase-action@master
+        with:
+          args: functions:config:set gmail.email="${{ secrets.FIREBASE_GMAIL_EMAIL }}" gmail.password="${{ secrets.FIREBASE_GMAIL_PASSWORD }}"
+        env:
+          FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
+      - name: Redeploy Functions
+        uses: w9jds/firebase-action@master
+        with:
+          args: deploy --only functions
+        env:
+          FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}

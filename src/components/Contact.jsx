@@ -42,30 +42,39 @@ const Contact = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsSubmitting(true);
+    setSubmitStatus(null);
 
     try {
-      // Execute reCAPTCHA when the form is submitted
+      console.log('Starting form submission');
+      
+      // Execute reCAPTCHA
       const token = await recaptchaRef.current.executeAsync();
+      console.log('reCAPTCHA token obtained:', token ? 'Yes' : 'No');
+
       if (!token) {
         throw new Error('reCAPTCHA verification failed');
       }
 
-      await addDoc(collection(db, 'messages'), {
+      // Add document to Firestore
+      const docRef = await addDoc(collection(db, 'messages'), {
         email,
         message,
         timestamp: new Date()
       });
+      console.log('Document written with ID: ', docRef.id);
+
       setSubmitStatus('success');
       setEmail('');
       setMessage('');
       recaptchaRef.current.reset();
     } catch (error) {
-      console.error('Error submitting message:', error);
+      console.error('Error during form submission:', error);
       setSubmitStatus('error');
+    } finally {
+      setIsSubmitting(false);
     }
-
-    setIsSubmitting(false);
   };
+
 
   return (
     <div className="min-h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
