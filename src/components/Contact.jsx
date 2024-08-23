@@ -42,33 +42,30 @@ const Contact = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsSubmitting(true);
-    setSubmitStatus(null);
-
+    console.log('Form submission started');
+  
     try {
-      console.log('Starting form submission');
-      
-      // Execute reCAPTCHA
+      console.log('Executing reCAPTCHA');
       const token = await recaptchaRef.current.executeAsync();
       console.log('reCAPTCHA token obtained:', token ? 'Yes' : 'No');
-
-      if (!token) {
-        throw new Error('reCAPTCHA verification failed');
-      }
-
-      // Add document to Firestore
+  
+      console.log('Adding document to Firestore');
       const docRef = await addDoc(collection(db, 'messages'), {
         email,
         message,
         timestamp: new Date()
       });
-      console.log('Document written with ID: ', docRef.id);
-
+      console.log('Document written with ID:', docRef.id);
+  
       setSubmitStatus('success');
-      setEmail('');
-      setMessage('');
-      recaptchaRef.current.reset();
     } catch (error) {
       console.error('Error during form submission:', error);
+      if (error.code) {
+        console.error('Error code:', error.code);
+      }
+      if (error.message) {
+        console.error('Error message:', error.message);
+      }
       setSubmitStatus('error');
     } finally {
       setIsSubmitting(false);
@@ -115,7 +112,7 @@ const Contact = () => {
             <ReCAPTCHA
               ref={recaptchaRef}
               size="invisible"
-              sitekey="6Lfx9CwqAAAAAA1MlzhDq1xg5NxM5leRgcoQUDMS"
+              sitekey={process.env.REACT_APP_RECAPTCHA_SITE_KEY}
             />
             <button
               type="submit"
