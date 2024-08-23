@@ -21,16 +21,19 @@ jobs:
           firebaseServiceAccount: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_ATKI_PORTFOLIO }}
           channelId: live
           projectId: atki-portfolio
-      - name: Deploy Firebase Functions
+      - name: Authenticate to Google Cloud
         uses: google-github-actions/auth@v1
         with:
           credentials_json: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_ATKI_PORTFOLIO }}
       - name: Set up Cloud SDK
         uses: google-github-actions/setup-gcloud@v1
-      - name: Use gcloud CLI
+      - name: Install Firebase CLI
+        run: npm install -g firebase-tools
+      - name: Deploy Firebase Functions
         run: |
-          gcloud info
-          gcloud functions deploy YOUR_FUNCTION_NAME --project=atki-portfolio
+          cd functions
+          npm install
+          firebase deploy --only functions --project=atki-portfolio
       - name: Set Firebase Functions Config
         run: |
           firebase functions:config:set gmail.email="${{ secrets.FIREBASE_GMAIL_EMAIL }}" gmail.password="${{ secrets.FIREBASE_GMAIL_PASSWORD }}" --project=atki-portfolio
