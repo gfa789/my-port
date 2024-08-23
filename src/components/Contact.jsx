@@ -8,48 +8,35 @@ const Contact = () => {
   const [message, setMessage] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitStatus, setSubmitStatus] = useState(null);
-  const recaptchaRef = useRef();
 
   const cardRef = useRef();
   const [isVisible, setIsVisible] = useState(false);
 
+  const [recaptchaLoaded, setRecaptchaLoaded] = useState(false);
+  const recaptchaRef = useRef();
+
+  const RECAPTCHA_SITE_KEY = process.env.REACT_APP_RECAPTCHA_SITE_KEY;
+
   useEffect(() => {
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setIsVisible(true);
-          observer.unobserve(entry.target);
-        }
-      },
-      {
-        root: null,
-        rootMargin: '0px',
-        threshold: 0.1,
-      }
-    );
-
-    if (cardRef.current) {
-      observer.observe(cardRef.current);
-    }
-
-    return () => {
-      if (cardRef.current) {
-        observer.unobserve(cardRef.current);
-      }
-    };
-  }, []);
+    console.log('Environment:', process.env.NODE_ENV);
+    console.log('RECAPTCHA_SITE_KEY:', RECAPTCHA_SITE_KEY);
+    setRecaptchaLoaded(!!RECAPTCHA_SITE_KEY);
+  }, [RECAPTCHA_SITE_KEY]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsSubmitting(true);
     console.log('Form submission started');
-  
+
     try {
-      console.log('Executing reCAPTCHA');
-      console.log('RECAPTCHA_SITE_KEY:', process.env.REACT_APP_RECAPTCHA_SITE_KEY);
-      const token = await recaptchaRef.current.executeAsync();
-      console.log('reCAPTCHA token obtained:', token ? 'Yes' : 'No');
-  
+      if (recaptchaLoaded) {
+        console.log('Executing reCAPTCHA');
+        const token = await recaptchaRef.current.executeAsync();
+        console.log('reCAPTCHA token obtained:', token ? 'Yes' : 'No');
+      } else {
+        console.warn('reCAPTCHA not loaded, proceeding without verification');
+      }
+
       console.log('Adding document to Firestore');
       const docRef = await addDoc(collection(db, 'messages'), {
         email,
@@ -57,22 +44,15 @@ const Contact = () => {
         timestamp: new Date()
       });
       console.log('Document written with ID:', docRef.id);
-  
+
       setSubmitStatus('success');
     } catch (error) {
       console.error('Error during form submission:', error);
-      if (error.code) {
-        console.error('Error code:', error.code);
-      }
-      if (error.message) {
-        console.error('Error message:', error.message);
-      }
       setSubmitStatus('error');
     } finally {
       setIsSubmitting(false);
     }
   };
-
 
   return (
     <div className="min-h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
@@ -110,11 +90,13 @@ const Contact = () => {
                 className=" px-2 py-2 mt-1 block w-full ring-puce ring-1 rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
               ></textarea>
             </div>
-            <ReCAPTCHA
-              ref={recaptchaRef}
-              size="invisible"
-              sitekey={process.env.REACT_APP_RECAPTCHA_SITE_KEY}
-            />
+            {recaptchaLoaded && (
+              <ReCAPTCHA
+                ref={recaptchaRef}
+                size="invisible"
+                sitekey={RECAPTCHA_SITE_KEY}
+              />
+            )}
             <button
               type="submit"
               disabled={isSubmitting}
