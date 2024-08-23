@@ -12,7 +12,6 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - run: npm ci && npm run build
-            firebase functions:config:set gmail.email=${{ secrets.FIREBASE_GMAIL_EMAIL }} gmail.password=${{ secrets.FIREBASE_GMAIL_APP_PASSWORD }}
       - uses: FirebaseExtended/action-hosting-deploy@v0
         with:
           repoToken: ${{ secrets.GITHUB_TOKEN }}
