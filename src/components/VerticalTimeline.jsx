@@ -102,8 +102,8 @@ const VerticalTimeline = () => {
     }, [handleScroll]);
 
     return (
-        <div className="w-screen bg-gradient-to-r from-sagegreen to-puce pt-48">
-            <div ref={timelineRef} className="max-w-5xl mx-auto relative px-4 sm:px-6 lg:px-8">
+        <div className="w-screen pt-48 lg:ml-56 xl:ml-0 xl:w-screen lg:w-3/4">
+            <div ref={timelineRef} className="lg:max-w-6xl lg:mx-auto relative ">
                 {/* Progress bar */}
                 <div className="ml-2 sm:ml-4 md:ml-0 absolute left-8 md:left-1/2 top-0 bottom-0 w-0.5 md:-translate-x-1/2 bg-gradient-to-b from-transparent via-slate-300 to-transparent">
                 <div 
@@ -117,12 +117,12 @@ const VerticalTimeline = () => {
                     const isActive = itemProgress > 0;
                     return (
                     <div key={index} className={`timeline-item relative flex items-start mb-24 group ${isActive ? 'is-active' : ''}`}>
-                        <div className={`ml-2 md:ml-0 absolute left-4 md:left-1/2 flex items-center justify-center w-16 h-16 rounded-full border-2 border-white ${isActive ? 'bg-emerald-500 text-emerald-50' : 'bg-slate-300 text-slate-500'} shadow shrink-0 transform -translate-x-1/2 z-10 transition-colors duration-300`}>
+                        <div className={`ml-6 sm:ml-8 md:ml-0 absolute left-4 md:left-1/2 flex items-center justify-center w-16 h-16 rounded-full border-2 border-white ${isActive ? 'bg-emerald-500 text-emerald-50' : 'bg-slate-300 text-slate-500'} shadow shrink-0 transform -translate-x-1/2 z-10 transition-colors duration-300`}>
                             {item.icon}
                         </div>
                         <motion.div whileHover={{ scale: 1.05 }}
                             whileTap={{ scale: 0.95 }}
-                            transition={{ type: "spring", stiffness: 300, damping: 15 }} className={`mr-5 md:mr-0 ml-28 md:ml-0 md:w-[calc(50%-4rem)] ${index % 2 === 0 ? 'md:pr-16' : 'md:pl-16 md:ml-auto'}`}>
+                            transition={{ type: "spring", stiffness: 300, damping: 15 }} className={`mr-5 md:mr-0 ml-24 md:ml-0 w-3/4 md:w-[calc(50%-4rem)] ${index % 2 === 0 ? 'md:pr-4 md:ml-4' : 'md:pl-4 md:ml-auto md:mr-6'}`}>
                             <div className={`text-puce bg-gradient-to-br from-white to-sagegreen
                             ring-1 ring-puce focus:ring-2 rounded-lg shadow overflow-hidden
                                 ${isActive ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}

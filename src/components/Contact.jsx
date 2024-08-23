@@ -18,32 +18,26 @@ const Contact = () => {
   const RECAPTCHA_SITE_KEY = process.env.REACT_APP_RECAPTCHA_SITE_KEY;
 
   useEffect(() => {
-    console.log('Environment:', process.env.NODE_ENV);
-    console.log('RECAPTCHA_SITE_KEY:', RECAPTCHA_SITE_KEY);
     setRecaptchaLoaded(!!RECAPTCHA_SITE_KEY);
   }, [RECAPTCHA_SITE_KEY]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsSubmitting(true);
-    console.log('Form submission started');
 
     try {
       if (recaptchaLoaded) {
-        console.log('Executing reCAPTCHA');
         const token = await recaptchaRef.current.executeAsync();
         console.log('reCAPTCHA token obtained:', token ? 'Yes' : 'No');
       } else {
         console.warn('reCAPTCHA not loaded, proceeding without verification');
       }
 
-      console.log('Adding document to Firestore');
       const docRef = await addDoc(collection(db, 'messages'), {
         email,
         message,
         timestamp: new Date()
       });
-      console.log('Document written with ID:', docRef.id);
 
       setSubmitStatus('success');
     } catch (error) {
@@ -55,10 +49,10 @@ const Contact = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8 ">
       <div 
         ref={cardRef}
-        className={`max-w-md w-full space-y-8 ${
+        className={`max-w-md w-full space-y-8  ${
           isVisible
             ? 'animate-popIn' : ''}`}
       >

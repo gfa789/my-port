@@ -79,7 +79,7 @@ const ImageCarousel = () => {
   };
 
   return (
-    <div className=" relative w-full h-72 sm:w-96 sm:h-72 overflow-hidden rounded-lg shadow-xl" {...handlers}>
+    <div className=" relative w-full  h-72 sm:w-96 sm:h-72 overflow-hidden rounded-lg shadow-xl" {...handlers}>
       <AnimatePresence initial={false} custom={direction} >
         <motion.img
           key={currentIndex}
@@ -128,8 +128,8 @@ const ImageCarousel = () => {
 const Header = () => {
   return (
     <header className="bg-gradient-to-r from-sagegreen to-puce text-white p-8 w-full">
-      <div className="container grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
-        <div className="ml-24 md:ml-48">
+      <div className="container md:flex lg:ml-16 items-center">
+        <div className="sm:ml-24 lg:ml-48 w-1/ pb-10">
           <motion.h1 
             className="text-4xl font-bold mb-2"
             initial={{ opacity: 0, y: -20 }}
@@ -159,7 +159,7 @@ const Header = () => {
           initial={{ opacity: 0, scale: 0.8 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.5, delay: 0.6 }}
-          className="ml-24"
+          className="sm:ml-24 sm:mr-24"
         >
           <ImageCarousel />
         </motion.div>
