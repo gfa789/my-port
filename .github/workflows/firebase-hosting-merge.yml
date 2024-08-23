@@ -22,20 +22,18 @@ jobs:
           channelId: live
           projectId: atki-portfolio
       - name: Deploy Firebase Functions
-        uses: w9jds/firebase-action@master
+        uses: google-github-actions/auth@v1
         with:
-          args: deploy --only functions
-        env:
-          GCP_SA_KEY: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_ATKI_PORTFOLIO }}
+          credentials_json: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_ATKI_PORTFOLIO }}
+      - name: Set up Cloud SDK
+        uses: google-github-actions/setup-gcloud@v1
+      - name: Use gcloud CLI
+        run: |
+          gcloud info
+          gcloud functions deploy YOUR_FUNCTION_NAME --project=atki-portfolio
       - name: Set Firebase Functions Config
-        uses: w9jds/firebase-action@master
-        with:
-          args: functions:config:set gmail.email="${{ secrets.FIREBASE_GMAIL_EMAIL }}" gmail.password="${{ secrets.FIREBASE_GMAIL_PASSWORD }}"
-        env:
-          GCP_SA_KEY: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_ATKI_PORTFOLIO }}
+        run: |
+          firebase functions:config:set gmail.email="${{ secrets.FIREBASE_GMAIL_EMAIL }}" gmail.password="${{ secrets.FIREBASE_GMAIL_PASSWORD }}" --project=atki-portfolio
       - name: Redeploy Functions
-        uses: w9jds/firebase-action@master
-        with:
-          args: deploy --only functions
-        env:
-          GCP_SA_KEY: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_ATKI_PORTFOLIO }}
+        run: |
+          firebase deploy --only functions --project=atki-portfolio
