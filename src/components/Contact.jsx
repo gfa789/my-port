@@ -46,6 +46,7 @@ const Contact = () => {
   
     try {
       console.log('Executing reCAPTCHA');
+      console.log('RECAPTCHA_SITE_KEY:', process.env.REACT_APP_RECAPTCHA_SITE_KEY);
       const token = await recaptchaRef.current.executeAsync();
       console.log('reCAPTCHA token obtained:', token ? 'Yes' : 'No');
   
