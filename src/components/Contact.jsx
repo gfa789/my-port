@@ -14,11 +14,18 @@ const Contact = () => {
 
   const [recaptchaLoaded, setRecaptchaLoaded] = useState(false);
   const recaptchaRef = useRef();
+  const [clientId, setClientId] = useState(null);
 
   const RECAPTCHA_SITE_KEY = process.env.REACT_APP_RECAPTCHA_SITE_KEY;
 
   useEffect(() => {
-    setRecaptchaLoaded(!!RECAPTCHA_SITE_KEY);
+    setRecaptchaLoaded(!!RECAPTCHA_SITE_KEY);   
+    let id = localStorage.getItem('clientId');
+    if (!id) {
+      id = 'client_' + Date.now();
+      localStorage.setItem('clientId', id);
+    }
+    setClientId(id);
   }, [RECAPTCHA_SITE_KEY]);
 
   const handleSubmit = async (e) => {
@@ -36,13 +43,16 @@ const Contact = () => {
       const docRef = await addDoc(collection(db, 'messages'), {
         email,
         message,
-        timestamp: new Date()
+        timestamp: new Date(),
+        clientId
       });
 
       setSubmitStatus('success');
+      setEmail('');
+      setMessage('')
     } catch (error) {
       console.error('Error during form submission:', error);
-      setSubmitStatus('error');
+      setSubmitStatus(error.code === 'permission-denied' ? 'rate-limit' : 'error');
     } finally {
       setIsSubmitting(false);
     }
@@ -107,6 +117,7 @@ const Contact = () => {
           {submitStatus === 'success' && (
             <p className="mt-4 text-green-600 text-center">Message sent successfully!</p>
           )}
+           {submitStatus === 'rate-limit' && <p>Rate limit exceeded. Please try again later.</p>}
           {submitStatus === 'error' && (
             <p className="mt-4 text-red-600 text-center">Error sending message. Please try again.</p>
           )}

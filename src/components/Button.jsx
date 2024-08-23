@@ -1,9 +1,19 @@
 import React from "react";
 import { motion} from 'framer-motion';
-const Button = ({ text, onClick }) => {
+const Button = ({ text, to }) => {
+
+  const handleClick = () => {
+    console.log(to)
+    // console.log("hi")
+    const element = document.getElementById(to);
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
   return (
     <motion.button
-      onClick={onClick}
+      
+      onClick={handleClick}
       whileHover={{ scale: 1.05 }}
       whileTap={{ scale: 0.95 }}
       transition={{ type: "spring", stiffness: 300, damping: 15 }}
