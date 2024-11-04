@@ -1,18 +1,20 @@
 import React from "react";
-import { motion} from 'framer-motion';
-const Button = ({ text, to }) => {
+import { motion } from 'framer-motion';
 
+const Button = ({ text, to, onClick }) => {
   const handleClick = () => {
-    console.log(to)
-    // console.log("hi")
-    const element = document.getElementById(to);
-    if (element) {
-      element.scrollIntoView({ behavior: 'smooth' });
+    if (onClick) {
+      onClick();
+    } else if (to) {
+      const element = document.getElementById(to);
+      if (element) {
+        element.scrollIntoView({ behavior: 'smooth' });
+      }
     }
   };
+
   return (
     <motion.button
-      
       onClick={handleClick}
       whileHover={{ scale: 1.05 }}
       whileTap={{ scale: 0.95 }}

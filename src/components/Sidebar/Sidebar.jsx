@@ -13,14 +13,21 @@ const Sidebar = ({ onToggle }) => {
   const [activeSection, setActiveSection] = useState('home');
   const [, setHoveredSection] = useState(null);
   const [isOpen, setIsOpen] = useState(true);
+  const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => {
-      const scrollPosition = window.scrollY + window.innerHeight / 3;
+      const scrollPosition = window.scrollY;
+      
+      // Check if we're at the very top of the page
+      if (scrollPosition === 0) {
+        setActiveSection('home');
+        return;
+      }
 
       for (let i = sectionData.length - 1; i >= 0; i--) {
         const section = document.getElementById(sectionData[i].id);
-        if (section && section.offsetTop <= scrollPosition) {
+        if (section && section.offsetTop <= scrollPosition + window.innerHeight / 3) {
           setActiveSection(sectionData[i].id);
           break;
         }
@@ -28,7 +35,9 @@ const Sidebar = ({ onToggle }) => {
     };
 
     const handleResize = () => {
-      if (window.innerWidth < 1024) {
+      const mobile = window.innerWidth < 1024;
+      setIsMobile(mobile);
+      if (mobile) {
         setIsOpen(false);
       } else {
         setIsOpen(true);
@@ -37,8 +46,8 @@ const Sidebar = ({ onToggle }) => {
 
     window.addEventListener('scroll', handleScroll);
     window.addEventListener('resize', handleResize);
-    handleResize();
-    handleScroll(); // Initial check for active section
+    handleResize(); // Initial check
+    handleScroll();
 
     return () => {
       window.removeEventListener('scroll', handleScroll);
@@ -49,7 +58,16 @@ const Sidebar = ({ onToggle }) => {
   const handleClick = (id) => {
     const element = document.getElementById(id);
     if (element) {
-      element.scrollIntoView({ behavior: 'smooth' });
+      if (id === 'home') {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      } else {
+        element.scrollIntoView({ behavior: 'smooth' });
+      }
+    }
+    // Close sidebar only on mobile after selection
+    if (isMobile) {
+      setIsOpen(false);
+      onToggle(false);
     }
   };
 
@@ -60,6 +78,7 @@ const Sidebar = ({ onToggle }) => {
 
   const scrollToTop = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
+    setActiveSection('home');
   };
 
   return (
@@ -67,9 +86,9 @@ const Sidebar = ({ onToggle }) => {
       <AnimatePresence>
         {isOpen && (
           <motion.nav
-            initial={{ x: -192 }}
-            animate={{ x: 0 }}
-            exit={{ x: -192 }}
+            initial={isMobile ? { x: -192 } : false}
+            animate={isMobile ? { x: 0 } : false}
+            exit={isMobile ? { x: -192 } : false}
             transition={{ duration: 0.3 }}
             className="fixed left-0 top-0 h-full w-screen sm:w-48 bg-sagegreen bg-opacity-70 backdrop-blur-md p-4 shadow-lg overflow-y-auto z-40"
           >
@@ -79,7 +98,7 @@ const Sidebar = ({ onToggle }) => {
             >
               <ArrowUp size={24} />
             </button>
-            <ul className='relative top-32'>
+            <ul className='relative top-48'>
               {sectionData.map((section) => (
                 <li key={section.id} className="mb-4">
                   <motion.button 
@@ -105,16 +124,18 @@ const Sidebar = ({ onToggle }) => {
                 </li>
               ))}
             </ul>
-            <button 
-              onClick={() => toggleSidebar(false)}
-              className="absolute bottom-1/2 right-4 text-puce hover:text-white transition-colors"
-            >
-              <ChevronLeft size={24} />
-            </button>
+            {isMobile && (
+              <button 
+                onClick={() => toggleSidebar(false)}
+                className="absolute bottom-1/2 right-4 text-puce hover:text-white transition-colors"
+              >
+                <ChevronLeft size={24} />
+              </button>
+            )}
           </motion.nav>
         )}
       </AnimatePresence>
-      {!isOpen && (
+      {!isOpen && isMobile && (
         <button
           onClick={() => toggleSidebar(true)}
           className="fixed z-30 left-4 top-32 bg-sagegreen bg-opacity-70 backdrop-blur-md p-2 rounded-full shadow-lg text-puce hover:text-white transition-colors"

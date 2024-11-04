@@ -4,9 +4,9 @@ import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { useSwipeable } from 'react-swipeable';
 
 const images = [
+  "/photos/4.jpg",
   "/photos/head.jpg",
   "/photos/sea.jpg",
-  "/photos/glasto.jpg",
 ];
 
 const ImageCarousel = () => {
@@ -128,8 +128,8 @@ const ImageCarousel = () => {
 const Header = () => {
   return (
     <header className="bg-gradient-to-r from-sagegreen to-puce text-white p-8 w-full">
-      <div className="container md:flex lg:ml-16 items-center">
-        <div className="sm:ml-24 lg:ml-48 w-1/ pb-10">
+      <div className="container mx-auto px-4 md:flex lg:justify-center items-center">
+        <div className="md:w-1/2 lg:w-2/5 pb-10 text-center md:text-left">
           <motion.h1 
             className="text-4xl font-bold mb-2"
             initial={{ opacity: 0, y: -20 }}
@@ -159,7 +159,7 @@ const Header = () => {
           initial={{ opacity: 0, scale: 0.8 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.5, delay: 0.6 }}
-          className="sm:ml-24 sm:mr-24"
+          className="md:w-1/2 lg:w-2/5 flex justify-center"
         >
           <ImageCarousel />
         </motion.div>

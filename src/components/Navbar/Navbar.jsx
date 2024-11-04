@@ -1,30 +1,50 @@
-import React from "react";
+import React, { useState } from "react";
 import Logo from "../Logo";
 import Button from "../Button";
-// import ImageCarousel from "../ImageCarousel"
+import { X } from 'lucide-react';
 
-
-// const images = [
-//   "https://images.unsplash.com/photo-1422565096762-bdb997a56a84?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-//   "https://images.unsplash.com/photo-1518020382113-a7e8fc38eac9?q=80&w=2034&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-//   "https://images.unsplash.com/photo-1517423440428-a5a00ad493e8?q=80&w=1949&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-// ];
+const Banner = ({ onClose }) => {
+  return (
+    <div className="w-full bg-gradient-to-r from-sagegreen/70 to-sage/70 backdrop-blur-sm px-4 py-2 text-puce">
+      <div className="max-w-7xl mx-auto flex justify-between items-center">
+        <div className="flex-grow text-center">
+          <p className="text-sm sm:text-base">
+            Check out my project OverWater{' '}
+            <a 
+              href="https://your-overwater-url.com" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="text-puce underline font-medium hover:text-white transition-colors"
+            >
+              here
+            </a>
+          </p>
+        </div>
+        <button
+          onClick={onClose}
+          className="ml-4 p-1 rounded-full hover:bg-white/20 transition-colors flex-shrink-0"
+        >
+          <X size={20} />
+        </button>
+      </div>
+    </div>
+  );
+};
 
 const Navbar = () => {
-  
+  const [showBanner, setShowBanner] = useState(false);
 
-    return (
-      <nav className="z-50 bg-sage p-4 flex justify-between items-center w-screen">
-        {/* <ImageCarousel images={images} /> */}
+  return (
+    <div className="sticky top-0 z-[60] w-full">
+      <nav className="bg-sage p-4 flex justify-between items-center w-full">
         <Logo />
-        <div className="mr-8 hidden lg:block">
-          {/* <a href="#contact" className="text-puce hover:text-nude transition-colors duration-300">
-            Contact Me
-          </a> */}
-          <Button text={"Contact Me"} to={"contact"}/>
+        <div className="mr-8 hidden lg:flex gap-4">
+          <Button text="Contact Me" to="contact"/>
         </div>
       </nav>
-    );
-  };
-  
-  export default Navbar;
+      {showBanner && <Banner onClose={() => setShowBanner(false)} />}
+    </div>
+  );
+};
+
+export default Navbar;
