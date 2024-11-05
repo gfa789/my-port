@@ -35,7 +35,7 @@ const Sidebar = ({ onToggle }) => {
     };
 
     const handleResize = () => {
-      const mobile = window.innerWidth < 1024;
+      const mobile = window.innerWidth < 1400;
       setIsMobile(mobile);
       if (mobile) {
         setIsOpen(false);
