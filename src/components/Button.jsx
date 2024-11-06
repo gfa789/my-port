@@ -1,14 +1,24 @@
 import React from "react";
 import { motion } from 'framer-motion';
+import { useNavigate, useLocation } from 'react-router-dom';
 
 const Button = ({ text, to, onClick }) => {
+  const navigate = useNavigate();
+  const location = useLocation();
+  
   const handleClick = () => {
     if (onClick) {
       onClick();
     } else if (to) {
-      const element = document.getElementById(to);
-      if (element) {
-        element.scrollIntoView({ behavior: 'smooth' });
+      if (location.pathname === '/overwater') {
+        // If we're on the overwater page, navigate to home first
+        navigate('/', { state: { scrollTo: to }});
+      } else {
+        // If we're already on home, just scroll
+        const element = document.getElementById(to);
+        if (element) {
+          element.scrollIntoView({ behavior: 'smooth' });
+        }
       }
     }
   };
