@@ -1,6 +1,6 @@
 import React from 'react';
 import ModelDiagram from './ModelDiagram';
-import VideoCompare from './VideoCompare';
+import VideoComparison from './VideoComparison';
 import OverWaterContact from './OverWaterContact';
 import Navbar from '../../components/Navbar/Navbar';
 import Footer from '../../components/Footer';
@@ -46,6 +46,7 @@ const OverWater = () => {
       <main className="flex-grow relative z-10">
         <ModelDiagram />
         {/* <VideoCompare /> */}
+        <VideoComparison />
         <OverWaterContact />
       </main>
       <Footer className="bg-transparent relative z-10" />
