@@ -12,7 +12,6 @@ const VideoComparisonItem = React.memo(({
   const video1Ref = useRef(null);
   const video2Ref = useRef(null);
 
-  // Sync videos when one starts playing
   const handlePlay = useCallback(() => {
     const video1 = video1Ref.current;
     const video2 = video2Ref.current;
@@ -22,7 +21,6 @@ const VideoComparisonItem = React.memo(({
     }
   }, []);
 
-  // Update video playback states
   React.useEffect(() => {
     const video1 = video1Ref.current;
     const video2 = video2Ref.current;
@@ -48,19 +46,27 @@ const VideoComparisonItem = React.memo(({
     }
   }, [isPlaying]);
 
+  const handleBoundedMouseMove = useCallback((e) => {
+    const container = containerRef.current;
+    if (!container) return;
+
+    const rect = container.getBoundingClientRect();
+    const x = Math.max(0, Math.min(e.clientX - rect.left, rect.width));
+    onMouseMove(e, index, x);
+  }, [index, onMouseMove]);
+
   return (
-    <div className="flex flex-col items-center gap-2">
+    <div className="flex flex-col items-center gap-2 w-11/12 lg:w-[400px]">
       <div 
         ref={containerRef}
-        className="relative overflow-hidden rounded-lg shadow-lg cursor-pointer"
-        style={{ height: '300px', display: 'inline-block' }}
-        onMouseMove={(e) => onMouseMove(e, index)}
+        className="relative overflow-hidden rounded-lg shadow-lg cursor-pointer w-full"
+        style={{ aspectRatio: '16/9' }}
+        onMouseMove={handleBoundedMouseMove}
         onClick={onTogglePlay}
       >
-        {/* Base video (processed/good version) */}
         <video
           ref={video2Ref}
-          className="h-full w-auto pointer-events-none"
+          className="absolute top-0 left-0 w-full h-full object-cover pointer-events-none"
           loop
           muted
           playsInline
@@ -68,10 +74,9 @@ const VideoComparisonItem = React.memo(({
           <source src={`/overwater/optimized_videos/optimized_${pair.comparison}.mp4`} type="video/mp4" />
         </video>
         
-        {/* Original video with clip path */}
         <video
           ref={video1Ref}
-          className="absolute top-0 left-0 h-full w-auto pointer-events-none"
+          className="absolute top-0 left-0 w-full h-full object-cover pointer-events-none"
           loop
           muted
           playsInline
@@ -83,7 +88,6 @@ const VideoComparisonItem = React.memo(({
           <source src={`/overwater/optimized_videos/optimized_${pair.original}.mp4`} type="video/mp4" />
         </video>
         
-        {/* White divider line */}
         <div 
           className="absolute top-0 bottom-0 w-0.5 bg-white pointer-events-none"
           style={{
@@ -103,12 +107,10 @@ const VideoComparison = () => {
   const [splitPositions, setSplitPositions] = useState({});
   const [isPlaying, setIsPlaying] = useState(true);
 
-  const handleMouseMove = useCallback((e, index) => {
-    const rect = e.currentTarget.getBoundingClientRect();
-    const x = e.clientX - rect.left;
+  const handleMouseMove = useCallback((e, index, boundedX) => {
     setSplitPositions(prev => ({
       ...prev,
-      [index]: x
+      [index]: boundedX
     }));
   }, []);
 
@@ -119,14 +121,14 @@ const VideoComparison = () => {
   const pairs = React.useMemo(() => [
     { original: '0', comparison: '0_good', label: 'Comparison Set 1' },
     { original: '1', comparison: '1_good', label: 'Comparison Set 2' },
-    { original: '2', comparison: '2_good', label: 'Comparison Set 3' },
-    // { original: '3', comparison: '3_good', label: 'Comparison Set 4' },
   ], []);
 
   return (
     <div className="p-4 w-full">
-      <h1 className='justify-center text-white text-center font-serif text-3xl pb-4'>Some Examples</h1>
-      <div className="justify-center gap-8">
+      <h1 className="justify-center text-white text-center font-serif text-3xl pb-8">
+        Some Examples
+      </h1>
+      <div className="flex flex-col lg:flex-row lg:flex-wrap items-center justify-center gap-8">
         {pairs.map((pair, index) => (
           <VideoComparisonItem
             key={index}

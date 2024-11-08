@@ -4,7 +4,6 @@ import { motion, AnimatePresence } from 'framer-motion';
 const ModelDiagram = () => {
   const [triggerAnimation, setTriggerAnimation] = useState(0);
   const [shouldAnimate, setShouldAnimate] = useState(true);
-  const [selectedImage, setSelectedImage] = useState(null);
 
   useEffect(() => {
     if (!shouldAnimate) {
@@ -12,25 +11,31 @@ const ModelDiagram = () => {
     }
   }, [triggerAnimation]);
 
-  const inputPositions = [
-    { x: -290, y: 40 },    
-    { x: -260, y: -50 },   
-    { x: -320, y: -20 },   
-    { x: -220, y: 70 },    
-    { x: -210, y: 10 },    
-  ];
+  // Updated positions to be more spread out and closer to center
+  const getInputPosition = (index) => {
+    return [
+      { x: -200, y: 70 },    // bottom
+      { x: -140, y: -70 },   // top
+      { x: -210, y: -20 },   // middle-top
+      { x: -120, y: 100 },   // bottom
+      { x: -140, y: 20 },    // middle
+    ][index];
+  };
 
-  const outputPositions = [
-    { x: 290, y: 40 },    
-    { x: 260, y: -50 },   
-    { x: 320, y: -20 },   
-    { x: 220, y: 70 },    
-    { x: 210, y: 10 },    
-  ];
+  const getOutputPosition = (index) => {
+    return [
+      { x: 200, y: 70 },    // bottom
+      { x: 140, y: -70 },   // top
+      { x: 210, y: -20 },   // middle-top
+      { x: 120, y: 100 },   // bottom
+      { x: 140, y: 20 },    // middle
+    ][index];
+  };
 
+  // Rest of the helper functions remain the same...
   const generatePath = (start, isInput) => {
     const controlPoint = {
-      x: isInput ? -150 : 150,
+      x: isInput ? -100 : 100,
       y: start.y * 0.2
     };
     return isInput 
@@ -38,8 +43,13 @@ const ModelDiagram = () => {
       : `M 0 0 Q ${controlPoint.x} ${controlPoint.y}, ${start.x} ${start.y}`;
   };
 
-  const inputPaths = inputPositions.map(pos => generatePath(pos, true));
-  const outputPaths = outputPositions.map(pos => generatePath(pos, false));
+  const inputPaths = Array(5).fill().map((_, i) => 
+    generatePath(getInputPosition(i), true)
+  );
+  
+  const outputPaths = Array(5).fill().map((_, i) => 
+    generatePath(getOutputPosition(i), false)
+  );
 
   const inputImages = [
     { id: "input-1", label: "Raw 1" },
@@ -57,29 +67,29 @@ const ModelDiagram = () => {
     { id: "output-5", label: "Enhanced 5" },
   ];
 
-  const getImageVariants = (isSelected) => ({
+  // Animation configurations remain the same...
+  const imageHoverAnimation = {
+    scale: 1.1,
+    transition: { duration: 0.1 }
+  };
+
+  const getImageVariants = () => ({
     initial: (i) => ({
-      x: inputPositions[i].x,
-      y: inputPositions[i].y,
+      x: getInputPosition(i).x,
+      y: getInputPosition(i).y,
       scale: 0,
       opacity: 0,
     }),
     animate: (i) => ({
-      x: inputPositions[i].x,
-      y: inputPositions[i].y,
-      scale: isSelected ? 1.2 : 1.1,
+      x: getInputPosition(i).x,
+      y: getInputPosition(i).y,
+      scale: 1,
       opacity: 1,
       transition: {
         duration: 0.3,
         delay: i * 0.05
       }
     }),
-    hover: {
-      scale: 1.2,
-      transition: {
-        duration: 0.2
-      }
-    },
     exit: {
       x: 0,
       y: 0,
@@ -91,7 +101,7 @@ const ModelDiagram = () => {
     }
   });
 
-  const getOutputVariants = (isSelected) => ({
+  const getOutputVariants = () => ({
     initial: {
       x: 0,
       y: 0,
@@ -99,21 +109,15 @@ const ModelDiagram = () => {
       opacity: 0,
     },
     animate: (i) => ({
-      x: outputPositions[i].x,
-      y: outputPositions[i].y,
-      scale: isSelected ? 1.2 : 1.1,
+      x: getOutputPosition(i).x,
+      y: getOutputPosition(i).y,
+      scale: 1,
       opacity: 1,
       transition: {
-        duration: 1,
-        delay: 0.5 +  i * 0.1
+        duration: 0.3,
+        delay: 1 + i * 0.05
       }
-    }),
-    hover: {
-      scale: 1.2,
-      transition: {
-        duration: 0.2
-      }
-    }
+    })
   });
 
   const centerSquareAnimation = {
@@ -128,214 +132,278 @@ const ModelDiagram = () => {
     },
   };
 
-  const handleImageClick = (id) => {
-    setSelectedImage(selectedImage === id ? null : id);
+  const inputTextVariants = {
+    initial: {
+      opacity: 0,
+      y: 20
+    },
+    animate: {
+      opacity: 1,
+      y: 0,
+      transition: {
+        duration: 0.5,
+        delay: 0.2
+      }
+    }
+  };
+
+  const arrowVariants = {
+    initial: {
+      opacity: 0,
+      y: 20
+    },
+    animate: {
+      opacity: 1,
+      y: 0,
+      transition: {
+        duration: 0.5,
+        delay: 0.5
+      }
+    }
+  };
+
+  const outputTextVariants = {
+    initial: {
+      opacity: 0,
+      y: 20
+    },
+    animate: {
+      opacity: 1,
+      y: 0,
+      transition: {
+        duration: 0.5,
+        delay: 0.7
+      }
+    }
   };
 
   const handleCenterClick = () => {
-    setSelectedImage(null);
     setShouldAnimate(false);
     setTriggerAnimation(prev => prev + 1);
   };
 
   return (
-    <section className="w-full relative overflow-hidden py-8">
-      
-
-      <div className="container mx-auto px-4 relative">
-        <h2 className="font-serif text-3xl font-bold text-white my-4 text-center">OverWater-UIE</h2>
-        <p className="font-serif text-white text-lg text-center mb-8 italic">For keeping your head above water</p>
+    <section className="w-full min-h-screen flex items-center justify-center">
+      <div className="container mx-auto px-4 flex flex-col items-center">
+        <h2 className="font-serif text-3xl font-bold text-white mb-2 text-center">OverWater-UIE</h2>
+        <p className="font-serif text-white text-lg text-center mb-8 italic">Painting a clearer picture</p>
         
-        <div className="flex justify-center items-center">
-          <svg width="1000" height="600" viewBox="-400 -250 800 500">
-            <defs>
-              <linearGradient id="overwater-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                <stop offset="0%" stopColor="#ffffff" />
-                <stop offset="100%" stopColor="#d0ccb9" />
-              </linearGradient>
-              
-              <filter id="drop-shadow" x="-50%" y="-50%" width="200%" height="200%">
-                <feGaussianBlur in="SourceAlpha" stdDeviation="4" />
-                <feOffset dx="2" dy="4" />
-                <feComponentTransfer>
-                  <feFuncA type="linear" slope="0.4" />
-                </feComponentTransfer>
-                <feMerge>
-                  <feMergeNode />
-                  <feMergeNode in="SourceGraphic" />
-                </feMerge>
-              </filter>
-            </defs>
+        <div className="w-full max-w-4xl mx-auto relative">
+          <div className="aspect-[1.4/1] w-full relative">
+            <svg 
+              viewBox="-250 -150 500 300"
+              className="w-full h-full"
+              preserveAspectRatio="xMidYMid meet"
+            >
+              {/* Definitions remain the same */}
+              <defs>
+                <linearGradient id="overwater-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" stopColor="#ffffff" />
+                  <stop offset="100%" stopColor="#d0ccb9" />
+                </linearGradient>
+                
+                <filter id="drop-shadow" x="-50%" y="-50%" width="200%" height="200%">
+                  <feGaussianBlur in="SourceAlpha" stdDeviation="4" />
+                  <feOffset dx="2" dy="4" />
+                  <feComponentTransfer>
+                    <feFuncA type="linear" slope="0.4" />
+                  </feComponentTransfer>
+                  <feMerge>
+                    <feMergeNode />
+                    <feMergeNode in="SourceGraphic" />
+                  </feMerge>
+                </filter>
+              </defs>
 
-            <AnimatePresence mode="wait" key={triggerAnimation}>
-              {shouldAnimate && (
-                <>
-                  {/* Left side - Input paths */}
-                  {inputPaths.map((path, index) => (
-                    <motion.path
-                      key={`input-path-${index}`}
-                      d={path}
-                      stroke="rgba(255, 255, 255, 0.2)"
-                      strokeWidth="3"
-                      fill="none"
-                      initial={{ pathLength: 0 }}
-                      animate={{ pathLength: 1 }}
-                      transition={{
-                        duration: 0.5,
-                        delay: index * 0.1
-                      }}
-                    />
-                  ))}
+              <AnimatePresence mode="wait" key={triggerAnimation}>
+                {shouldAnimate && (
+                  <>
+                    {/* Input paths */}
+                    {inputPaths.map((path, index) => (
+                      <motion.path
+                        key={`input-path-${index}`}
+                        d={path}
+                        stroke="rgba(255, 255, 255, 0.2)"
+                        strokeWidth="2"
+                        fill="none"
+                        initial={{ pathLength: 0 }}
+                        animate={{ pathLength: 1 }}
+                        transition={{
+                          duration: 0.5,
+                          delay: index * 0.1
+                        }}
+                      />
+                    ))}
 
-                  {/* Left side - Input images */}
-                  {inputImages.map((img, index) => {
-                    const isSelected = selectedImage === img.id;
-                    return (
+                    {/* Input images */}
+                    {inputImages.map((img, index) => (
                       <motion.g
                         key={img.id}
                         custom={index}
                         initial="initial"
                         animate="animate"
-                        whileHover="hover"
-                        variants={getImageVariants(isSelected)}
-                        onClick={() => handleImageClick(img.id)}
-                        style={{ 
-                          cursor: 'pointer',
-                          position: 'relative',
-                          zIndex: isSelected ? 100 : 1 
-                        }}
+                        variants={getImageVariants()}
+                        whileHover={imageHoverAnimation}
                       >
                         <rect
-                          width="90"
-                          height="90"
-                          x="-45"
-                          y="-45"
-                          rx="10"
+                          width="70"
+                          height="70"
+                          x="-35"
+                          y="-35"
+                          rx="8"
                           fill="url(#overwater-gradient)"
                           filter="url(#drop-shadow)"
                         />
                         <image
                           href={`/overwater/${(parseInt(img.id.split('-')[1])-1)*2}.png`}
-                          width="90"
-                          height="90"
-                          x="-45"
-                          y="-45"
-                          rx="10"
-                          style={{ clipPath: "inset(0 round 10px)" }}
+                          width="70"
+                          height="70"
+                          x="-35"
+                          y="-35"
+                          rx="8"
+                          style={{ clipPath: "inset(0 round 8px)" }}
                         />
                       </motion.g>
-                    );
-                  })}
+                    ))}
 
-                  {/* Right side - Output paths */}
-                  {outputPaths.map((path, index) => (
-                    <motion.path
-                      key={`output-path-${index}`}
-                      d={path}
-                      stroke="rgba(255, 255, 255, 0.2)"
-                      strokeWidth="3"
-                      fill="none"
-                      initial={{ pathLength: 0 }}
-                      animate={{ pathLength: 1 }}
-                      transition={{
-                        duration: 0.5,
-                        delay: 1+ index * 0.1
-                      }}
-                    />
-                  ))}
+                    {/* Input text */}
+                    <motion.text
+                      initial="initial"
+                      animate="animate"
+                      variants={inputTextVariants}
+                      x="-160"
+                      y="170"
+                      textAnchor="middle"
+                      fill="white"
+                      fontSize="22"
+                      fontFamily="serif"
+                    >
+                      Raw Images
+                    </motion.text>
 
-                  {/* Right side - Output images */}
-                  {outputImages.map((img, index) => {
-                    const isSelected = selectedImage === img.id;
-                    return (
+                    {/* Output paths */}
+                    {outputPaths.map((path, index) => (
+                      <motion.path
+                        key={`output-path-${index}`}
+                        d={path}
+                        stroke="rgba(255, 255, 255, 0.2)"
+                        strokeWidth="2"
+                        fill="none"
+                        initial={{ pathLength: 0 }}
+                        animate={{ pathLength: 1 }}
+                        transition={{
+                          duration: 0.5,
+                          delay: 1 + index * 0.1
+                        }}
+                      />
+                    ))}
+
+                    {/* Output images */}
+                    {outputImages.map((img, index) => (
                       <motion.g
                         key={img.id}
                         custom={index}
                         initial="initial"
                         animate="animate"
-                        whileHover="hover"
-                        variants={getOutputVariants(isSelected)}
-                        onClick={() => handleImageClick(img.id)}
-                        style={{ 
-                          cursor: 'pointer',
-                          position: 'relative',
-                          zIndex: isSelected ? 100 : 1 
-                        }}
+                        variants={getOutputVariants()}
+                        whileHover={imageHoverAnimation}
                       >
                         <rect
-                          width="90"
-                          height="90"
-                          x="-45"
-                          y="-45"
-                          rx="10"
+                          width="70"
+                          height="70"
+                          x="-35"
+                          y="-35"
+                          rx="8"
                           fill="#34D399"
                           filter="url(#drop-shadow)"
                         />
                         <image
                           href={`/overwater/${(parseInt(img.id.split('-')[1])-1)*2 + 1}.png`}
-                          width="90"
-                          height="90"
-                          x="-45"
-                          y="-45"
-                          rx="10"
-                          style={{ clipPath: "inset(0 round 10px)" }}
+                          width="70"
+                          height="70"
+                          x="-35"
+                          y="-35"
+                          rx="8"
+                          style={{ clipPath: "inset(0 round 8px)" }}
                         />
                       </motion.g>
-                    );
-                  })}
-                </>
-              )}
-            </AnimatePresence>
+                    ))}
 
-            {/* OW-UIE Square */}
-            <motion.g
-              onClick={handleCenterClick}
-              className="cursor-pointer"
-              initial="initial"
-              whileHover="hover"
-              variants={centerSquareAnimation}
-              style={{ 
-                position: 'relative',
-                zIndex: selectedImage === 'center' ? 100 : 1 
-              }}
-            >
-              <rect
-                width="170"
-                height="170"
-                x="-85"
-                y="-85"
-                rx="22"
-                fill="none"
-                stroke="#a7a88a"
-                strokeWidth="2"
-              />
+                    {/* Output text */}
+                    <motion.text
+                      initial="initial"
+                      animate="animate"
+                      variants={outputTextVariants}
+                      x="160"
+                      y="170"
+                      textAnchor="middle"
+                      fill="white"
+                      fontSize="22"
+                      fontFamily="serif"
+                    >
+                      Enhanced Images
+                    </motion.text>
 
-              <rect
-                width="160"
-                height="160"
-                x="-80"
-                y="-80"
-                rx="20"
-                fill="url(#overwater-gradient)"
-                filter="url(#drop-shadow)"
-              />
+                    {/* Center arrow */}
+                    <motion.path
+                      initial="initial"
+                      animate="animate"
+                      variants={arrowVariants}
+                      d="M -40 120 L 40 120 M 25 105 L 40 120 L 25 135"
+                      stroke="white"
+                      strokeWidth="2"
+                      fill="none"
+                    />
+                  </>
+                )}
+              </AnimatePresence>
 
-              <text
-                x="0"
-                y="0"
-                textAnchor="middle"
-                dominantBaseline="middle"
-                fill="#474241"
-                fontFamily="DM Serif Text"
-                fontSize="28"
-                fontWeight="bold"
-                fontStyle="italic"
-                className="select-none"
+              {/* OW-UIE Square */}
+              <motion.g
+                onClick={handleCenterClick}
+                className="cursor-pointer"
+                initial="initial"
+                whileHover="hover"
+                variants={centerSquareAnimation}
               >
-                OW-UIE
-              </text>
-            </motion.g>
-          </svg>
+                <rect
+                  width="140"
+                  height="140"
+                  x="-70"
+                  y="-70"
+                  rx="18"
+                  fill="none"
+                  stroke="#a7a88a"
+                  strokeWidth="2"
+                />
+
+                <rect
+                  width="130"
+                  height="130"
+                  x="-65"
+                  y="-65"
+                  rx="16"
+                  fill="url(#overwater-gradient)"
+                  filter="url(#drop-shadow)"
+                />
+
+                <text
+                  x="0"
+                  y="0"
+                  textAnchor="middle"
+                  dominantBaseline="middle"
+                  fill="#474241"
+                  fontFamily="DM Serif Text"
+                  fontSize="30"
+                  fontWeight="bold"
+                  fontStyle="italic"
+                  className="select-none"
+                >
+                  OW-UIE
+                </text>
+              </motion.g>
+            </svg>
+          </div>
         </div>
       </div>
     </section>
