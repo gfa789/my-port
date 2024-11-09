@@ -30,7 +30,7 @@ const Footer = () => {
                         </div>
                     </div>
                 </div>
-                <hr className={`my-6 ${isOverWater ? 'border-blue-700' : 'border-puce'} sm:mx-auto dark:border-gray-700 lg:my-8`} />
+                <hr className={`my-6 ${isOverWater ? 'border-gray-200' : 'border-puce'} sm:mx-auto dark:border-gray-700 lg:my-8`} />
             </div>
         </footer>
     )
