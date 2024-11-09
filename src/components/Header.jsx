@@ -128,7 +128,7 @@ const ImageCarousel = () => {
 const Header = () => {
   return (
     <header className="bg-gradient-to-r from-sagegreen to-puce text-white p-8 w-full">
-      <div className="container mx-auto px-4 md:flex lg:justify-center items-center">
+      <div className="container mx-auto px-6 md:flex lg:justify-center items-center max-w-[1100px]">
         <div className="md:w-1/2 lg:w-2/5 pb-10 text-center md:text-left">
           <motion.h1 
             className="text-4xl font-bold mb-2"

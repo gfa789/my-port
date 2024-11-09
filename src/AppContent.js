@@ -10,7 +10,7 @@ import Contact from './components/Contact';
 import OverWater from './pages/OverWater/OverWater';
 
 function AppContent() {
-  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+  const [, setIsSidebarOpen] = useState(true);
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -23,7 +23,7 @@ function AppContent() {
       // Clear the state after scrolling
       navigate(location.pathname, { replace: true, state: {} });
     }
-  }, [location.state, navigate]);
+  }, [location.state, navigate, location.pathname]);
 
   return (
     <Routes>
@@ -39,7 +39,7 @@ function AppContent() {
                 <section id="home"><Header /></section>
                 <section id="timeline"><VerticalTimeline /></section>
                 <section id="projects"><Projects /></section>
-                <section id="contact"><Contact /></section>
+                <Contact />
               </main>
             </div>
             <Footer />

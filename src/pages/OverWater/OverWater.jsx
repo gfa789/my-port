@@ -8,7 +8,7 @@ import VideoComparison from './VideoComparison';
 
 const OverWater = () => {
   return (
-    <div className="flex flex-col min-h-screen relative overflow-hidden">
+    <div className="flex flex-col min-h-full relative overflow-hidden">
       {/* Simplified Animated Background */}
       <div 
         className="fixed inset-0 -z-10"

@@ -9,7 +9,7 @@ const ModelDiagram = () => {
     if (!shouldAnimate) {
       setShouldAnimate(true);
     }
-  }, [triggerAnimation]);
+  }, [triggerAnimation, shouldAnimate]);
 
   // Updated positions to be more spread out and closer to center
   const getInputPosition = (index) => {

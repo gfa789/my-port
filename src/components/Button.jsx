@@ -1,24 +1,20 @@
 import React from "react";
 import { motion } from 'framer-motion';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate } from "react-router-dom";
 
-const Button = ({ text, to, onClick, icon }) => {
-  const navigate = useNavigate();
-  const location = useLocation();
-  
+const Button = ({ text, to, onClick, icon, water, link }) => {
+
+  var navigate = useNavigate();
+
   const handleClick = () => {
     if (onClick) {
       onClick();
-    } else if (to) {
-      if (location.pathname === '/overwater') {
-        // If we're on the overwater page, navigate to home first
-        navigate('/', { state: { scrollTo: to }});
-      } else {
-        // If we're already on home, just scroll
+    } else if (link){
+      navigate(link);
+    }else if (to) {
         const element = document.getElementById(to);
         if (element) {
           element.scrollIntoView({ behavior: 'smooth' });
-        }
       }
     }
   };
@@ -29,17 +25,19 @@ const Button = ({ text, to, onClick, icon }) => {
       whileHover={{ scale: 1.05 }}
       whileTap={{ scale: 0.95 }}
       transition={{ type: "spring", stiffness: 300, damping: 15 }}
-      className="relative overflow-hidden text-puce bg-gradient-to-br from-white to-sagegreen
-                 ring-1 ring-puce focus:ring-2 dark:focus:ring-blue-800
+      className={`relative overflow-hidden text-puce bg-gradient-to-br ${water ? "from-blue-950 to-black ring-black text-white" : "from-white to-sagegreen ring-puce"}
+                 ring-1  focus:ring-2 dark:focus:ring-blue-800
                  font-medium rounded-lg text-sm px-3 py-2.5 text-center me-2 mb-2
-                 group hover:before:animate-shine flex"
+                 group hover:before:animate-shine inline-flex items-center justify-center w-full lg:w-auto`}
     >
-      <span className="relative z-10">{text}</span>
-      {icon ? <span className={text ? "pl-2" : ""}>{icon}</span> : <></>}
-      <span className="absolute inset-0 bg-gradient-to-r from-transparent via-white to-transparent
+      <span className="relative z-10 inline-flex items-center">
+        {text}
+        {icon && <span className={text ? "ml-2" : ""}>{icon}</span>}
+      </span>
+    {water?<></> :<span className="absolute inset-0 bg-gradient-to-r from-transparent via-white to-transparent
                        -translate-x-full group-hover:animate-shine" 
             style={{ '--shine-deg': '45deg' }}
-      />
+      />}
     </motion.button>
   );
 };

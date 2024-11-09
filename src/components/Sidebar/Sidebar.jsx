@@ -138,7 +138,7 @@ const Sidebar = ({ onToggle }) => {
       {!isOpen && isMobile && (
         <button
           onClick={() => toggleSidebar(true)}
-          className="fixed z-30 left-4 top-32 bg-sagegreen bg-opacity-70 backdrop-blur-md p-2 rounded-full shadow-lg text-puce hover:text-white transition-colors"
+          className="fixed z-30 left-4 top-46 bg-sagegreen bg-opacity-70 backdrop-blur-md p-2 rounded-full shadow-lg text-puce hover:text-white transition-colors"
         >
           <ChevronRight size={24} />
         </button>

@@ -10,7 +10,7 @@ const Contact = () => {
   const [submitStatus, setSubmitStatus] = useState(null);
 
   const cardRef = useRef();
-  const [isVisible, setIsVisible] = useState(false);
+  const [isVisible, ] = useState(false);
 
   const [recaptchaLoaded, setRecaptchaLoaded] = useState(false);
   const recaptchaRef = useRef();
@@ -40,7 +40,7 @@ const Contact = () => {
         console.warn('reCAPTCHA not loaded, proceeding without verification');
       }
 
-      const docRef = await addDoc(collection(db, 'messages'), {
+      await addDoc(collection(db, 'messages'), {
         email,
         message,
         timestamp: new Date(),
@@ -59,6 +59,7 @@ const Contact = () => {
   };
 
   return (
+    <section id="contact">
     <div className="min-h-[500px] flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8 ">
       <div 
         ref={cardRef}
@@ -68,7 +69,7 @@ const Contact = () => {
       >
         <div className="bg-gradient-to-br from-white to-sagegreen
                  ring-1 ring-puce focus:ring-2 p-6 rounded-lg shadow-xl">
-          <h2 className="text-2xl font-bold mb-6 text-center">Contact Me</h2>
+          <h2 className="text-2xl text-puce font-bold mb-6 text-center">Contact Me</h2>
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
               <label htmlFor="email" className="block text-sm font-medium text-gray-700">Email</label>
@@ -124,6 +125,7 @@ const Contact = () => {
         </div>
       </div>
     </div>
+    </section>
   );
 };
 

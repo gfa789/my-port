@@ -77,6 +77,7 @@ const projects = [
           <div className="flex-grow overflow-y-auto">
             <p className="text-gray-600 mb-4">{project.description}</p>
           </div>
+          
           {project.hasVisitButton && (
           <a
             href={project.link}
@@ -118,6 +119,7 @@ const projects = [
       });
   
       return () => {
+          // eslint-disable-next-line
         rowRefs.current.forEach(row => {
           if (row) observer.unobserve(row);
         });
