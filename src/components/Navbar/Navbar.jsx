@@ -20,7 +20,7 @@ const Navbar = () => {
         <Logo />
         
         {/* Mobile Menu Button */}
-        {`${isOverWater}` ? <></> :
+        {isOverWater ? <></> :
         <button 
           onClick={toggleMenu}
           className={`lg:hidden p-2 focus:outline-none ${isOverWater? 'text-white' : 'text-puce'}`}
