@@ -43,7 +43,7 @@ const Navbar = () => {
         </div>
 
         {/* Mobile Dropdown Menu */}
-        {`${isOverWater}` ? <></> : 
+        {isOverWater ? <></> : 
         <div className={`
           lg:hidden 
           absolute 
