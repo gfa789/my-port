@@ -57,8 +57,21 @@ const timelineItems = [
     },
     {
         title: "Neptune North",
-        date: "2024-Present",
-        description: "Software Engineer",
+        date: "2024-2025",
+        description: "Graduate Software Developer",
+        longDescription: "Worked on the Rokos Capital Management project for the Reference Data team; I developed in a wide variety of areas primarily utilising .NET/C#, Python, React.js, and MS SQL Server. Additionally, deployed full stack AI applications used company-wide.",
+        isActive: true,
+        image: "/photos/neptune2.png",
+        icon: (
+            <svg className="fill-current" xmlns="http://www.w3.org/2000/svg" width="12" height="10">
+                <path fillRule="nonzero" d="M10.422 1.257 4.655 7.025 2.553 4.923A.916.916 0 0 0 1.257 6.22l2.75 2.75a.916.916 0 0 0 1.296 0l6.415-6.416a.916.916 0 0 0-1.296-1.296Z" />
+            </svg>
+        )
+    },
+    {
+        title: "Neptune North",
+        date: "2025-Present",
+        description: "Software Developer",
         longDescription: "The latest step in my career. To be continued...",
         isActive: false,
         image: "/photos/neptune2.png",
