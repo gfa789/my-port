@@ -3,6 +3,18 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { useSwipeable } from 'react-swipeable';
 
+const getAge = (birthDate, today = new Date()) => {
+  let age = today.getFullYear() - birthDate.getFullYear();
+  const birthdayHasPassed =
+    today.getMonth() > birthDate.getMonth() ||
+    (today.getMonth() === birthDate.getMonth() && today.getDate() >= birthDate.getDate());
+
+  if (!birthdayHasPassed) age -= 1;
+  return age;
+};
+
+const age = getAge(new Date(2003, 6, 5));
+
 const images = [
   "/photos/4.jpg",
   "/photos/head.jpg",
@@ -144,7 +156,7 @@ const Header = () => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.2 }}
           >
-            Software Engineer, 22
+            Software Engineer, {age}
           </motion.h2>
           <motion.p 
             className="text-lg max-w-md text-gray-200"
@@ -169,4 +181,3 @@ const Header = () => {
 };
 
 export default Header;
-
