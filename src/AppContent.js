@@ -1,59 +1,50 @@
-import PageMetadata from './components/PageMetadata';
-import NotFound from './components/NotFound';
-import { Routes, Route, useLocation, useNavigate } from 'react-router-dom';
-import Navbar from './components/Navbar/Navbar';
-import Sidebar from './components/Sidebar/Sidebar';
-import Header from './components/Header';
-import { useState, useEffect } from 'react';
-import VerticalTimeline from './components/VerticalTimeline';
-import Footer from './components/Footer';
-import Projects from './components/Projects';
-import Contact from './components/Contact';
-import OverWater from './pages/OverWater/OverWater';
+import { Routes, Route, useLocation } from "react-router-dom";
+import { useEffect } from "react";
+import Navbar from "./components/Navbar/Navbar";
+import Header from "./components/Header";
+import Footer from "./components/Footer";
+import Projects from "./components/Projects";
+import Experience from "./components/Experience";
+import Contact from "./components/Contact";
+import OverWater from "./pages/OverWater/OverWater";
+import PageMetadata from "./components/PageMetadata";
+import NotFound from "./components/NotFound";
 
-function AppContent() {
-  const [, setIsSidebarOpen] = useState(true);
-  const location = useLocation();
-  const navigate = useNavigate();
-
+export default function AppContent() {
+  const { pathname, hash } = useLocation();
   useEffect(() => {
-    if (location.state?.scrollTo) {
-      const element = document.getElementById(location.state.scrollTo);
-      if (element) {
-        element.scrollIntoView({ behavior: 'smooth' });
-      }
-      // Clear the state after scrolling
-      navigate(location.pathname, { replace: true, state: {} });
+    if (hash) {
+      const element = document.getElementById(hash.slice(1));
+      element?.scrollIntoView();
+    } else {
+      window.scrollTo(0, 0);
     }
-  }, [location.state, navigate, location.pathname]);
-
+  }, [pathname, hash]);
   return (
     <>
-    <PageMetadata />
-    <Routes>
-      <Route path="/overwater" element={<OverWater />} />
-      <Route
-        path="/"
-        element={
-          <div className="flex flex-col min-h-screen">
-            <Navbar />
-            <div className="relative flex-grow">
-              <Sidebar onToggle={(isOpen) => setIsSidebarOpen(isOpen)} />
-              <main className="w-screen bg-gradient-to-r from-sagegreen to-puce">
-                <section id="home"><Header /></section>
-                <section id="timeline"><VerticalTimeline /></section>
-                <section id="projects"><Projects /></section>
+      <PageMetadata />
+      <a className="skip-link" href="#main-content">
+        Skip to content
+      </a>
+      <Routes>
+        <Route path="/overwater" element={<OverWater />} />
+        <Route
+          path="/"
+          element={
+            <div className="portfolio-page">
+              <Navbar />
+              <main id="main-content" tabIndex={-1}>
+                <Header />
+                <Projects />
+                <Experience />
                 <Contact />
               </main>
+              <Footer />
             </div>
-            <Footer />
-          </div>
-        }
-      />
-      <Route path="*" element={<NotFound />} />
-    </Routes>
+          }
+        />
+        <Route path="*" element={<NotFound />} />
+      </Routes>
     </>
   );
 }
-
-export default AppContent;

@@ -1,151 +1,180 @@
-import React, { useEffect, useRef } from 'react';
-import { ExternalLink } from 'lucide-react';
-import { motion} from 'framer-motion';
-
+import { Link } from "react-router-dom";
+const paper =
+  "https://drive.google.com/file/d/1n85HyTZDCYAQlW12iAW1lgoUPREGd93h/view";
 const projects = [
-    {
-      id: 1,
-      title: "Underwater Image Enhancement",
-      icon: "ðŸŒŠ",
-      date: "Jan-May 2024",
-      description: "University dissertation project in which I created a rich dataset, and researched deep learning methods for obtaining enhanced underwater images using GANs in PyTorch.",
-      link: "https://drive.google.com/file/d/1n85HyTZDCYAQlW12iAW1lgoUPREGd93h/view?usp=sharing",
-      hasVisitButton: true
-      
-    },
-    {
-      id: 2,
-      title: "ML for Weather Forecasting",
-      icon: "â›…",
-      date: "Jan-May 2024",
-      description: "University group coursework set by the MET Office to wrangle time-series weather data, and use it to make weather forecasts using machine learning methods in both sklearn and TensorFlow.",
-      link: "https://drive.google.com/file/d/111cPGMAF14W8wbxG88lhSIKxDMPB1ul9/view?usp=sharing",
-      hasVisitButton: true
-    },
-    {
-      id: 3,
-      title: "ML Model Analysis",
-      icon: "ðŸ“ˆ",
-      date: "Nov-Dec 2023",
-      description: "Coursework for my university module in Machine Learning. Explored a number of techniques for fitting models using sklearn, and analyzing their performance.",
-      link: "https://github.com/gfa789/ml-cw",
-      hasVisitButton: true
-    },{
-      id: 4,
-      title: "Dartboard Detector",
-      icon: "ðŸŽ¯",
-      date: "Nov-Dec 2023",
-      description: "Implemented an algorithm using Hough transforms and YOLO for detecting and locating dartboards in images. This was towards my university module in computer vision.",
-      link: "https://github.com/gfa789/darts-cw",
-      hasVisitButton: true
-    },
-    {
-      id: 5,
-      title: "Stereo Vision",
-      icon: "ðŸŽ¥",
-      date: "Nov-Dec 2023",
-      description: "As part of my computer vision module at university, implemented an algorithm that detects objects from two viewpoints, and uses epipolar lines to reconstruct the scene in 3D.",
-      link: "https://github.com/gfa789/darts-cw",
-      hasVisitButton: true
-    },
-    {
-      id: 6,
-      title: "Veterinary Database",
-      icon: "ðŸ“Š",
-      date: "Sept 2022 - May 2023",
-      description: "Worked in a team of 4 to develop a full stack project using React, Node.js, and MongoDB. The product was a self sustaining database with different authority levels for each user type. This was for the university vet school contributing towards our module in Software Engineering. Further details cannot be displayed due to an NDA.",
-      link: "#",
-      hasVisitButton: false
-    },
-    // Add more projects as needed
-  ];
-  
-
-  const ProjectCard = ({ project }) => {
-    return (
-      <motion.div whileHover={{ scale: 1.05 }}
-      whileTap={{ scale: 0.95 }}
-      transition={{ type: "spring", stiffness: 300, damping: 15 }} 
-      className="text-puce bg-gradient-to-br from-white to-sagegreen
-                            ring-1 ring-puce focus:ring-2 rounded-lg shadow-md overflow-hidden hover:shadow-xl h-[350px] flex flex-col mr-4 md:mr-0">
-        <div className="p-6 flex flex-col h-full">
-          <div className="flex items-center justify-between mb-4">
-            <span className="text-4xl">{project.icon}</span>
-            <span className="text-sm text-gray-500">{project.date}</span>
-          </div>
-          <h3 className="text-xl font-semibold mb-2">{project.title}</h3>
-          <div className="flex-grow overflow-y-auto">
-            <p className="text-gray-600 mb-4">{project.description}</p>
-          </div>
-          
-          {project.hasVisitButton && (
-          <a
-            href={project.link}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center mt-4 text-slate-500 hover:text-slate-700 transition-colors duration-200"
-          >
-            Visit Project <ExternalLink className="ml-1" size={16} />
-          </a>
-        )}
+  {
+    title: "Dartboard detector",
+    date: "2023",
+    tags: ["Computer vision", "Python", "YOLO"],
+    description:
+      "Finding dartboards in images with Hough transforms and object detection. Built for my computer vision coursework at Bristol.",
+    href: "https://github.com/gfa789/darts-cw/tree/main/Part1",
+    label: "View detector code",
+  },
+  {
+    title: "Weather forecasting",
+    date: "2024",
+    tags: ["Machine learning", "TensorFlow", "Time series"],
+    description:
+      "A team project set by the Met Office: wrangling weather observations and exploring machine learning methods for forecasting.",
+    href: "https://drive.google.com/file/d/111cPGMAF14W8wbxG88lhSIKxDMPB1ul9/view",
+    label: "Read forecasting report",
+  },
+];
+const archive = [
+  {
+    title: "Stereo vision",
+    description:
+      "Reconstructing a scene in 3D from two viewpoints using image correspondences and epipolar geometry.",
+    href: "https://github.com/gfa789/darts-cw/tree/main/Part2",
+    label: "View stereo vision code",
+  },
+  {
+    title: "ML model analysis",
+    description:
+      "Exploring model-fitting techniques in scikit-learn and analysing their performance.",
+    href: "https://github.com/gfa789/ml-cw",
+    label: "View model analysis code",
+  },
+  {
+    title: "Veterinary database",
+    description:
+      "A team of four building a full-stack React, Node.js and MongoDB database for the university vet school, with different user permission levels. Further details are confidential under an NDA.",
+  },
+];
+export default function Projects() {
+  return (
+    <section
+      id="projects"
+      className="work-section section shell"
+      aria-labelledby="work-title"
+    >
+      <div className="section-heading">
+        <div>
+          <p className="eyebrow">01 / Selected work</p>
+          <h2 id="work-title">Ideas, put into practice.</h2>
         </div>
-      </motion.div>
-    );
-  };
-  
-  const Projects = () => {
-    const rowRefs = useRef([]);
-  
-    useEffect(() => {
-      const observerOptions = {
-        root: null,
-        rootMargin: '0px',
-        threshold: 0.1
-      };
-  
-      const observerCallback = (entries, observer) => {
-        entries.forEach(entry => {
-          if (entry.isIntersecting) {
-            entry.target.classList.add('animate-fade-in-up');
-            observer.unobserve(entry.target);
-          }
-        });
-      };
-  
-      const observer = new IntersectionObserver(observerCallback, observerOptions);
-  
-      rowRefs.current.forEach(row => {
-        if (row) observer.observe(row);
-      });
-  
-      return () => {
-          // eslint-disable-next-line
-        rowRefs.current.forEach(row => {
-          if (row) observer.unobserve(row);
-        });
-      };
-    }, []);
-  
-    const getRowRef = (index) => (el) => {
-      rowRefs.current[index] = el;
-    };
-  
-    return (
-      <div className="container mx-auto px-4 py-8 lg:max-w-6xl">
-        <h2 className="text-3xl font-bold mb-8 text-gray-100 text-center">My Projects</h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {projects.map((project, index) => (
-            <div 
-              key={project.id} 
-              ref={getRowRef(index)}
-              className="opacity-0"
+        <p>
+          A selection of research and university projects, from machine learning
+          to computer vision.
+        </p>
+      </div>
+      <article className="featured-project">
+        <Link
+          to="/overwater"
+          className="project-visual"
+          aria-label="Explore the OverWater case study"
+        >
+          <div className="image-pair">
+            <figure>
+              <img
+                src="/overwater/0.png"
+                alt="Original underwater scene with a green colour cast"
+                width="512"
+                height="512"
+                loading="lazy"
+              />
+              <figcaption>Original</figcaption>
+            </figure>
+            <figure>
+              <img
+                src="/overwater/1.png"
+                alt="Corresponding scene enhanced by the OverWater model"
+                width="512"
+                height="512"
+                loading="lazy"
+              />
+              <figcaption>Enhanced</figcaption>
+            </figure>
+          </div>
+          <span className="visual-caption">
+            A clearer view below the surface <span aria-hidden="true">↗</span>
+          </span>
+        </Link>
+        <div className="project-copy">
+          <p className="eyebrow">Featured project / 2024</p>
+          <h3>OverWater</h3>
+          <p className="project-subtitle">Underwater image enhancement</p>
+          <p>
+            My dissertation exploring how generative adversarial networks can
+            bring colour and clarity to underwater imagery. I created a dataset
+            and researched deep learning approaches in PyTorch.
+          </p>
+          <ul className="tags" aria-label="Technologies">
+            <li>PyTorch</li>
+            <li>GANs</li>
+            <li>Computer vision</li>
+          </ul>
+          <div className="project-links">
+            <Link className="text-link" to="/overwater">
+              Read case study <span aria-hidden="true">↗</span>
+            </Link>
+            <a href={paper}>Read dissertation</a>
+            <a href="https://github.com/gfa789/finalproject">
+              View research code
+            </a>
+          </div>
+        </div>
+      </article>
+      <div className="project-grid">
+        {projects.map((project, index) => (
+          <article className="project-card" key={project.title}>
+            <div
+              className={`project-illustration illustration-${index}`}
+              aria-hidden="true"
             >
-              <ProjectCard project={project} />
+              {index === 0 ? (
+                <>
+                  <span className="target-ring" />
+                  <span className="target-label">Locate. Detect. Analyse.</span>
+                </>
+              ) : (
+                <>
+                  <span>Observations</span>
+                  <span>↓</span>
+                  <span>Model</span>
+                  <span>↓</span>
+                  <span>Forecast</span>
+                </>
+              )}
             </div>
+            <div className="project-card-copy">
+              <p className="eyebrow">
+                {project.date} /{" "}
+                {index === 0 ? "Computer vision" : "Applied machine learning"}
+              </p>
+              <h3>{project.title}</h3>
+              <p>{project.description}</p>
+              <ul className="tags" aria-label="Technologies">
+                {project.tags.map((tag) => (
+                  <li key={tag}>{tag}</li>
+                ))}
+              </ul>
+              <a className="text-link" href={project.href}>
+                {project.label} <span aria-hidden="true">↗</span>
+              </a>
+            </div>
+          </article>
+        ))}
+      </div>
+      <details className="project-archive">
+        <summary>
+          More projects <span className="archive-count">03</span>
+        </summary>
+        <div className="archive-grid">
+          {archive.map((project) => (
+            <article key={project.title}>
+              <h3>{project.title}</h3>
+              <p>{project.description}</p>
+              {project.href && (
+                <a className="text-link" href={project.href}>
+                  {project.label} <span aria-hidden="true">↗</span>
+                </a>
+              )}
+            </article>
           ))}
         </div>
-      </div>
-    );
-  };
-  
-  export default Projects;
+      </details>
+    </section>
+  );
+}

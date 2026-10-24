@@ -1,70 +1,30 @@
-# Getting Started with Create React App
+# George Atkinson’s portfolio
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+React portfolio with statically rendered public pages and Firebase Hosting.
 
-## Available Scripts
+## Local development
 
-In the project directory, you can run:
+Use Node 22 and `npm ci`, then `npm start` (http://localhost:3000).
+No production credentials are needed to explore the site. LinkedIn remains available for contact.
+`npm run build` produces route-specific HTML, metadata and social previews.
+`npm run preview` serves the build on http://localhost:4173 with clean URLs and real 404 responses.
+Run `npm run check:seo`, `npm test -- --watchAll=false`, and `npm --prefix functions test`.
 
-### `npm start`
+## Contact form deployment
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+The public Firestore rules intentionally deny direct client access. The form submits only to the validated `/api/contact` function. Do not open database writes to fix contact delivery.
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+1. Install function dependencies with `npm --prefix functions ci`.
+2. Configure Firebase secrets `RECAPTCHA_SECRET_KEY`, `GMAIL_EMAIL`, and `GMAIL_APP_PASSWORD` with `firebase functions:secrets:set NAME`. The Gmail account receives notifications; use a Gmail app password. Secret values never belong in source or client configuration.
+3. Set `CONTACT_HOSTNAMES` in `functions/.env` if using additional production hosts; see `functions/.env.example`. Configure the matching invisible reCAPTCHA v2 site key for those hosts.
+4. Deploy functions and rules with `firebase deploy --only functions,firestore:rules`. Keep the existing hosting release separate until delivery is verified. The functions require a Firebase plan that supports Cloud Functions.
+5. In a controlled environment verify a real submission is stored and its notification delivered. Only then set the public build variables `REACT_APP_CONTACT_ENABLED=true` and `REACT_APP_RECAPTCHA_SITE_KEY`. Copy `.env.example` to `.env.local` for local development. The default is a LinkedIn contact panel, so missing configuration never presents a broken form.
+6. Build and deploy hosting. `/api/contact` is the only hosting rewrite. All public pages are real HTML files; unknown routes return the custom 404.
 
-### `npm test`
+The endpoint validates message length and email, verifies CAPTCHA server-side and restricts submissions to five per IP per hour using a Firestore transaction. IPs are stored as keyed hashes only. Configure Firestore TTL on `contactRateLimits.expiresAt` to remove expired limiter records. The notification function retries failures; a rare duplicate email is possible on retries. “Received” means the message was persisted, not that an email delivery was confirmed.
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+The existing GitHub workflows deploy hosting only. Function changes and secrets need the explicit deployment above before enabling the form. The workflows read `REACT_APP_CONTACT_ENABLED` from GitHub repository variables (defaults to `false`) and `REACT_APP_RECAPTCHA_SITE_KEY` from repository secrets. Preview hostnames must be authorised in both CAPTCHA configuration and `CONTACT_HOSTNAMES` before enabling the preview form. No production services are modified by local builds or tests.
 
-### `npm run build`
+## Content and assets
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
-
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
-
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `npm run eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
-
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
-
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+The current role copy is based on George’s supplied responsibilities. Project descriptions avoid unverified performance claims. Stereo vision lives in `gfa789/darts-cw/Part2`; dartboard detection is in `Part1`. OverWater research code is in `gfa789/finalproject`.

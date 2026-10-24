@@ -1,132 +1,166 @@
-import React, { useState, useRef, useEffect} from 'react';
-import { addDoc, collection } from 'firebase/firestore';
-import { db } from '../firebase';
-import ReCAPTCHA from "react-google-recaptcha";
-
-const Contact = () => {
-  const [email, setEmail] = useState('');
-  const [message, setMessage] = useState('');
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [submitStatus, setSubmitStatus] = useState(null);
-
-  const cardRef = useRef();
-  const [isVisible, ] = useState(false);
-
-  const [recaptchaLoaded, setRecaptchaLoaded] = useState(false);
-  const recaptchaRef = useRef();
-  const [clientId, setClientId] = useState(null);
-
-  const RECAPTCHA_SITE_KEY = process.env.REACT_APP_RECAPTCHA_SITE_KEY;
-
-  useEffect(() => {
-    setRecaptchaLoaded(!!RECAPTCHA_SITE_KEY);   
-    let id = localStorage.getItem('clientId');
-    if (!id) {
-      id = 'client_' + Date.now();
-      localStorage.setItem('clientId', id);
-    }
-    setClientId(id);
-  }, [RECAPTCHA_SITE_KEY]);
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setIsSubmitting(true);
-
+import { lazy, Suspense, useRef, useState } from "react";
+const ReCAPTCHA = lazy(() => import("react-google-recaptcha"));
+const siteKey = process.env.REACT_APP_RECAPTCHA_SITE_KEY;
+const contactEnabled =
+  process.env.REACT_APP_CONTACT_ENABLED === "true" && Boolean(siteKey);
+const errors = {
+  429: "You have sent several messages. Please try again later or connect on LinkedIn.",
+  403: "Verification did not complete. Please try again or connect on LinkedIn.",
+  503: "The message service is unavailable. Please connect on LinkedIn instead.",
+};
+export default function Contact() {
+  const [email, setEmail] = useState("");
+  const [message, setMessage] = useState("");
+  const [busy, setBusy] = useState(false);
+  const [status, setStatus] = useState(null);
+  const [verificationReady, setVerificationReady] = useState(false);
+  const [verificationError, setVerificationError] = useState(false);
+  const captcha = useRef(null);
+  async function submit(event) {
+    event.preventDefault();
+    if (busy) return;
+    setBusy(true);
+    setStatus(null);
     try {
-      if (recaptchaLoaded) {
-        const token = await recaptchaRef.current.executeAsync();
-        console.log('reCAPTCHA token obtained:', token ? 'Yes' : 'No');
-      } else {
-        console.warn('reCAPTCHA not loaded, proceeding without verification');
-      }
-
-      await addDoc(collection(db, 'messages'), {
-        email,
-        message,
-        timestamp: new Date(),
-        clientId
+      const token = await captcha.current?.executeAsync();
+      if (!token) throw new Error(errors[403]);
+      const response = await fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, message, token }),
+        signal: AbortSignal.timeout(20000),
       });
-
-      setSubmitStatus('success');
-      setEmail('');
-      setMessage('')
+      if (!response.ok)
+        throw new Error(
+          errors[response.status] ||
+            "Your message could not be received. Please try again or connect on LinkedIn.",
+        );
+      setEmail("");
+      setMessage("");
+      setStatus({
+        success: true,
+        text: "Your message has been received. Thank you for getting in touch.",
+      });
     } catch (error) {
-      console.error('Error during form submission:', error);
-      setSubmitStatus(error.code === 'permission-denied' ? 'rate-limit' : 'error');
+      setStatus({
+        success: false,
+        text:
+          error.name === "TimeoutError"
+            ? "The request timed out. Please try again or connect on LinkedIn."
+            : error.message,
+      });
     } finally {
-      setIsSubmitting(false);
+      captcha.current?.reset();
+      setBusy(false);
     }
-  };
-
+  }
   return (
-    <section id="contact">
-    <div className="min-h-[500px] flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8 ">
-      <div 
-        ref={cardRef}
-        className={`max-w-md w-full space-y-8  ${
-          isVisible
-            ? 'animate-popIn' : ''}`}
-      >
-        <div className="bg-gradient-to-br from-white to-sagegreen
-                 ring-1 ring-puce focus:ring-2 p-6 rounded-lg shadow-xl">
-          <h2 className="text-2xl text-puce font-bold mb-6 text-center">Contact Me</h2>
-          <form onSubmit={handleSubmit} className="space-y-4">
-            <div>
-              <label htmlFor="email" className="block text-sm font-medium text-gray-700">Email</label>
-              <input
-                type="email"
-                id="email"
-                placeholder='Enter Your Email'
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                required
-                className="px-2 py-2 mt-1 ring-1 ring-puce block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
-              />
-            </div>
-            <div>
-              <label htmlFor="message" className="block text-sm font-medium text-gray-700">Message</label>
-              <textarea
-                id="message"
-                placeholder='Enter Your Message'
-                value={message}
-                onChange={(e) => setMessage(e.target.value)}
-                required
-                rows="4"
-                className=" px-2 py-2 mt-1 block w-full ring-puce ring-1 rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
-              ></textarea>
-            </div>
-            {recaptchaLoaded && (
-              <ReCAPTCHA
-                ref={recaptchaRef}
-                size="invisible"
-                sitekey={RECAPTCHA_SITE_KEY}
-              />
-            )}
-            <button
-              type="submit"
-              disabled={isSubmitting}
-              className="w-full bg-indigo-600 text-white py-2 px-4 rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-opacity-50 disabled:opacity-50"
-            >
-              {isSubmitting ? 'Submitting...' : 'Submit'}
-            </button>
-            <p className="text-xs text-gray-500 mt-2">
-              This site is protected by reCAPTCHA and the Google{' '}
-              <a href="https://policies.google.com/privacy" className="text-blue-500 hover:underline">Privacy Policy</a> and{' '}
-              <a href="https://policies.google.com/terms" className="text-blue-500 hover:underline">Terms of Service</a> apply.
-            </p>
-          </form>
-          {submitStatus === 'success' && (
-            <p className="mt-4 text-green-600 text-center">Message sent successfully!</p>
-          )}
-           {submitStatus === 'rate-limit' && <p>Rate limit exceeded. Please try again later.</p>}
-          {submitStatus === 'error' && (
-            <p className="mt-4 text-red-600 text-center">Error sending message. Please try again.</p>
-          )}
+    <section
+      id="contact"
+      className="contact-section section"
+      aria-labelledby="contact-title"
+    >
+      <div className="shell contact-layout">
+        <div>
+          <p className="eyebrow">03 / Get in touch</p>
+          <h2 id="contact-title">
+            Good things start
+            <br />
+            with a conversation<span>.</span>
+          </h2>
+          <p>
+            Have a project in mind, a question about my work, or just want to
+            say hello?
+          </p>
+          <a
+            className="button button-primary"
+            href="https://linkedin.com/in/georgeatki"
+          >
+            Connect on LinkedIn <span aria-hidden="true">↗</span>
+          </a>
         </div>
+        {contactEnabled ? (
+          <form
+            className="contact-form"
+            onSubmit={submit}
+            aria-label="Send a message"
+            aria-busy={busy}
+          >
+            <label htmlFor="email">Your email</label>
+            <input
+              id="email"
+              name="email"
+              type="email"
+              autoComplete="email"
+              required
+              maxLength={254}
+              value={email}
+              onChange={(event) => setEmail(event.target.value)}
+              disabled={busy}
+            />
+            <label htmlFor="message">Your message</label>
+            <textarea
+              id="message"
+              name="message"
+              required
+              minLength={10}
+              maxLength={5000}
+              rows={5}
+              value={message}
+              onChange={(event) => setMessage(event.target.value)}
+              disabled={busy}
+            />
+            <Suspense fallback={<p>Loading message verification…</p>}>
+              <ReCAPTCHA
+                ref={captcha}
+                sitekey={siteKey}
+                size="invisible"
+                asyncScriptOnLoad={() => setVerificationReady(true)}
+                onErrored={() => {
+                  setVerificationError(true);
+                  setVerificationReady(false);
+                }}
+              />
+            </Suspense>
+            <button
+              className="button button-primary"
+              type="submit"
+              disabled={busy || !verificationReady}
+            >
+              {busy ? "Sending…" : "Send message"}
+            </button>
+            {verificationError && (
+              <p role="alert">
+                Message verification is unavailable. Please connect on LinkedIn
+                instead.
+              </p>
+            )}
+            <p className="form-note">
+              Your email and message are used to respond to your enquiry.
+              Protected by reCAPTCHA: Google’s{" "}
+              <a href="https://policies.google.com/privacy">Privacy Policy</a>{" "}
+              and{" "}
+              <a href="https://policies.google.com/terms">Terms of Service</a>{" "}
+              apply.
+            </p>
+            {status && (
+              <p role={status.success ? "status" : "alert"}>{status.text}</p>
+            )}
+          </form>
+        ) : (
+          <div className="contact-note">
+            <span aria-hidden="true">↗</span>
+            <h3>Let’s connect.</h3>
+            <p>
+              LinkedIn is the best place to reach me. You can also explore more
+              of my code on GitHub.
+            </p>
+            <a className="text-link" href="https://github.com/gfa789">
+              Explore GitHub <span aria-hidden="true">↗</span>
+            </a>
+          </div>
+        )}
       </div>
-    </div>
     </section>
   );
-};
-
-export default Contact;
+}
