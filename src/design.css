@@ -14,15 +14,6 @@
   background: var(--puce);
   -webkit-font-smoothing: antialiased;
 }
-::view-transition-group(root),
-::view-transition-old(root),
-::view-transition-new(root) {
-  animation-duration: 650ms;
-  animation-timing-function: ease-in-out;
-}
-::view-transition {
-  pointer-events: none;
-}
 * {
   box-sizing: border-box;
 }
@@ -1646,5 +1637,160 @@ main[id] {
   }
   .overwater-embedded .section-heading h3 {
     font-size: 27px;
+  }
+}
+
+/* Animate colours on the live page; never blend snapshots of scrolling content. */
+@property --water-mix {
+  syntax: "<number>";
+  inherits: true;
+  initial-value: 0;
+}
+.portfolio-page {
+  --water-mix: 0;
+  transition:
+    --water-mix 650ms ease-in-out,
+    color 650ms ease-in-out;
+}
+.portfolio-page.water-theme {
+  --water-mix: 1;
+}
+.portfolio-page,
+.portfolio-page.water-theme {
+  background: linear-gradient(
+    100deg,
+    color-mix(in srgb, #d0ccb9, #080f24 calc(var(--water-mix) * 100%)) 0%,
+    color-mix(in srgb, #aaa89a, #080f24 calc(var(--water-mix) * 100%)) 31%,
+    color-mix(in srgb, #77716c, #080f24 calc(var(--water-mix) * 100%)) 65%,
+    color-mix(in srgb, #474241, #080f24 calc(var(--water-mix) * 100%)) 100%
+  );
+}
+.portfolio-page .site-header {
+  background: color-mix(
+    in srgb,
+    #a7a88af0,
+    #0b142a calc(var(--water-mix) * 100%)
+  );
+}
+.portfolio-page .heritage-sidebar {
+  background: linear-gradient(
+    135deg,
+    color-mix(in srgb, #d0ccb9e8, #101c33 calc(var(--water-mix) * 100%)),
+    color-mix(in srgb, #b6b49ee8, #101c33 calc(var(--water-mix) * 100%))
+  );
+}
+.portfolio-page .monogram {
+  background: linear-gradient(
+    135deg,
+    color-mix(in srgb, #fff, #182b47 calc(var(--water-mix) * 100%)),
+    color-mix(in srgb, #d0ccb9, #182b47 calc(var(--water-mix) * 100%))
+  );
+}
+.portfolio-page .button-soft {
+  background: linear-gradient(
+    135deg,
+    color-mix(in srgb, #fff, #1b3352 calc(var(--water-mix) * 100%)),
+    color-mix(in srgb, #d0ccb9, #1b3352 calc(var(--water-mix) * 100%))
+  );
+}
+.portfolio-page .button-primary {
+  background: color-mix(
+    in srgb,
+    #f5f3ec,
+    #1b3352 calc(var(--water-mix) * 100%)
+  );
+}
+.portfolio-page .hero-copy {
+  background: linear-gradient(
+    135deg,
+    color-mix(in srgb, #ffffffed, #12213a calc(var(--water-mix) * 100%)),
+    color-mix(in srgb, #d0ccb9ed, #12213a calc(var(--water-mix) * 100%))
+  );
+}
+.portfolio-page .glass-card {
+  background: linear-gradient(
+    135deg,
+    color-mix(in srgb, #fff, #12213a calc(var(--water-mix) * 100%)),
+    color-mix(in srgb, #d0ccb9, #12213a calc(var(--water-mix) * 100%))
+  );
+}
+.portfolio-page .contact-layout {
+  background: linear-gradient(
+    135deg,
+    color-mix(in srgb, #ffffffed, #12213a calc(var(--water-mix) * 100%)),
+    color-mix(in srgb, #d0ccb9ed, #12213a calc(var(--water-mix) * 100%))
+  );
+}
+.portfolio-page .heritage-sidebar nav a[aria-current] {
+  background: linear-gradient(
+    135deg,
+    color-mix(in srgb, #fff, #203958 calc(var(--water-mix) * 100%)),
+    color-mix(in srgb, #d0ccb9, #203958 calc(var(--water-mix) * 100%))
+  );
+}
+.portfolio-page .sidebar-toggle {
+  background: color-mix(
+    in srgb,
+    #d0ccb9c9,
+    #182b47 calc(var(--water-mix) * 100%)
+  );
+}
+.portfolio-page .site-footer {
+  background: color-mix(
+    in srgb,
+    #a7a88a,
+    #0b142a calc(var(--water-mix) * 100%)
+  );
+}
+
+.portfolio-page
+  :is(
+    .site-header,
+    .heritage-sidebar,
+    .sidebar-toggle,
+    .monogram,
+    .button,
+    .glass-card,
+    .hero-copy,
+    .contact-layout,
+    .tags li,
+    .contact-note,
+    .research-grid article,
+    .project-facts,
+    .comparison-media,
+    .site-footer,
+    h1,
+    h2,
+    h3,
+    h4,
+    p,
+    a,
+    dt,
+    dd,
+    span
+  ) {
+  transition:
+    color 650ms ease-in-out,
+    border-color 650ms ease-in-out,
+    background-color 650ms ease-in-out,
+    box-shadow 200ms ease;
+}
+.portfolio-page :is(.button, .heritage-sidebar nav a) {
+  transition:
+    color 650ms ease-in-out,
+    border-color 650ms ease-in-out,
+    background-color 650ms ease-in-out,
+    box-shadow 200ms ease,
+    transform 200ms ease;
+}
+.portfolio-page .sidebar-toggle span {
+  transition:
+    max-width 200ms ease,
+    opacity 200ms ease,
+    color 650ms ease-in-out;
+}
+@media (prefers-reduced-motion: reduce) {
+  .portfolio-page {
+    transition: none;
   }
 }

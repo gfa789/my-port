@@ -1,6 +1,5 @@
 import { Routes, Route, useLocation } from "react-router-dom";
 import { useEffect, useRef, useState } from "react";
-import { flushSync } from "react-dom";
 import Sidebar from "./components/Sidebar/Sidebar";
 import Navbar from "./components/Navbar/Navbar";
 import Header from "./components/Header";
@@ -15,7 +14,6 @@ import NotFound from "./components/NotFound";
 export default function AppContent() {
   const [waterTheme, setWaterTheme] = useState(false);
   const palette = useRef(false);
-  const paletteTransition = useRef(null);
   const { pathname, hash, key } = useLocation();
   useEffect(() => {
     if (hash) {
@@ -39,19 +37,7 @@ export default function AppContent() {
       );
       if (next === palette.current) return;
       palette.current = next;
-      paletteTransition.current?.skipTransition();
-      const reduceMotion = window.matchMedia?.(
-        "(prefers-reduced-motion: reduce)",
-      ).matches;
-      if (document.startViewTransition && !reduceMotion) {
-        // Crossfade the complete palette, including surfaces with gradient fills.
-        paletteTransition.current = document.startViewTransition(() => {
-          flushSync(() => setWaterTheme(next));
-        });
-        paletteTransition.current.ready.catch(() => {});
-      } else {
-        setWaterTheme(next);
-      }
+      setWaterTheme(next);
     };
     update();
     window.addEventListener("scroll", update, { passive: true });
