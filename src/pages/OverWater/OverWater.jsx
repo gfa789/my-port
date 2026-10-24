@@ -9,8 +9,6 @@ const paper =
   "https://drive.google.com/file/d/1n85HyTZDCYAQlW12iAW1lgoUPREGd93h/view";
 
 export function OverWaterContent({ embedded = false }) {
-  const ResearchHeading = embedded ? "h3" : "h2";
-  const DetailHeading = embedded ? "h4" : "h3";
   return (
     <section
       id="overwater"
@@ -58,55 +56,6 @@ export function OverWaterContent({ embedded = false }) {
           </div>
         </dl>
       </div>
-      <section
-        className="research-section section shell"
-        aria-labelledby="research-heading"
-      >
-        <div className="section-heading">
-          <div>
-            <p className="eyebrow">01 / The research</p>
-            <ResearchHeading id="research-heading">
-              About the project
-            </ResearchHeading>
-          </div>
-          <p>
-            Underwater scenes can lose colour and clarity. This project explores
-            a learned approach to enhancement.
-          </p>
-        </div>
-        <div className="research-grid">
-          <article>
-            <span className="research-number">01</span>
-            <DetailHeading>The approach</DetailHeading>
-            <p>
-              I created a dataset and researched deep learning approaches for
-              enhancing underwater imagery, working with generative adversarial
-              networks in PyTorch.
-            </p>
-          </article>
-          <article>
-            <span className="research-number">02</span>
-            <DetailHeading>The evaluation</DetailHeading>
-            <p>
-              The comparisons below show changes between original and enhanced
-              footage. The dissertation documents the methodology, experiments
-              and evaluation.
-            </p>
-          </article>
-          <article>
-            <span className="research-number">03</span>
-            <DetailHeading>The limitations</DetailHeading>
-            <p>
-              These examples illustrate visual changes rather than proving
-              accuracy or generalisation. Enhanced colours are model outputs,
-              not known ground-truth colours.
-            </p>
-          </article>
-        </div>
-        <a className="text-link" href="https://github.com/gfa789/finalproject">
-          Explore the research code <span aria-hidden="true">↗</span>
-        </a>
-      </section>
       <VideoComparison headingLevel={embedded ? 3 : 2} />
     </section>
   );

@@ -116,7 +116,8 @@ test("OverWater comparison responds to keyboard-compatible range values without 
     </MemoryRouter>,
   );
   const sliders = screen.getAllByRole("slider");
-  fireEvent.change(sliders[0], { target: { value: "70" } });
+  fireEvent.keyDown(sliders[0], { key: "ArrowRight", shiftKey: true });
+  fireEvent.keyDown(sliders[0], { key: "ArrowRight", shiftKey: true });
   expect(sliders[0]).toHaveAttribute(
     "aria-valuetext",
     "70% original, 30% enhanced",
@@ -125,6 +126,41 @@ test("OverWater comparison responds to keyboard-compatible range values without 
     expect(video).toHaveAttribute("preload", "none");
     expect(video).not.toHaveAttribute("autoplay");
   });
+  expect(screen.queryByText("About the project")).not.toBeInTheDocument();
+  expect(
+    screen.queryByText("Compare original and enhanced footage"),
+  ).not.toBeInTheDocument();
+});
+
+test("the integrated playback control plays and pauses both comparison layers", async () => {
+  const play = jest
+    .spyOn(HTMLMediaElement.prototype, "play")
+    .mockResolvedValue();
+  const pause = jest
+    .spyOn(HTMLMediaElement.prototype, "pause")
+    .mockImplementation(() => {});
+  try {
+    render(
+      <MemoryRouter initialEntries={["/overwater"]}>
+        <AppContent />
+      </MemoryRouter>,
+    );
+    fireEvent.click(screen.getByRole("button", { name: "Play comparison 1" }));
+    await waitFor(() =>
+      expect(
+        screen.getByRole("button", { name: "Pause comparison 1" }),
+      ).toBeInTheDocument(),
+    );
+    expect(play).toHaveBeenCalledTimes(2);
+    fireEvent.click(screen.getByRole("button", { name: "Pause comparison 1" }));
+    expect(pause).toHaveBeenCalledTimes(2);
+    expect(
+      screen.getByRole("button", { name: "Play comparison 1" }),
+    ).toBeInTheDocument();
+  } finally {
+    play.mockRestore();
+    pause.mockRestore();
+  }
 });
 test("unknown routes provide a useful recovery link", () => {
   render(

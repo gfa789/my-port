@@ -1046,7 +1046,7 @@ main[id] {
 .comparison-divider {
   position: absolute;
   top: 0;
-  bottom: 0;
+  bottom: 54px;
   border-left: 2px solid white;
   pointer-events: none;
 }
@@ -1080,22 +1080,48 @@ main[id] {
 .after-label {
   right: 12px;
 }
-.comparison-card figcaption {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-top: 10px;
-  font-size: 13px;
+.comparison-label {
+  pointer-events: none;
 }
-.comparison-card label {
-  font-size: 11px;
-  color: #e2e8f0;
-}
-.comparison-range {
-  width: 100%;
-  min-height: 44px;
-  accent-color: #d0ccb9;
+.comparison-drag-surface {
+  position: absolute;
+  inset: 0 0 54px;
   cursor: ew-resize;
+  touch-action: pan-y;
+  user-select: none;
+}
+.comparison-drag-surface:focus-visible {
+  outline: 3px solid #8dc8ff;
+  outline-offset: -4px;
+  border-radius: 0;
+}
+.comparison-player-controls {
+  position: absolute;
+  inset: auto 0 0;
+  height: 54px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 12px;
+  background: #0b142aeb;
+  backdrop-filter: blur(12px);
+  border-top: 1px solid #547fa860;
+  color: #e5edf8;
+  font-size: 12px;
+}
+.comparison-play {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  min-height: 44px;
+  padding: 0 10px;
+  border: 0;
+  border-radius: 6px;
+  background: transparent;
+  color: #e5edf8;
+}
+.comparison-play:hover {
+  background: #274667;
 }
 .comparison-card [role="alert"] {
   font-size: 12px;

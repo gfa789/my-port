@@ -1,3 +1,4 @@
+import { Play, Pause } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 function Comparison({ index }) {
   const [split, setSplit] = useState(50);
@@ -46,8 +47,40 @@ function Comparison({ index }) {
     )
       after.current.currentTime = before.current.currentTime;
   }
+  function drag(event) {
+    const bounds = event.currentTarget.getBoundingClientRect();
+    if (bounds.width)
+      setSplit(
+        Math.max(
+          0,
+          Math.min(100, ((event.clientX - bounds.left) / bounds.width) * 100),
+        ),
+      );
+  }
+  function handleKey(event) {
+    const step = event.shiftKey ? 10 : 1;
+    const changes = {
+      ArrowLeft: -step,
+      ArrowDown: -step,
+      ArrowRight: step,
+      ArrowUp: step,
+    };
+    if (event.key === "Home" || event.key === "End" || event.key in changes) {
+      event.preventDefault();
+      setSplit((value) =>
+        event.key === "Home"
+          ? 0
+          : event.key === "End"
+            ? 100
+            : Math.max(0, Math.min(100, value + changes[event.key])),
+      );
+    }
+  }
   return (
-    <figure className="comparison-card">
+    <figure
+      className="comparison-card"
+      aria-label={`Underwater comparison ${index + 1}`}
+    >
       <div className="comparison-media">
         <video
           ref={after}
@@ -92,32 +125,51 @@ function Comparison({ index }) {
         />
         <span className="comparison-label before-label">Original</span>
         <span className="comparison-label after-label">Enhanced</span>
+        <div
+          className="comparison-drag-surface"
+          role="slider"
+          tabIndex={0}
+          aria-label={`Image split, example ${index + 1}`}
+          aria-valuemin={0}
+          aria-valuemax={100}
+          aria-valuenow={Math.round(split)}
+          aria-valuetext={`${Math.round(split)}% original, ${100 - Math.round(split)}% enhanced`}
+          onKeyDown={handleKey}
+          onPointerDown={(event) => {
+            if (event.button !== 0) return;
+            event.preventDefault();
+            event.currentTarget.focus({ preventScroll: true });
+            event.currentTarget.setPointerCapture(event.pointerId);
+            drag(event);
+          }}
+          onPointerMove={(event) => {
+            if (event.currentTarget.hasPointerCapture(event.pointerId))
+              drag(event);
+          }}
+          onPointerUp={(event) => {
+            if (event.currentTarget.hasPointerCapture(event.pointerId)) {
+              drag(event);
+              event.currentTarget.releasePointerCapture(event.pointerId);
+            }
+          }}
+        />
+        <div className="comparison-player-controls">
+          <span>Example {String(index + 1).padStart(2, "0")}</span>
+          <button
+            className="comparison-play"
+            type="button"
+            onClick={toggle}
+            aria-label={`${playing ? "Pause" : "Play"} comparison ${index + 1}`}
+          >
+            {playing ? (
+              <Pause size={17} aria-hidden="true" />
+            ) : (
+              <Play size={17} aria-hidden="true" />
+            )}
+            {playing ? "Pause" : "Play"}
+          </button>
+        </div>
       </div>
-      <figcaption>
-        <span>Example {String(index + 1).padStart(2, "0")}</span>
-        <button
-          className="text-link"
-          type="button"
-          onClick={toggle}
-          aria-label={`${playing ? "Pause" : "Play"} comparison ${index + 1}`}
-        >
-          {playing ? "Pause footage" : "Play footage"}{" "}
-          <span aria-hidden="true">{playing ? "Ⅱ" : "▷"}</span>
-        </button>
-      </figcaption>
-      <label htmlFor={`compare-${index}`}>
-        Compare original and enhanced footage
-      </label>
-      <input
-        id={`compare-${index}`}
-        className="comparison-range"
-        type="range"
-        min="0"
-        max="100"
-        value={split}
-        onChange={(event) => setSplit(Number(event.target.value))}
-        aria-valuetext={`${split}% original, ${100 - split}% enhanced`}
-      />
       {error && <p role="alert">{error}</p>}
     </figure>
   );
@@ -126,15 +178,18 @@ export default function VideoComparison({ headingLevel = 2 }) {
   const Heading = `h${headingLevel}`;
   return (
     <section
+      id="examples-title"
       className="comparison-section section shell"
-      aria-labelledby="examples-title"
+      aria-labelledby="examples-heading"
     >
       <div className="section-heading">
         <div>
-          <p className="eyebrow">02 / In practice</p>
-          <Heading id="examples-title">See the difference.</Heading>
+          <p className="eyebrow">In practice</p>
+          <Heading id="examples-heading">See the difference.</Heading>
         </div>
-        <p>Move the slider to compare. Play the footage when you’re ready.</p>
+        <p>
+          Drag the divider to compare. Play or pause directly in each video.
+        </p>
       </div>
       <div className="comparison-grid">
         <Comparison index={0} />
