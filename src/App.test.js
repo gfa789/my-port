@@ -43,6 +43,26 @@ test("the original journey layout retains private contact details and one main h
     ).queryByRole("link", { name: "OverWater" }),
   ).not.toBeInTheDocument();
 });
+test("the entire page palette switches at OverWater and restores on scrolling back", () => {
+  const { container } = render(
+    <MemoryRouter>
+      <AppContent />
+    </MemoryRouter>,
+  );
+  const page = container.querySelector(".portfolio-page");
+  const section = container.querySelector("#overwater");
+  let top = 900;
+  section.getBoundingClientRect = () => ({ top });
+  fireEvent.scroll(window);
+  expect(page).not.toHaveClass("water-theme");
+  top = 100;
+  fireEvent.scroll(window);
+  expect(page).toHaveClass("water-theme");
+  top = 900;
+  fireEvent.scroll(window);
+  expect(page).not.toHaveClass("water-theme");
+});
+
 test("the carousel retains every slide and waits for the incoming image before switching", async () => {
   const { container } = render(
     <MemoryRouter>

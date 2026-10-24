@@ -208,8 +208,8 @@ const ModelDiagram = ({ headingLevel = 1 }) => {
                   x2="100%"
                   y2="100%"
                 >
-                  <stop offset="0%" stopColor="#ffffff" />
-                  <stop offset="100%" stopColor="#d0ccb9" />
+                  <stop offset="0%" stopColor="#294b71" />
+                  <stop offset="100%" stopColor="#142b48" />
                 </linearGradient>
 
                 <filter
@@ -398,7 +398,7 @@ const ModelDiagram = ({ headingLevel = 1 }) => {
                   y="-70"
                   rx="18"
                   fill="none"
-                  stroke="#a7a88a"
+                  stroke="#79a8d1"
                   strokeWidth="2"
                 />
 
@@ -417,7 +417,7 @@ const ModelDiagram = ({ headingLevel = 1 }) => {
                   y="0"
                   textAnchor="middle"
                   dominantBaseline="middle"
-                  fill="#474241"
+                  fill="#e5edf8"
                   fontFamily="DM Serif Text"
                   fontSize="30"
                   fontWeight="bold"

@@ -219,8 +219,8 @@ main[id] {
   color: #474241;
 }
 .button-primary {
-  background: #a7a88a;
-  color: #35332f;
+  background: #f5f3ec;
+  color: #474241;
 }
 .button-water {
   background: linear-gradient(135deg, #182047, #02030b);
@@ -1498,40 +1498,19 @@ main[id] {
 .water-background {
   position: absolute;
 }
+/* OverWater switches the entire palette at the section boundary. */
 .overwater-embedded {
-  --water-transition-height: 260px;
   background: transparent;
+  color: inherit;
   min-height: 0;
-  padding-top: 260px;
-  scroll-margin-top: 0;
+  padding-top: 64px;
+  scroll-margin-top: 130px;
 }
 .overwater-embedded .water-background {
-  /* Travel through green and teal rather than mixing complementary colours into grey. */
-  background:
-    linear-gradient(
-        to bottom,
-        transparent 0%,
-        #45644a 26%,
-        #1a5b55 48%,
-        #123f59 68%,
-        #0d183b 100%
-      )
-      top / 100% var(--water-transition-height) no-repeat,
-    linear-gradient(100deg, #d0ccb9 0%, #aaa89a 31%, #77716c 65%, #474241 100%)
-      top / 100% var(--water-transition-height) no-repeat,
-    #0d183b;
-  animation: none;
+  display: none;
 }
 .overwater-embedded .water-title {
   margin-top: 0;
-}
-.overwater-embedded .water-background::after {
-  content: "";
-  position: absolute;
-  inset: var(--water-transition-height) 0 0;
-  background: radial-gradient(ellipse at 85% 85%, #192d61, transparent 60%);
-  background-size: 140% 140%;
-  animation: water-drift 25s ease-in-out infinite alternate;
 }
 .overwater-embedded .research-grid h4 {
   font-size: 21px;
@@ -1542,66 +1521,130 @@ main[id] {
   font-size: 30px;
   font-weight: 650;
 }
-.site-header {
-  isolation: isolate;
+.portfolio-page:not(.water-theme)
+  .overwater-embedded
+  :is(
+    .water-summary,
+    .research-grid p,
+    .project-facts dt,
+    .research-number,
+    .text-link
+  ) {
+  color: #342f30;
 }
-.site-header::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: #070c20;
-  opacity: 0;
-  transition: opacity 850ms ease;
-  z-index: -1;
+.portfolio-page:not(.water-theme)
+  .overwater-embedded
+  :is(.research-grid article, .project-facts) {
+  border-color: #47424160;
 }
-.heritage-sidebar {
-  isolation: isolate;
-  transition: color 850ms ease;
+.water-theme {
+  background: #080f24;
+  color: #e5edf8;
+  --ink: #e5edf8;
+  --muted: #b4c6dd;
 }
-.heritage-sidebar::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(145deg, #19223a, #0a1022);
-  opacity: 0;
-  transition: opacity 850ms ease;
-  z-index: -1;
-}
-.water-theme .site-header::before,
-.water-theme .heritage-sidebar::before {
-  opacity: 0.98;
+.water-theme .site-header {
+  background: #0b142a;
+  border-color: #314563;
 }
 .water-theme .heritage-sidebar {
-  color: #e5e7eb;
+  background: #101c33;
+  color: #dce8f7;
+  border-color: #314563;
 }
 .water-theme .heritage-sidebar > p {
-  color: #d0ccb9;
+  color: #a8bed9;
 }
 .water-theme .heritage-sidebar nav a[aria-current] {
-  color: #474241;
+  background: #203958;
+  border-color: #547fa8;
+  color: #edf6ff;
 }
-.sidebar-toggle {
-  transition:
-    background-color 850ms ease,
-    color 850ms ease;
+.water-theme .heritage-sidebar nav a:hover {
+  background: #213653;
 }
 .water-theme .sidebar-toggle {
-  background: #1c2749e8;
-  color: #fff;
-  border-color: #ffffff50;
+  background: #182b47;
+  color: #e5edf8;
+  border-color: #547fa8;
 }
-.water-theme > .site-footer {
-  background: #0a1022;
-  color: #e5e7eb;
-  border-color: #ffffff30;
+.water-theme .monogram {
+  background: #182b47;
+  border-color: #6b8db5;
+  color: #e5edf8;
+  box-shadow: 0 2px 8px #0004;
 }
-.standalone-water .water-background {
-  inset: 0;
+.water-theme :is(.button, .button-soft, .button-primary, .button-water) {
+  background: #1b3352;
+  color: #e5edf8;
+  border-color: #547fa8;
+}
+.water-theme .button:hover {
+  background: #274667;
+}
+.water-theme :is(.glass-card, .hero-copy, .contact-layout) {
+  background: #12213a;
+  border-color: #3b5374;
+  color: #e5edf8;
+}
+.water-theme
+  :is(
+    .hero-role,
+    .hero-description,
+    .hero-detail,
+    .timeline-card h3,
+    .timeline-role,
+    .timeline-date,
+    .timeline-description,
+    .project-card > p,
+    .project-top > span:last-child,
+    .contact-note > span
+  ) {
+  color: #c1d3e9;
+}
+.water-theme :is(.text-link, .project-links a, .contact-layout .text-link) {
+  color: #b9dcff;
+}
+.water-theme .tags li {
+  background: #1b3352;
+  border-color: #547fa8;
+  color: #dce8f7;
+}
+.water-theme .contact-note {
+  border-color: #3b5374;
+}
+.water-theme .section-intro {
+  background: #182b47;
+}
+.water-theme .journey-cue {
+  background: #182b47;
+  color: #dce8f7;
+  border-color: #547fa8;
+}
+.water-theme .research-number {
+  color: #a8c9ed;
+}
+.water-theme .research-grid article {
+  background: #12213a;
+  border-color: #3b5374;
+}
+.water-theme .comparison-media {
+  border-color: #547fa8;
+}
+.water-theme input[type="range"] {
+  accent-color: #8dc8ff;
+}
+.water-theme .site-footer {
+  background: #0b142a;
+  color: #c1d3e9;
+  border-color: #314563;
+}
+.water-theme :focus-visible {
+  outline-color: #8dc8ff;
 }
 @media (max-width: 680px) {
   .overwater-embedded {
-    --water-transition-height: 180px;
-    padding-top: 180px;
+    padding-top: 45px;
   }
   .overwater-embedded .section-heading h3 {
     font-size: 27px;

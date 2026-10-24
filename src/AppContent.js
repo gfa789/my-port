@@ -31,7 +31,9 @@ export default function AppContent() {
           .bottom ?? 100;
       setWaterTheme(
         Boolean(
-          section && section.getBoundingClientRect().top < headerBottom + 80,
+          section &&
+            section.getBoundingClientRect().top <=
+              Math.max(headerBottom + 24, window.innerHeight * 0.4),
         ),
       );
     };

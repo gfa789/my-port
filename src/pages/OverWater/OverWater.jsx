@@ -113,7 +113,7 @@ export function OverWaterContent({ embedded = false }) {
 }
 export default function OverWater() {
   return (
-    <div className="overwater-page standalone-water">
+    <div className="overwater-page standalone-water water-theme">
       <Navbar />
       <Sidebar />
       <main id="main-content" tabIndex={-1}>
