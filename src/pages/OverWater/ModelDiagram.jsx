@@ -193,9 +193,9 @@ const ModelDiagram = ({ headingLevel = 1 }) => {
         <p className="water-tagline">Painting a clearer picture</p>
 
         <div className="w-full max-w-4xl mx-auto relative">
-          <div className="aspect-[1.4/1] w-full relative">
+          <div className="model-diagram-stage">
             <svg
-              viewBox="-250 -150 500 300"
+              viewBox="-250 -150 500 360"
               className="w-full h-full"
               preserveAspectRatio="xMidYMid meet"
             >
