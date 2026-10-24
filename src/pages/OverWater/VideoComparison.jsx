@@ -52,7 +52,7 @@ function Comparison({ index }) {
         <video
           ref={after}
           preload="none"
-          poster={`/overwater/${index * 2 + 1}.png`}
+          poster={`/overwater/${index * 2 + 1}.webp`}
           loop
           muted
           playsInline
@@ -69,7 +69,7 @@ function Comparison({ index }) {
         <video
           ref={before}
           preload="none"
-          poster={`/overwater/${index * 2}.png`}
+          poster={`/overwater/${index * 2}.webp`}
           loop
           muted
           playsInline

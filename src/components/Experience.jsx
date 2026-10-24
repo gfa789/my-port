@@ -72,6 +72,16 @@ export default function Experience() {
               Performance (2021–2023). I attended St Mary’s Catholic School
               (2014–2021), studying Physics, Maths and Further Maths at A level.
             </p>
+            <p>
+              Coaching meant taking responsibility for groups of 15–20 children
+              aged 5–12 at summer camps across Newcastle. At school I achieved
+              A*A*A* in Physics, Maths and Further Maths, AA in EPQ and Thinking
+              Skills, and 12 GCSEs: four 9s, seven 8s and one 7.
+            </p>
+            <p>
+              At Bristol I graduated with 67% and participated in the
+              engineering football team alongside my studies.
+            </p>
           </details>
         </div>
       </div>

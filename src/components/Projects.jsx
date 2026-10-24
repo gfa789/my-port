@@ -68,7 +68,7 @@ export default function Projects() {
           <div className="image-pair">
             <figure>
               <img
-                src="/overwater/0.png"
+                src="/overwater/0.webp"
                 alt="Original underwater scene with a green colour cast"
                 width="512"
                 height="512"
@@ -78,7 +78,7 @@ export default function Projects() {
             </figure>
             <figure>
               <img
-                src="/overwater/1.png"
+                src="/overwater/1.webp"
                 alt="Corresponding scene enhanced by the OverWater model"
                 width="512"
                 height="512"
@@ -119,25 +119,51 @@ export default function Projects() {
       <div className="project-grid">
         {projects.map((project, index) => (
           <article className="project-card" key={project.title}>
-            <div
-              className={`project-illustration illustration-${index}`}
-              aria-hidden="true"
-            >
-              {index === 0 ? (
-                <>
-                  <span className="target-ring" />
-                  <span className="target-label">Locate. Detect. Analyse.</span>
-                </>
-              ) : (
-                <>
+            {index === 0 ? (
+              <figure className="project-photo">
+                <img
+                  src="/projects/dartboard.webp"
+                  alt="Sample input scene containing a dartboard"
+                  width="960"
+                  height="640"
+                  loading="lazy"
+                  decoding="async"
+                />
+                <figcaption>Sample input / Dartboard detection</figcaption>
+              </figure>
+            ) : (
+              <div
+                className="project-illustration illustration-weather"
+                aria-label="Forecasting workflow: observations, model, forecast"
+              >
+                <span className="workflow-label">
+                  From observations to forecasts
+                </span>
+                <div className="weather-lines" aria-hidden="true">
+                  <svg viewBox="0 0 500 130" fill="none">
+                    <path
+                      d="M0 96 Q35 100 65 70 T130 80 T195 35 T260 65 T325 38 T390 25 T455 40 T520 15"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                    />
+                    <path
+                      d="M0 115 Q35 118 65 95 T130 105 T195 65 T260 85 T325 68 T390 55 T455 65 T520 45"
+                      stroke="currentColor"
+                      strokeWidth="1"
+                      strokeDasharray="5 6"
+                    />
+                  </svg>
+                </div>
+                <div className="workflow-steps">
                   <span>Observations</span>
-                  <span>↓</span>
+                  <span aria-hidden="true">→</span>
                   <span>Model</span>
-                  <span>↓</span>
+                  <span aria-hidden="true">→</span>
                   <span>Forecast</span>
-                </>
-              )}
-            </div>
+                </div>
+                <span className="workflow-note">Illustrated workflow</span>
+              </div>
+            )}
             <div className="project-card-copy">
               <p className="eyebrow">
                 {project.date} /{" "}
@@ -164,6 +190,17 @@ export default function Projects() {
         <div className="archive-grid">
           {archive.map((project) => (
             <article key={project.title}>
+              {project.title === "Stereo vision" && (
+                <img
+                  className="archive-preview"
+                  src="/projects/stereo.webp"
+                  alt="Epipolar lines over a stereo vision scene from the coursework"
+                  width="640"
+                  height="480"
+                  loading="lazy"
+                  decoding="async"
+                />
+              )}
               <h3>{project.title}</h3>
               <p>{project.description}</p>
               {project.href && (

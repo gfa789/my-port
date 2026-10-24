@@ -27,10 +27,12 @@ export default function Header() {
       </div>
       <figure className="hero-portrait">
         <img
-          src="/photos/head.jpg"
+          src="/photos/portrait-960.webp"
+          srcSet="/photos/portrait-640.webp 640w, /photos/portrait-960.webp 960w"
+          sizes="(max-width: 760px) calc(100vw - 48px), 360px"
           alt="George Atkinson at his University of Bristol graduation"
-          width="640"
-          height="760"
+          width="960"
+          height="720"
           fetchpriority="high"
         />
         <figcaption>
