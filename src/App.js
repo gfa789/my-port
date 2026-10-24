@@ -1,10 +1,13 @@
 import "./App.css";
 import { BrowserRouter } from "react-router-dom";
+import { MotionConfig } from "framer-motion";
 import AppContent from "./AppContent";
 export default function App() {
   return (
     <BrowserRouter>
-      <AppContent />
+      <MotionConfig reducedMotion="user">
+        <AppContent />
+      </MotionConfig>
     </BrowserRouter>
   );
 }

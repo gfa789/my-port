@@ -5,7 +5,7 @@ beforeEach(() => {
   window.scrollTo = jest.fn();
   Element.prototype.scrollIntoView = jest.fn();
 });
-test("selected work precedes experience and private email is not published", () => {
+test("the original journey layout retains private contact details and one main heading", () => {
   const { container } = render(
     <MemoryRouter>
       <AppContent />
@@ -14,9 +14,28 @@ test("selected work precedes experience and private email is not published", () 
   const sections = [...container.querySelectorAll("main > section")].map(
     (section) => section.id,
   );
-  expect(sections).toEqual(["home", "projects", "experience", "contact"]);
+  expect(sections).toEqual(["home", "experience", "projects", "contact"]);
   expect(container.textContent).not.toMatch(/georgeatki1@gmail/);
   expect(screen.getAllByRole("heading", { level: 1 })).toHaveLength(1);
+});
+test("the restored photo carousel has labelled controls and a pause option", () => {
+  render(
+    <MemoryRouter>
+      <AppContent />
+    </MemoryRouter>,
+  );
+  expect(
+    screen.getByRole("region", { name: "Personal photos" }),
+  ).toBeInTheDocument();
+  fireEvent.click(screen.getByRole("button", { name: "Next photo" }));
+  expect(screen.getByRole("button", { name: "Show photo 2" })).toHaveAttribute(
+    "aria-pressed",
+    "true",
+  );
+  fireEvent.click(screen.getByRole("button", { name: "Pause slideshow" }));
+  expect(
+    screen.getByRole("button", { name: "Play slideshow" }),
+  ).toHaveAttribute("aria-pressed", "true");
 });
 test("menu exposes state, closes on Escape and restores focus", () => {
   render(

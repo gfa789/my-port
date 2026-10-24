@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import Sidebar from "../../components/Sidebar/Sidebar";
 import ModelDiagram from "./ModelDiagram";
 import Navbar from "../../components/Navbar/Navbar";
 import Footer from "../../components/Footer";
@@ -9,7 +10,9 @@ const paper =
 export default function OverWater() {
   return (
     <div className="overwater-page">
+      <div className="water-background" aria-hidden="true" />
       <Navbar />
+      <Sidebar />
       <main id="main-content" tabIndex={-1}>
         <section
           className="overwater-hero shell"
@@ -18,35 +21,19 @@ export default function OverWater() {
           <Link className="back-link" to="/">
             ← Back to portfolio
           </Link>
-          <div className="overwater-intro">
-            <div>
-              <p className="eyebrow">
-                Research project / University of Bristol / 2024
-              </p>
-              <h1 id="overwater-title">
-                Over<em>Water.</em>
-              </h1>
-              <p className="overwater-tagline">
-                A clearer picture of what lies beneath.
-              </p>
-            </div>
-            <div className="overwater-summary">
-              <p>
-                Exploring underwater image enhancement with generative
-                adversarial networks. My dissertation in computer science, built
-                with PyTorch.
-              </p>
-              <div className="hero-actions">
-                <a className="button button-primary" href="#examples-title">
-                  Explore the results <span aria-hidden="true">↓</span>
-                </a>
-                <a className="text-link" href={paper}>
-                  Read dissertation <span aria-hidden="true">↗</span>
-                </a>
-              </div>
-            </div>
-          </div>
           <ModelDiagram />
+          <p className="water-summary">
+            My computer science dissertation exploring underwater image
+            enhancement with generative adversarial networks in PyTorch.
+          </p>
+          <div className="water-actions">
+            <a className="button button-soft shine" href="#examples-title">
+              See the examples ↓
+            </a>
+            <a className="button button-soft shine" href={paper}>
+              Read the dissertation ↗
+            </a>
+          </div>
           <dl className="project-facts">
             <div>
               <dt>My role</dt>
@@ -73,11 +60,7 @@ export default function OverWater() {
           <div className="section-heading">
             <div>
               <p className="eyebrow">01 / The research</p>
-              <h2 id="research-heading">
-                Making sense of
-                <br />
-                <em>murky waters.</em>
-              </h2>
+              <h2 id="research-heading">About the project</h2>
             </div>
             <p>
               Underwater scenes can lose colour and clarity. This project

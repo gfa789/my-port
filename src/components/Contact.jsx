@@ -62,12 +62,8 @@ export default function Contact() {
     >
       <div className="shell contact-layout">
         <div>
-          <p className="eyebrow">03 / Get in touch</p>
-          <h2 id="contact-title">
-            Good things start
-            <br />
-            with a conversation<span>.</span>
-          </h2>
+          <p className="eyebrow">Get in touch</p>
+          <h2 id="contact-title">Contact Me</h2>
           <p>
             Have a project in mind, a question about my work, or just want to
             say hello?
@@ -150,7 +146,7 @@ export default function Contact() {
         ) : (
           <div className="contact-note">
             <span aria-hidden="true">↗</span>
-            <h3>Let’s connect.</h3>
+            <h3>Let’s connect</h3>
             <p>
               LinkedIn is the best place to reach me. You can also explore more
               of my code on GitHub.

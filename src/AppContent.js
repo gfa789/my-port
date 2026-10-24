@@ -1,5 +1,6 @@
 import { Routes, Route, useLocation } from "react-router-dom";
 import { useEffect } from "react";
+import Sidebar from "./components/Sidebar/Sidebar";
 import Navbar from "./components/Navbar/Navbar";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
@@ -11,7 +12,7 @@ import PageMetadata from "./components/PageMetadata";
 import NotFound from "./components/NotFound";
 
 export default function AppContent() {
-  const { pathname, hash } = useLocation();
+  const { pathname, hash, key } = useLocation();
   useEffect(() => {
     if (hash) {
       const element = document.getElementById(hash.slice(1));
@@ -19,7 +20,7 @@ export default function AppContent() {
     } else {
       window.scrollTo(0, 0);
     }
-  }, [pathname, hash]);
+  }, [pathname, hash, key]);
   return (
     <>
       <PageMetadata />
@@ -33,10 +34,11 @@ export default function AppContent() {
           element={
             <div className="portfolio-page">
               <Navbar />
+              <Sidebar />
               <main id="main-content" tabIndex={-1}>
                 <Header />
-                <Projects />
                 <Experience />
+                <Projects />
                 <Contact />
               </main>
               <Footer />

@@ -1,150 +1,189 @@
-import React, { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { ArrowUp, Home, FolderGit, Mail, ChevronLeft, ChevronRight, Rewind} from 'lucide-react';
-
-const sectionData = [
-  { id: 'home', title: 'Home', description: 'Welcome to our site', icon: Home },
-  { id: 'timeline', title: 'Timeline', description: 'Check out my history', icon: Rewind },
-  { id: 'projects', title: 'Projects', description: 'Check out my projects', icon: FolderGit },
-  { id: 'contact', title: 'Contact', description: 'Get in touch with us', icon: Mail },
+import { useEffect, useRef, useState } from "react";
+import { Link, useLocation } from "react-router-dom";
+import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
+import {
+  Home,
+  History,
+  FolderGit,
+  Mail,
+  ChevronRight,
+  ChevronLeft,
+  Waves,
+  ArrowUp,
+} from "lucide-react";
+const items = [
+  { id: "home", label: "Home", icon: Home },
+  { id: "experience", label: "Timeline", icon: History },
+  { id: "projects", label: "Projects", icon: FolderGit },
+  { id: "contact", label: "Contact", icon: Mail },
 ];
-
-const Sidebar = ({ onToggle }) => {
-  const [activeSection, setActiveSection] = useState('home');
-  const [, setHoveredSection] = useState(null);
-  const [isOpen, setIsOpen] = useState(true);
-  const [isMobile, setIsMobile] = useState(false);
-
+export default function Sidebar() {
+  const [open, setOpen] = useState(false),
+    [wide, setWide] = useState(false),
+    [active, setActive] = useState("home");
+  const toggle = useRef(null),
+    panel = useRef(null);
+  const { pathname, hash } = useLocation();
+  const previousLocation = useRef(pathname + hash);
+  const reduce = useReducedMotion();
   useEffect(() => {
-    const handleScroll = () => {
-      const scrollPosition = window.scrollY;
-      
-      // Check if we're at the very top of the page
-      if (scrollPosition === 0) {
-        setActiveSection('home');
-        return;
+    const query = window.matchMedia?.("(min-width: 1400px)");
+    if (!query) return;
+    const update = () => {
+      setWide(query.matches);
+      setOpen(query.matches);
+    };
+    update();
+    query.addEventListener("change", update);
+    return () => query.removeEventListener("change", update);
+  }, []);
+  useEffect(() => {
+    if (previousLocation.current !== pathname + hash && !wide) setOpen(false);
+    previousLocation.current = pathname + hash;
+  }, [pathname, hash, wide]);
+  useEffect(() => {
+    const check = () => {
+      if (pathname !== "/") return;
+      let current = "home";
+      for (const item of items) {
+        const element = document.getElementById(item.id);
+        if (
+          element &&
+          element.getBoundingClientRect().top < window.innerHeight * 0.4
+        )
+          current = item.id;
       }
-
-      for (let i = sectionData.length - 1; i >= 0; i--) {
-        const section = document.getElementById(sectionData[i].id);
-        if (section && section.offsetTop <= scrollPosition + window.innerHeight / 3) {
-          setActiveSection(sectionData[i].id);
-          break;
+      setActive(current);
+    };
+    window.addEventListener("scroll", check, { passive: true });
+    check();
+    return () => window.removeEventListener("scroll", check);
+  }, [pathname]);
+  useEffect(() => {
+    if (!open) return;
+    if (!wide) panel.current?.querySelector("a")?.focus();
+    const key = (event) => {
+      if (event.key === "Escape") {
+        setOpen(false);
+        toggle.current?.focus();
+      }
+      if (event.key === "Tab" && !wide) {
+        const controls = [...panel.current.querySelectorAll("a,button")];
+        const first = controls[0],
+          last = controls[controls.length - 1];
+        if (event.shiftKey && document.activeElement === first) {
+          event.preventDefault();
+          last.focus();
+        } else if (!event.shiftKey && document.activeElement === last) {
+          event.preventDefault();
+          first.focus();
         }
       }
     };
-
-    const handleResize = () => {
-      const mobile = window.innerWidth < 1400;
-      setIsMobile(mobile);
-      if (mobile) {
-        setIsOpen(false);
-      } else {
-        setIsOpen(true);
-      }
-    };
-
-    window.addEventListener('scroll', handleScroll);
-    window.addEventListener('resize', handleResize);
-    handleResize(); // Initial check
-    handleScroll();
-
-    return () => {
-      window.removeEventListener('scroll', handleScroll);
-      window.removeEventListener('resize', handleResize);
-    };
-  }, []);
-
-  const handleClick = (id) => {
-    const element = document.getElementById(id);
-    if (element) {
-      if (id === 'home') {
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-      } else {
-        element.scrollIntoView({ behavior: 'smooth' });
-      }
-    }
-    // Close sidebar only on mobile after selection
-    if (isMobile) {
-      setIsOpen(false);
-      onToggle(false);
-    }
-  };
-
-  const toggleSidebar = (open) => {
-    setIsOpen(open);
-    onToggle(open);
-  };
-
-  const scrollToTop = () => {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-    setActiveSection('home');
-  };
-
+    document.addEventListener("keydown", key);
+    return () => document.removeEventListener("keydown", key);
+  }, [open, wide]);
   return (
     <>
+      <button
+        ref={toggle}
+        className={`sidebar-toggle ${open ? "drawer-open" : ""}`}
+        type="button"
+        aria-label={open ? "Close navigation menu" : "Open navigation menu"}
+        aria-expanded={open}
+        aria-controls="section-navigation"
+        onClick={() => setOpen(!open)}
+      >
+        {open ? <ChevronLeft size={20} /> : <ChevronRight size={20} />}
+        <span>Menu</span>
+      </button>
       <AnimatePresence>
-        {isOpen && (
-          <motion.nav
-            initial={isMobile ? { x: -192 } : false}
-            animate={isMobile ? { x: 0 } : false}
-            exit={isMobile ? { x: -192 } : false}
-            transition={{ duration: 0.3 }}
-            className="fixed left-0 top-0 h-full w-screen sm:w-48 bg-sagegreen bg-opacity-70 backdrop-blur-md p-4 shadow-lg overflow-y-auto z-40"
-          >
-            <button 
-              onClick={scrollToTop}
-              className="absolute top-4 left-4 text-puce hover:text-white transition-colors"
-            >
-              <ArrowUp size={24} />
-            </button>
-            <ul className='relative top-48'>
-              {sectionData.map((section) => (
-                <li key={section.id} className="mb-4">
-                  <motion.button 
-                    onClick={() => handleClick(section.id)}
-                    className="block relative w-full text-left"
-                    onMouseEnter={() => setHoveredSection(section.id)}
-                    onMouseLeave={() => setHoveredSection(null)}
-                  >
-                    <motion.div
-                      className={`p-2 rounded-md transition-colors flex items-center ${
-                        activeSection === section.id 
-                          ? 'font-bold text-puce bg-gradient-to-br from-white to-sagegreen ring-puce ring-1'
-                          : 'hover:ring-1 ring-puce'
-                      }`}
-                      whileHover={{ scale: 1.05 }}
-                      whileTap={{ scale: 0.95 }}
-                      transition={{ type: 'spring', stiffness: 300, damping: 15 }}
-                    >
-                      <section.icon className="mr-2" size={18} />
-                      {section.title}
-                    </motion.div>
-                  </motion.button>
-                </li>
-              ))}
-            </ul>
-            {isMobile && (
-              <button 
-                onClick={() => toggleSidebar(false)}
-                className="absolute bottom-1/2 right-4 text-puce hover:text-white transition-colors"
-              >
-                <ChevronLeft size={24} />
-              </button>
+        {open && (
+          <>
+            {!wide && (
+              <motion.button
+                type="button"
+                className="sidebar-scrim"
+                aria-label="Close navigation backdrop"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                onClick={() => {
+                  setOpen(false);
+                  toggle.current?.focus();
+                }}
+              />
             )}
-          </motion.nav>
+            <motion.aside
+              ref={panel}
+              id="section-navigation"
+              className="heritage-sidebar"
+              role={wide ? "complementary" : "dialog"}
+              aria-modal={wide ? undefined : true}
+              aria-label="Explore my portfolio"
+              initial={{ x: reduce ? 0 : -240, opacity: 0 }}
+              animate={{ x: 0, opacity: 1 }}
+              exit={{ x: reduce ? 0 : -240, opacity: 0 }}
+              transition={{ type: "spring", stiffness: 250, damping: 28 }}
+            >
+              <Link
+                className="sidebar-top"
+                to="/#home"
+                aria-label="Back to top"
+              >
+                <ArrowUp size={20} />
+              </Link>
+              <p>Take a look around</p>
+              <nav aria-label="Section navigation">
+                <ul>
+                  {items.map((item) => (
+                    <li key={item.id}>
+                      <Link
+                        to={`/#${item.id}`}
+                        aria-current={
+                          pathname === "/" && active === item.id
+                            ? "location"
+                            : undefined
+                        }
+                        onClick={() => {
+                          if (!wide) setOpen(false);
+                        }}
+                      >
+                        <item.icon size={19} aria-hidden="true" />
+                        <span>{item.label}</span>
+                      </Link>
+                    </li>
+                  ))}
+                  <li>
+                    <Link
+                      to="/overwater"
+                      aria-current={
+                        pathname.startsWith("/overwater") ? "page" : undefined
+                      }
+                    >
+                      <Waves size={19} aria-hidden="true" />
+                      OverWater
+                    </Link>
+                  </li>
+                </ul>
+              </nav>
+              <a className="sidebar-social" href="https://github.com/gfa789">
+                GitHub ↗
+              </a>
+              <button
+                className="sidebar-close"
+                type="button"
+                onClick={() => {
+                  setOpen(false);
+                  toggle.current?.focus();
+                }}
+              >
+                Close menu <ChevronLeft size={17} />
+              </button>
+            </motion.aside>
+          </>
         )}
       </AnimatePresence>
-      {!isOpen && isMobile && (
-        <button
-          onClick={() => toggleSidebar(true)}
-          className="fixed z-30 left-4 top-46 bg-sagegreen bg-opacity-70 backdrop-blur-md p-2 rounded-full shadow-lg text-puce hover:text-white transition-colors"
-        >
-          <ChevronRight size={24} />
-        </button>
-      )}
     </>
   );
-};
-
-export default Sidebar;
+}

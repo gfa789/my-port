@@ -4,7 +4,7 @@ export default function Footer() {
     <footer className="site-footer">
       <div className="shell footer-inner">
         <Logo />
-        <p>Thoughtfully built. Always learning.</p>
+        <p>George Atkinson · Software Engineer</p>
         <nav aria-label="Social links">
           <a href="https://github.com/gfa789">
             GitHub <span aria-hidden="true">↗</span>
