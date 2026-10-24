@@ -614,6 +614,55 @@ main[id] {
   height: 100px;
   object-fit: contain;
 }
+.timeline-section .section-title {
+  margin-bottom: 42px;
+}
+.timeline-logos {
+  display: grid;
+  gap: 16px;
+  align-content: center;
+}
+.timeline-client {
+  display: grid;
+  gap: 7px;
+  text-align: center;
+}
+.timeline-client > span {
+  font-size: 10px;
+  color: #57545b;
+}
+.timeline-client img {
+  width: 100%;
+  height: auto;
+  max-height: 60px;
+  padding: 12px 8px;
+  border-radius: 6px;
+  background: #14213a;
+  object-fit: contain;
+}
+.water-theme .timeline-client > span {
+  color: #b4c6dd;
+}
+@media (max-width: 1050px) {
+  .timeline-logos {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+  }
+  .timeline-card .timeline-logos > img {
+    margin: 0;
+    width: min(92px, 40%);
+  }
+  .timeline-client {
+    width: min(110px, 50%);
+    flex-shrink: 1;
+  }
+  .timeline-card .timeline-client img {
+    width: 100%;
+    height: auto;
+  }
+}
 .timeline-card h3 {
   font-size: 19px;
   font-weight: 700;

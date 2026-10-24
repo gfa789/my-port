@@ -95,9 +95,10 @@ const timelineItems = [
     date: "2024-2025",
     description: "Graduate Software Developer",
     longDescription:
-      "Worked on the Rokos Capital Management project for the Reference Data team; I developed in a wide variety of areas primarily utilising .NET/C#, Python, React.js, and MS SQL Server. Additionally, deployed full stack AI applications used company-wide.",
+      "Worked on the Rokos Capital Management account in reference data technology, developing with .NET/C#, Python, React and MS SQL Server. Additionally, deployed full-stack AI applications used company-wide.",
     isActive: true,
     image: "/photos/neptune2.png",
+    clientImage: "/photos/rokos-capital-management.svg",
     icon: (
       <svg
         className="fill-current"
@@ -117,12 +118,14 @@ const timelineItems = [
     date: "2025-Present",
     description: "Software Developer",
     longDescription:
-      "Full-stack development in reference data technology, predominantly using .NET, Python, React and SQL. I am involved in independent end-to-end delivery, design decisions and system architecture.",
+      "Working on the Rokos Capital Management account in reference data technology, developing across the full stack with .NET, Python, React and SQL. I am involved in independent end-to-end delivery, design decisions and system architecture.",
     isActive: false,
     image: "/photos/neptune2.png",
+    clientImage: "/photos/rokos-capital-management.svg",
     icon: "...",
   },
 ];
+const newestFirst = [...timelineItems].reverse();
 
 export default function Experience() {
   const ref = useRef(null);
@@ -140,7 +143,7 @@ export default function Experience() {
               0,
               Math.min(
                 100,
-                ((innerHeight * 0.6 - bounds.top) / bounds.height) * 100,
+                ((window.innerHeight * 0.6 - bounds.top) / bounds.height) * 100,
               ),
             ),
           );
@@ -162,35 +165,46 @@ export default function Experience() {
       aria-labelledby="experience-title"
     >
       <h2 id="experience-title" className="section-title">
-        My Journey
+        Experience &amp; Education
       </h2>
-      <p className="section-intro">
-        The people, places and projects that brought me here.
-      </p>
       <div ref={ref} className="journey-timeline">
         <div className="timeline-track" aria-hidden="true">
           <div style={{ height: `${progress}%` }} />
         </div>
-        {timelineItems.map((item, index) => (
+        {newestFirst.map((item, index) => (
           <Reveal
             key={item.title + item.date}
             className={`journey-stop ${index % 2 ? "right" : "left"} ${progress > (index / timelineItems.length) * 100 ? "passed" : ""}`}
           >
             <div className="journey-marker" aria-hidden="true">
-              {index === timelineItems.length - 1 ? "…" : "✓"}
+              {item.isActive ? "✓" : "…"}
             </div>
             <motion.article
               className="timeline-card glass-card"
               whileHover={reduce ? {} : { scale: 1.035, y: -3 }}
               transition={{ type: "spring", stiffness: 280, damping: 22 }}
             >
-              <img
-                src={item.image}
-                alt={item.title}
-                width="180"
-                height="180"
-                loading="lazy"
-              />
+              <div className="timeline-logos">
+                <img
+                  src={item.image}
+                  alt={item.title}
+                  width="180"
+                  height="180"
+                  loading="lazy"
+                />
+                {item.clientImage && (
+                  <div className="timeline-client">
+                    <span>Client account</span>
+                    <img
+                      src={item.clientImage}
+                      alt="Rokos Capital Management"
+                      width="180"
+                      height="70"
+                      loading="lazy"
+                    />
+                  </div>
+                )}
+              </div>
               <div>
                 <h3>{item.title}</h3>
                 <p className="timeline-role">{item.description}</p>
