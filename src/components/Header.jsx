@@ -83,7 +83,12 @@ export function ImageCarousel() {
           setFocused(false);
       }}
     >
-      <div className="carousel-window">
+      <button
+        className="carousel-window"
+        type="button"
+        aria-label="Show next photo"
+        onClick={() => next(1)}
+      >
         {photos.map((photo, photoIndex) => (
           <img
             key={photo.src}
@@ -101,7 +106,7 @@ export function ImageCarousel() {
             draggable="false"
           />
         ))}
-      </div>
+      </button>
       <button
         className="carousel-arrow previous"
         type="button"

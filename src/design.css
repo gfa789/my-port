@@ -219,8 +219,8 @@ main[id] {
   color: #474241;
 }
 .button-primary {
-  background: linear-gradient(135deg, #f4f5fb, #d5dac9);
-  color: #35333c;
+  background: #a7a88a;
+  color: #35332f;
 }
 .button-water {
   background: linear-gradient(135deg, #182047, #02030b);
@@ -305,6 +305,11 @@ main[id] {
 }
 .carousel-window {
   position: relative;
+  display: block;
+  width: 100%;
+  padding: 0;
+  border: 0;
+  cursor: pointer;
   height: 310px;
   overflow: hidden;
   border-radius: 10px;
@@ -1494,16 +1499,39 @@ main[id] {
   position: absolute;
 }
 .overwater-embedded {
+  --water-transition-height: 260px;
   background: transparent;
   min-height: 0;
   padding-top: 260px;
   scroll-margin-top: 0;
 }
 .overwater-embedded .water-background {
-  mask-image: linear-gradient(to bottom, transparent 0px, #000 260px);
+  /* Travel through green and teal rather than mixing complementary colours into grey. */
+  background:
+    linear-gradient(
+        to bottom,
+        transparent 0%,
+        #45644a 26%,
+        #1a5b55 48%,
+        #123f59 68%,
+        #0d183b 100%
+      )
+      top / 100% var(--water-transition-height) no-repeat,
+    linear-gradient(100deg, #d0ccb9 0%, #aaa89a 31%, #77716c 65%, #474241 100%)
+      top / 100% var(--water-transition-height) no-repeat,
+    #0d183b;
+  animation: none;
 }
 .overwater-embedded .water-title {
   margin-top: 0;
+}
+.overwater-embedded .water-background::after {
+  content: "";
+  position: absolute;
+  inset: var(--water-transition-height) 0 0;
+  background: radial-gradient(ellipse at 85% 85%, #192d61, transparent 60%);
+  background-size: 140% 140%;
+  animation: water-drift 25s ease-in-out infinite alternate;
 }
 .overwater-embedded .research-grid h4 {
   font-size: 21px;
@@ -1572,10 +1600,8 @@ main[id] {
 }
 @media (max-width: 680px) {
   .overwater-embedded {
+    --water-transition-height: 180px;
     padding-top: 180px;
-  }
-  .overwater-embedded .water-background {
-    mask-image: linear-gradient(to bottom, transparent 0px, #000 180px);
   }
   .overwater-embedded .section-heading h3 {
     font-size: 27px;

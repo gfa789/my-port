@@ -1,4 +1,10 @@
-import { render, screen, fireEvent, waitFor } from "@testing-library/react";
+import {
+  render,
+  screen,
+  fireEvent,
+  waitFor,
+  within,
+} from "@testing-library/react";
 import { MemoryRouter } from "react-router-dom";
 import AppContent from "./AppContent";
 beforeEach(() => {
@@ -31,6 +37,11 @@ test("the original journey layout retains private contact details and one main h
   );
   expect(container.textContent).not.toMatch(/georgeatki1@gmail/);
   expect(screen.getAllByRole("heading", { level: 1 })).toHaveLength(1);
+  expect(
+    within(
+      screen.getByRole("navigation", { name: "Main navigation" }),
+    ).queryByRole("link", { name: "OverWater" }),
+  ).not.toBeInTheDocument();
 });
 test("the carousel retains every slide and waits for the incoming image before switching", async () => {
   const { container } = render(
@@ -41,7 +52,7 @@ test("the carousel retains every slide and waits for the incoming image before s
   expect(
     screen.getByRole("region", { name: "Personal photos" }),
   ).toBeInTheDocument();
-  fireEvent.click(screen.getByRole("button", { name: "Next photo" }));
+  fireEvent.click(screen.getByRole("button", { name: "Show next photo" }));
   expect(screen.getByRole("button", { name: "Show photo 1" })).toHaveAttribute(
     "aria-pressed",
     "true",

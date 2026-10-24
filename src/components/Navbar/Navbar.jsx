@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { Mail, Waves } from "lucide-react";
+import { Mail } from "lucide-react";
 import Logo from "../Logo";
 export default function Navbar() {
   return (
@@ -10,10 +10,6 @@ export default function Navbar() {
           <Link className="button button-soft shine" to="/#contact">
             <span>Contact me</span>
             <Mail size={16} aria-hidden="true" />
-          </Link>
-          <Link className="button button-water" to="/#overwater">
-            <span>OverWater</span>
-            <Waves size={18} aria-hidden="true" />
           </Link>
         </div>
       </nav>
