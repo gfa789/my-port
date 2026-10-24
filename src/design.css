@@ -953,7 +953,10 @@ main[id] {
   height: 100%;
   overflow: visible;
 }
-.original-water-diagram svg [role="button"]:focus {
+.original-water-diagram svg [role="button"]:focus:not(:focus-visible) {
+  outline: none;
+}
+.original-water-diagram svg [role="button"]:focus-visible {
   outline: 2px solid #d0ccb9;
   outline-offset: 8px;
 }
