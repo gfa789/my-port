@@ -166,9 +166,9 @@ const VideoComparison = () => {
 
   return (
     <div className="p-4 w-full">
-      <h1 className="justify-center text-white text-center font-serif text-3xl pb-8">
+      <h2 className="justify-center text-white text-center font-serif text-3xl pb-8">
         Some Examples
-      </h1>
+      </h2>
       <div className="flex flex-col lg:flex-row lg:flex-wrap items-center justify-center gap-8">
         {pairs.map((pair, index) => (
           <VideoComparisonItem

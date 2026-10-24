@@ -1,3 +1,5 @@
+import PageMetadata from './components/PageMetadata';
+import NotFound from './components/NotFound';
 import { Routes, Route, useLocation, useNavigate } from 'react-router-dom';
 import Navbar from './components/Navbar/Navbar';
 import Sidebar from './components/Sidebar/Sidebar';
@@ -26,6 +28,8 @@ function AppContent() {
   }, [location.state, navigate, location.pathname]);
 
   return (
+    <>
+    <PageMetadata />
     <Routes>
       <Route path="/overwater" element={<OverWater />} />
       <Route
@@ -46,7 +50,9 @@ function AppContent() {
           </div>
         }
       />
+      <Route path="*" element={<NotFound />} />
     </Routes>
+    </>
   );
 }
 
