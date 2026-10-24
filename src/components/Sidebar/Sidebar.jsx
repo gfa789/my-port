@@ -16,6 +16,7 @@ const items = [
   { id: "experience", label: "Timeline", icon: History },
   { id: "projects", label: "Projects", icon: FolderGit },
   { id: "contact", label: "Contact", icon: Mail },
+  { id: "overwater", label: "OverWater", icon: Waves },
 ];
 export default function Sidebar() {
   const [open, setOpen] = useState(false),
@@ -141,7 +142,8 @@ export default function Sidebar() {
                       <Link
                         to={`/#${item.id}`}
                         aria-current={
-                          pathname === "/" && active === item.id
+                          (pathname === "/" && active === item.id) ||
+                          (pathname === "/overwater" && item.id === "overwater")
                             ? "location"
                             : undefined
                         }
@@ -154,17 +156,6 @@ export default function Sidebar() {
                       </Link>
                     </li>
                   ))}
-                  <li>
-                    <Link
-                      to="/overwater"
-                      aria-current={
-                        pathname.startsWith("/overwater") ? "page" : undefined
-                      }
-                    >
-                      <Waves size={19} aria-hidden="true" />
-                      OverWater
-                    </Link>
-                  </li>
                 </ul>
               </nav>
               <a className="sidebar-social" href="https://github.com/gfa789">

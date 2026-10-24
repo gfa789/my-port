@@ -257,12 +257,12 @@ main[id] {
   padding-block: 64px 105px;
 }
 .hero-copy {
-  color: white;
+  color: #474241;
   padding: 28px 30px;
-  background: linear-gradient(135deg, #474241d9, #474241b8);
-  border: 1px solid #ffffff30;
-  border-radius: 14px;
-  box-shadow: 0 15px 35px #342f3015;
+  background: linear-gradient(135deg, #ffffffed, #d0ccb9ed);
+  border: 1px solid #474241a6;
+  border-radius: 10px;
+  box-shadow: 0 8px 22px #342f3026;
   animation: hero-arrive 0.7s ease both;
 }
 .hero h1 {
@@ -274,16 +274,16 @@ main[id] {
 .hero-role {
   font-size: 25px;
   margin-top: 9px;
-  color: #f5f3ec;
+  color: #484e6c;
 }
 .hero-description {
   font-size: 17px;
   margin-top: 20px;
-  color: #fff;
+  color: #474241;
 }
 .hero-detail {
   font-size: 14px;
-  color: #efeee5;
+  color: #51545c;
   margin-top: 15px;
 }
 .hero-actions {
@@ -304,12 +304,18 @@ main[id] {
   filter: drop-shadow(0 13px 16px #0003);
 }
 .carousel-window {
+  position: relative;
   height: 310px;
   overflow: hidden;
   border-radius: 10px;
   background: #d0ccb9;
 }
 .carousel-window img {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  transition: opacity 650ms linear;
+  pointer-events: none;
   width: 100%;
   height: 100%;
   object-fit: cover;
@@ -1474,5 +1480,104 @@ main[id] {
   }
   .monogram {
     font-size: 40px;
+  }
+}
+
+.carousel-window img.is-active {
+  opacity: 1;
+}
+.overwater-content {
+  position: relative;
+  isolation: isolate;
+}
+.water-background {
+  position: absolute;
+}
+.overwater-embedded {
+  background: transparent;
+  min-height: 0;
+  padding-top: 260px;
+  scroll-margin-top: 0;
+}
+.overwater-embedded .water-background {
+  mask-image: linear-gradient(to bottom, transparent 0px, #000 260px);
+}
+.overwater-embedded .water-title {
+  margin-top: 0;
+}
+.overwater-embedded .research-grid h4 {
+  font-size: 21px;
+  font-family: Georgia, serif;
+  margin-bottom: 14px;
+}
+.overwater-embedded .section-heading h3 {
+  font-size: 30px;
+  font-weight: 650;
+}
+.site-header {
+  isolation: isolate;
+}
+.site-header::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: #070c20;
+  opacity: 0;
+  transition: opacity 850ms ease;
+  z-index: -1;
+}
+.heritage-sidebar {
+  isolation: isolate;
+  transition: color 850ms ease;
+}
+.heritage-sidebar::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(145deg, #19223a, #0a1022);
+  opacity: 0;
+  transition: opacity 850ms ease;
+  z-index: -1;
+}
+.water-theme .site-header::before,
+.water-theme .heritage-sidebar::before {
+  opacity: 0.98;
+}
+.water-theme .heritage-sidebar {
+  color: #e5e7eb;
+}
+.water-theme .heritage-sidebar > p {
+  color: #d0ccb9;
+}
+.water-theme .heritage-sidebar nav a[aria-current] {
+  color: #474241;
+}
+.sidebar-toggle {
+  transition:
+    background-color 850ms ease,
+    color 850ms ease;
+}
+.water-theme .sidebar-toggle {
+  background: #1c2749e8;
+  color: #fff;
+  border-color: #ffffff50;
+}
+.water-theme > .site-footer {
+  background: #0a1022;
+  color: #e5e7eb;
+  border-color: #ffffff30;
+}
+.standalone-water .water-background {
+  inset: 0;
+}
+@media (max-width: 680px) {
+  .overwater-embedded {
+    padding-top: 180px;
+  }
+  .overwater-embedded .water-background {
+    mask-image: linear-gradient(to bottom, transparent 0px, #000 180px);
+  }
+  .overwater-embedded .section-heading h3 {
+    font-size: 27px;
   }
 }

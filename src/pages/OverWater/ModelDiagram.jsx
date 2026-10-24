@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
 
-const ModelDiagram = () => {
+const ModelDiagram = ({ headingLevel = 1 }) => {
+  const Heading = `h${headingLevel}`;
   const reduce = useReducedMotion();
   const [triggerAnimation, setTriggerAnimation] = useState(0);
   const [shouldAnimate, setShouldAnimate] = useState(true);
@@ -186,9 +187,9 @@ const ModelDiagram = () => {
   return (
     <section className="original-water-diagram">
       <div className="container mx-auto px-4 flex flex-col items-center">
-        <h1 id="overwater-title" className="water-title">
+        <Heading id="overwater-title" className="water-title">
           OverWater-UIE
-        </h1>
+        </Heading>
         <p className="water-tagline">Painting a clearer picture</p>
 
         <div className="w-full max-w-4xl mx-auto relative">

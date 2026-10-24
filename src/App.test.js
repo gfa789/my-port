@@ -1,4 +1,4 @@
-import { render, screen, fireEvent } from "@testing-library/react";
+import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 import { MemoryRouter } from "react-router-dom";
 import AppContent from "./AppContent";
 beforeEach(() => {
@@ -14,12 +14,26 @@ test("the original journey layout retains private contact details and one main h
   const sections = [...container.querySelectorAll("main > section")].map(
     (section) => section.id,
   );
-  expect(sections).toEqual(["home", "experience", "projects", "contact"]);
+  expect(sections).toEqual([
+    "home",
+    "experience",
+    "projects",
+    "contact",
+    "overwater",
+  ]);
+  expect(container.querySelectorAll("#contact")).toHaveLength(1);
+  expect(
+    screen.getByRole("heading", { name: "OverWater-UIE", level: 2 }),
+  ).toBeInTheDocument();
+  expect(screen.getAllByRole("link", { name: /OverWater/ })[0]).toHaveAttribute(
+    "href",
+    "/#overwater",
+  );
   expect(container.textContent).not.toMatch(/georgeatki1@gmail/);
   expect(screen.getAllByRole("heading", { level: 1 })).toHaveLength(1);
 });
-test("the restored photo carousel has labelled controls and a pause option", () => {
-  render(
+test("the carousel retains every slide and waits for the incoming image before switching", async () => {
+  const { container } = render(
     <MemoryRouter>
       <AppContent />
     </MemoryRouter>,
@@ -28,6 +42,20 @@ test("the restored photo carousel has labelled controls and a pause option", () 
     screen.getByRole("region", { name: "Personal photos" }),
   ).toBeInTheDocument();
   fireEvent.click(screen.getByRole("button", { name: "Next photo" }));
+  expect(screen.getByRole("button", { name: "Show photo 1" })).toHaveAttribute(
+    "aria-pressed",
+    "true",
+  );
+  const images = container.querySelectorAll(".carousel-window img");
+  expect(images).toHaveLength(3);
+  Object.defineProperty(images[1], "naturalWidth", { value: 960 });
+  fireEvent.load(images[1]);
+  await waitFor(() =>
+    expect(
+      screen.getByRole("button", { name: "Show photo 2" }),
+    ).toHaveAttribute("aria-pressed", "true"),
+  );
+  expect(container.querySelectorAll(".carousel-window img")[0]).toBe(images[0]);
   expect(screen.getByRole("button", { name: "Show photo 2" })).toHaveAttribute(
     "aria-pressed",
     "true",

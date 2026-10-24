@@ -122,7 +122,8 @@ function Comparison({ index }) {
     </figure>
   );
 }
-export default function VideoComparison() {
+export default function VideoComparison({ headingLevel = 2 }) {
+  const Heading = `h${headingLevel}`;
   return (
     <section
       className="comparison-section section shell"
@@ -131,7 +132,7 @@ export default function VideoComparison() {
       <div className="section-heading">
         <div>
           <p className="eyebrow">02 / In practice</p>
-          <h2 id="examples-title">See the difference.</h2>
+          <Heading id="examples-title">See the difference.</Heading>
         </div>
         <p>Move the slider to compare. Play the footage when you’re ready.</p>
       </div>

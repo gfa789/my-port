@@ -1,5 +1,5 @@
 import { Routes, Route, useLocation } from "react-router-dom";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import Sidebar from "./components/Sidebar/Sidebar";
 import Navbar from "./components/Navbar/Navbar";
 import Header from "./components/Header";
@@ -7,11 +7,12 @@ import Footer from "./components/Footer";
 import Projects from "./components/Projects";
 import Experience from "./components/Experience";
 import Contact from "./components/Contact";
-import OverWater from "./pages/OverWater/OverWater";
+import OverWater, { OverWaterContent } from "./pages/OverWater/OverWater";
 import PageMetadata from "./components/PageMetadata";
 import NotFound from "./components/NotFound";
 
 export default function AppContent() {
+  const [waterTheme, setWaterTheme] = useState(false);
   const { pathname, hash, key } = useLocation();
   useEffect(() => {
     if (hash) {
@@ -21,6 +22,27 @@ export default function AppContent() {
       window.scrollTo(0, 0);
     }
   }, [pathname, hash, key]);
+  useEffect(() => {
+    if (pathname !== "/") return;
+    const update = () => {
+      const section = document.getElementById("overwater");
+      const headerBottom =
+        document.querySelector(".site-header")?.getBoundingClientRect()
+          .bottom ?? 100;
+      setWaterTheme(
+        Boolean(
+          section && section.getBoundingClientRect().top < headerBottom + 80,
+        ),
+      );
+    };
+    update();
+    window.addEventListener("scroll", update, { passive: true });
+    window.addEventListener("resize", update);
+    return () => {
+      window.removeEventListener("scroll", update);
+      window.removeEventListener("resize", update);
+    };
+  }, [pathname]);
   return (
     <>
       <PageMetadata />
@@ -32,7 +54,9 @@ export default function AppContent() {
         <Route
           path="/"
           element={
-            <div className="portfolio-page">
+            <div
+              className={`portfolio-page ${waterTheme ? "water-theme" : ""}`}
+            >
               <Navbar />
               <Sidebar />
               <main id="main-content" tabIndex={-1}>
@@ -40,6 +64,7 @@ export default function AppContent() {
                 <Experience />
                 <Projects />
                 <Contact />
+                <OverWaterContent embedded />
               </main>
               <Footer />
             </div>

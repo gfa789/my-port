@@ -11,7 +11,7 @@ export default function Navbar() {
             <span>Contact me</span>
             <Mail size={16} aria-hidden="true" />
           </Link>
-          <Link className="button button-water" to="/overwater">
+          <Link className="button button-water" to="/#overwater">
             <span>OverWater</span>
             <Waves size={18} aria-hidden="true" />
           </Link>

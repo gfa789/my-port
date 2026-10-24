@@ -1,6 +1,6 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
-import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
+import { motion, useReducedMotion } from "framer-motion";
 import {
   ChevronLeft,
   ChevronRight,
@@ -9,7 +9,10 @@ import {
   ArrowDown,
 } from "lucide-react";
 const photos = [
-  { src: "/photos/graduation.webp", alt: "George Atkinson in his graduation gown" },
+  {
+    src: "/photos/graduation.webp",
+    alt: "George Atkinson in his graduation gown",
+  },
   {
     src: "/photos/portrait-960.webp",
     alt: "George Atkinson at his University of Bristol graduation",
@@ -21,6 +24,30 @@ const photos = [
 ];
 export function ImageCarousel() {
   const [index, setIndex] = useState(0);
+  const [requested, setRequested] = useState(0);
+  const [loaded, setLoaded] = useState(photos.map(() => false));
+  const imageRefs = useRef([]);
+  const markLoaded = useCallback((photoIndex) => {
+    const image = imageRefs.current[photoIndex];
+    if (!image?.naturalWidth) return;
+    Promise.resolve(image.decode?.())
+      .then(() => {
+        setLoaded((previous) =>
+          previous[photoIndex]
+            ? previous
+            : previous.map((ready, i) => i === photoIndex || ready),
+        );
+      })
+      .catch(() => {});
+  }, []);
+  useEffect(() => {
+    imageRefs.current.forEach((image, i) => {
+      if (image?.complete) markLoaded(i);
+    });
+  }, [markLoaded]);
+  useEffect(() => {
+    if (loaded[requested]) setIndex(requested);
+  }, [requested, loaded]);
   const [paused, setPaused] = useState(false);
   const [hovered, setHovered] = useState(false);
   const [focused, setFocused] = useState(false);
@@ -34,13 +61,13 @@ export function ImageCarousel() {
   useEffect(() => {
     if (paused || hovered || focused || hidden || reduce) return;
     const timer = setInterval(
-      () => setIndex((current) => (current + 1) % photos.length),
+      () => setRequested((index + 1) % photos.length),
       5000,
     );
     return () => clearInterval(timer);
-  }, [paused, hovered, focused, hidden, reduce]);
+  }, [paused, hovered, focused, hidden, reduce, index]);
   function next(delta) {
-    setIndex((current) => (current + delta + photos.length) % photos.length);
+    setRequested((requested + delta + photos.length) % photos.length);
   }
   return (
     <div
@@ -57,21 +84,23 @@ export function ImageCarousel() {
       }}
     >
       <div className="carousel-window">
-        <AnimatePresence initial={false} mode="wait">
-          <motion.img
-            key={index}
-            src={photos[index].src}
-            alt={photos[index].alt}
+        {photos.map((photo, photoIndex) => (
+          <img
+            key={photo.src}
+            ref={(element) => {
+              imageRefs.current[photoIndex] = element;
+            }}
+            src={photo.src}
+            alt={photoIndex === index ? photo.alt : ""}
+            aria-hidden={photoIndex !== index}
+            className={photoIndex === index ? "is-active" : ""}
             width="960"
             height="720"
-            initial={reduce ? false : { opacity: 0, x: 35, scale: 0.98 }}
-            animate={{ opacity: 1, x: 0, scale: 1 }}
-            exit={reduce ? {} : { opacity: 0, x: -25, scale: 0.98 }}
-            transition={{ type: "spring", stiffness: 220, damping: 28 }}
-            fetchpriority={index === 0 ? "high" : "auto"}
+            onLoad={() => markLoaded(photoIndex)}
+            fetchpriority={photoIndex === 0 ? "high" : "low"}
             draggable="false"
           />
-        </AnimatePresence>
+        ))}
       </div>
       <button
         className="carousel-arrow previous"
@@ -95,7 +124,7 @@ export function ImageCarousel() {
             <button
               type="button"
               key={photo.src}
-              onClick={() => setIndex(i)}
+              onClick={() => setRequested(i)}
               aria-label={`Show photo ${i + 1}`}
               aria-pressed={index === i}
             >

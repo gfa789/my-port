@@ -10,7 +10,7 @@ const projects = [
     description:
       "My university dissertation: creating a dataset and researching underwater image enhancement with GANs in PyTorch.",
     tags: ["PyTorch", "GANs"],
-    internal: "/overwater",
+    internal: "/#overwater",
     label: "Explore OverWater",
     code: "https://github.com/gfa789/finalproject",
     paper:
