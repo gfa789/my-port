@@ -134,7 +134,6 @@ export default function Sidebar() {
               >
                 <ArrowUp size={20} />
               </Link>
-              <p>Take a look around</p>
               <nav aria-label="Section navigation">
                 <ul>
                   {items.map((item) => (

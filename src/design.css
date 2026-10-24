@@ -14,6 +14,15 @@
   background: var(--puce);
   -webkit-font-smoothing: antialiased;
 }
+::view-transition-group(root),
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation-duration: 650ms;
+  animation-timing-function: ease-in-out;
+}
+::view-transition {
+  pointer-events: none;
+}
 * {
   box-sizing: border-box;
 }
@@ -461,11 +470,6 @@ main[id] {
   overflow: auto;
   color: #474241;
 }
-.heritage-sidebar > p {
-  font-size: 10px;
-  margin-bottom: 24px;
-  color: #56514a;
-}
 .heritage-sidebar nav ul {
   list-style: none;
   margin: 0;
@@ -846,9 +850,6 @@ main[id] {
   color: #e5e7eb;
   background: linear-gradient(145deg, #19223ae8, #0a1022ed);
   border-color: #ffffff30;
-}
-.overwater-page .heritage-sidebar > p {
-  color: #d0ccb9;
 }
 .overwater-page .heritage-sidebar nav a[aria-current] {
   color: #474241;
@@ -1551,9 +1552,6 @@ main[id] {
   background: #101c33;
   color: #dce8f7;
   border-color: #314563;
-}
-.water-theme .heritage-sidebar > p {
-  color: #a8bed9;
 }
 .water-theme .heritage-sidebar nav a[aria-current] {
   background: #203958;
