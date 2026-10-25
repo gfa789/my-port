@@ -25,6 +25,10 @@ jobs:
           REACT_APP_RECAPTCHA_SITE_KEY: ${{ secrets.REACT_APP_RECAPTCHA_SITE_KEY }}
           REACT_APP_CONTACT_ENABLED: ${{ vars.REACT_APP_CONTACT_ENABLED || 'false' }}
       - run: npm run check:seo
+      - name: Identify Firebase deployment account
+        env:
+          FIREBASE_DEPLOY_CREDENTIAL: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_ATKI_PORTFOLIO }}
+        run: node -e 'console.log("Firebase deployment account:", JSON.parse(process.env.FIREBASE_DEPLOY_CREDENTIAL).client_email)'
       - uses: FirebaseExtended/action-hosting-deploy@v0
         with:
           repoToken: '${{ secrets.GITHUB_TOKEN }}'
