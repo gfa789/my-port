@@ -1,4 +1,4 @@
-export const origin = "https://atki-portfolio.web.app";
+export const origin = "https://georgeatkinson.co.uk";
 export function pageMetadata(pathname) {
   if (pathname.replace(/\/$/, "") === "/overwater")
     return {

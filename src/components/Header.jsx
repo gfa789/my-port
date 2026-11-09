@@ -161,12 +161,13 @@ export default function Header() {
         <h1 id="hero-title">George Atkinson</h1>
         <p className="hero-role">Software Engineer</p>
         <p className="hero-description">
-          Full-stack development, curious thinking, and a passion for complex
-          problems.
+          I’m George Atkinson, a software engineer building full-stack applications
+          and exploring machine learning and computer vision.
         </p>
         <p className="hero-detail">
-          Currently at Neptune North, working in reference data technology with
-          .NET, Python, React and SQL.
+          At Neptune North, I work in reference data technology with .NET, Python,
+          React and SQL. I studied Computer Science at the University of Bristol,
+          where my dissertation explored underwater image enhancement with GANs.
         </p>
         <div className="hero-actions">
           <Link className="button button-primary shine" to="/#projects">
