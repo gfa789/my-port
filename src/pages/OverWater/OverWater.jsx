@@ -36,6 +36,12 @@ export function OverWaterContent({ embedded = false }) {
           <a className="button button-soft shine" href={paper}>
             Read the dissertation ↗
           </a>
+          <a
+            className="button button-soft shine"
+            href="https://github.com/gfa789/finalproject"
+          >
+            View research code ↗
+          </a>
         </div>
         <dl className="project-facts">
           <div>

@@ -20,21 +20,11 @@ test("the original journey layout retains private contact details and one main h
   const sections = [...container.querySelectorAll("main > section")].map(
     (section) => section.id,
   );
-  expect(sections).toEqual([
-    "home",
-    "experience",
-    "projects",
-    "contact",
-    "overwater",
-  ]);
+  expect(sections).toEqual(["home", "experience", "projects", "contact"]);
   expect(container.querySelectorAll("#contact")).toHaveLength(1);
   expect(
-    screen.getByRole("heading", { name: "OverWater-UIE", level: 2 }),
-  ).toBeInTheDocument();
-  expect(screen.getAllByRole("link", { name: /OverWater/ })[0]).toHaveAttribute(
-    "href",
-    "/#overwater",
-  );
+    screen.getByRole("link", { name: "Explore OverWater" }),
+  ).toHaveAttribute("href", "/overwater");
   expect(container.textContent).not.toMatch(/georgeatki1@gmail/);
   expect(screen.getAllByRole("heading", { level: 1 })).toHaveLength(1);
   expect(
@@ -43,24 +33,26 @@ test("the original journey layout retains private contact details and one main h
     ).queryByRole("link", { name: "OverWater" }),
   ).not.toBeInTheDocument();
 });
-test("the entire page palette switches at OverWater and restores on scrolling back", () => {
-  const { container } = render(
+test("the project stack can move forwards and backwards", () => {
+  render(
     <MemoryRouter>
       <AppContent />
     </MemoryRouter>,
   );
-  const page = container.querySelector(".portfolio-page");
-  const section = container.querySelector("#overwater");
-  let top = 900;
-  section.getBoundingClientRect = () => ({ top });
-  fireEvent.scroll(window);
-  expect(page).not.toHaveClass("water-theme");
-  top = 100;
-  fireEvent.scroll(window);
-  expect(page).toHaveClass("water-theme");
-  top = 900;
-  fireEvent.scroll(window);
-  expect(page).not.toHaveClass("water-theme");
+  const deck = within(screen.getByRole("region", { name: "Browse projects" }));
+  fireEvent.keyDown(screen.getByRole("region", { name: "Browse projects" }), {
+    key: "ArrowRight",
+  });
+  expect(
+    deck.getByRole("heading", { name: "ML for Weather Forecasting" }),
+  ).toBeInTheDocument();
+  fireEvent.keyDown(screen.getByRole("region", { name: "Browse projects" }), {
+    key: "ArrowLeft",
+  });
+  expect(deck.getByRole("link", { name: "Explore OverWater" })).toHaveAttribute(
+    "href",
+    "/overwater",
+  );
 });
 
 test("the carousel retains every slide and waits for the incoming image before switching", async () => {

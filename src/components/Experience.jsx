@@ -1,6 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
-import { motion, useReducedMotion } from "framer-motion";
-import Reveal from "./Reveal";
+import ChapterViewer from "./ChapterViewer";
 const timelineItems = [
   {
     title: "St Mary's Catholic School",
@@ -128,36 +126,6 @@ const timelineItems = [
 const newestFirst = [...timelineItems].reverse();
 
 export default function Experience() {
-  const ref = useRef(null);
-  const [progress, setProgress] = useState(0);
-  const reduce = useReducedMotion();
-  useEffect(() => {
-    let frame;
-    const update = () => {
-      cancelAnimationFrame(frame);
-      frame = requestAnimationFrame(() => {
-        const bounds = ref.current?.getBoundingClientRect();
-        if (bounds)
-          setProgress(
-            Math.max(
-              0,
-              Math.min(
-                100,
-                ((window.innerHeight * 0.6 - bounds.top) / bounds.height) * 100,
-              ),
-            ),
-          );
-      });
-    };
-    window.addEventListener("scroll", update, { passive: true });
-    window.addEventListener("resize", update);
-    update();
-    return () => {
-      window.removeEventListener("scroll", update);
-      window.removeEventListener("resize", update);
-      cancelAnimationFrame(frame);
-    };
-  }, []);
   return (
     <section
       id="experience"
@@ -167,23 +135,15 @@ export default function Experience() {
       <h2 id="experience-title" className="section-title">
         Experience &amp; Education
       </h2>
-      <div ref={ref} className="journey-timeline">
-        <div className="timeline-track" aria-hidden="true">
-          <div style={{ height: `${progress}%` }} />
-        </div>
-        {newestFirst.map((item, index) => (
-          <Reveal
-            key={item.title + item.date}
-            className={`journey-stop ${index % 2 ? "right" : "left"} ${progress > (index / timelineItems.length) * 100 ? "passed" : ""}`}
-          >
-            <div className="journey-marker" aria-hidden="true">
-              {item.isActive ? "✓" : "…"}
-            </div>
-            <motion.article
-              className="timeline-card glass-card"
-              whileHover={reduce ? {} : { scale: 1.035, y: -3 }}
-              transition={{ type: "spring", stiffness: 280, damping: 22 }}
-            >
+      <ChapterViewer label="career entry" timeline entries={newestFirst}>
+        {newestFirst.map((item) => (
+          <article key={item.title + item.date} className="career-chapter">
+            <div className="career-identity">
+              <span className="chapter-overline">
+                {item.date.includes("Present")
+                  ? "CURRENT CHAPTER"
+                  : "EARLIER CHAPTER"}
+              </span>
               <div className="timeline-logos">
                 <img
                   src={item.image}
@@ -205,16 +165,17 @@ export default function Experience() {
                   </div>
                 )}
               </div>
-              <div>
-                <h3>{item.title}</h3>
-                <p className="timeline-role">{item.description}</p>
-                <p className="timeline-date">{item.date}</p>
-                <p className="timeline-description">{item.longDescription}</p>
-              </div>
-            </motion.article>
-          </Reveal>
+            </div>
+            <div className="career-story">
+              <span className="chapter-overline">{item.date}</span>
+              <h3>{item.title}</h3>
+              <p className="timeline-role">{item.description}</p>
+              <p className="timeline-date">{item.date}</p>
+              <p className="timeline-description">{item.longDescription}</p>
+            </div>
+          </article>
         ))}
-      </div>
+      </ChapterViewer>
     </section>
   );
 }
