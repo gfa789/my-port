@@ -1,4 +1,4 @@
-import ProjectStack from "./ProjectStack";
+import ProjectWheel from "./ProjectWheel";
 
 const projects = [
   {
@@ -51,10 +51,13 @@ export default function Projects() {
       className="section shell project-deck"
       aria-labelledby="work-title"
     >
-      <h2 id="work-title" className="section-title">
-        Selected work
-      </h2>
-      <ProjectStack projects={projects} />
+      <div className="portfolio-section-heading">
+        <h2 id="work-title" className="section-title">
+          Selected work
+        </h2>
+        <p>Five projects across machine learning and computer vision.</p>
+      </div>
+      <ProjectWheel projects={projects} />
     </section>
   );
 }

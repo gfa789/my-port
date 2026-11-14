@@ -28,7 +28,7 @@ export default function Sidebar() {
   const previousLocation = useRef(pathname + hash);
   const reduce = useReducedMotion();
   useEffect(() => {
-    const query = window.matchMedia?.("(min-width: 1400px)");
+    const query = window.matchMedia?.("(min-width: 1024px)");
     if (!query) return;
     const update = () => {
       setWide(query.matches);
@@ -49,6 +49,7 @@ export default function Sidebar() {
       for (const item of items) {
         const element = document.getElementById(item.id);
         if (
+          item.id !== "overwater" &&
           element &&
           element.getBoundingClientRect().top < window.innerHeight * 0.4
         )
@@ -61,14 +62,14 @@ export default function Sidebar() {
     return () => window.removeEventListener("scroll", check);
   }, [pathname]);
   useEffect(() => {
-    if (!open) return;
-    if (!wide) panel.current?.querySelector("a")?.focus();
+    if (!open || wide) return;
+    panel.current?.querySelector("a")?.focus();
     const key = (event) => {
       if (event.key === "Escape") {
         setOpen(false);
         toggle.current?.focus();
       }
-      if (event.key === "Tab" && !wide) {
+      if (event.key === "Tab") {
         const controls = [...panel.current.querySelectorAll("a,button")];
         const first = controls[0],
           last = controls[controls.length - 1];
@@ -139,7 +140,11 @@ export default function Sidebar() {
                   {items.map((item) => (
                     <li key={item.id}>
                       <Link
-                        to={`/#${item.id}`}
+                        to={
+                          item.id === "overwater"
+                            ? "/overwater"
+                            : `/#${item.id}`
+                        }
                         aria-current={
                           (pathname === "/" && active === item.id) ||
                           (pathname === "/overwater" && item.id === "overwater")

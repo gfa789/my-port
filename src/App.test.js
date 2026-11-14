@@ -33,7 +33,7 @@ test("the original journey layout retains private contact details and one main h
     ).queryByRole("link", { name: "OverWater" }),
   ).not.toBeInTheDocument();
 });
-test("the project stack can move forwards and backwards", () => {
+test("the project wheel wraps in both directions with keyboard and buttons", () => {
   render(
     <MemoryRouter>
       <AppContent />
@@ -41,53 +41,61 @@ test("the project stack can move forwards and backwards", () => {
   );
   const deck = within(screen.getByRole("region", { name: "Browse projects" }));
   fireEvent.keyDown(screen.getByRole("region", { name: "Browse projects" }), {
-    key: "ArrowRight",
+    key: "ArrowUp",
   });
   expect(
-    deck.getByRole("heading", { name: "ML for Weather Forecasting" }),
+    deck.getByRole("heading", { name: "Stereo Vision" }),
   ).toBeInTheDocument();
-  fireEvent.keyDown(screen.getByRole("region", { name: "Browse projects" }), {
-    key: "ArrowLeft",
-  });
+  fireEvent.click(deck.getByRole("button", { name: "Next project" }));
   expect(deck.getByRole("link", { name: "Explore OverWater" })).toHaveAttribute(
     "href",
     "/overwater",
   );
 });
 
-test("the carousel retains every slide and waits for the incoming image before switching", async () => {
-  const { container } = render(
+test("horizontal scroll rotates the project wheel and vertical scroll passes through", async () => {
+  render(
     <MemoryRouter>
       <AppContent />
     </MemoryRouter>,
   );
+  const wheel = screen.getByRole("region", { name: "Browse projects" });
+  const deck = within(wheel);
+  const stage = wheel.querySelector(".project-wheel-stage");
+  expect(fireEvent.wheel(stage, { deltaX: 12, deltaY: 120 })).toBe(true);
+  expect(fireEvent.wheel(stage, { deltaX: 100 })).toBe(false);
   expect(
-    screen.getByRole("region", { name: "Personal photos" }),
+    deck.getByRole("link", { name: "Explore OverWater" }),
   ).toBeInTheDocument();
-  fireEvent.click(screen.getByRole("button", { name: "Show next photo" }));
-  expect(screen.getByRole("button", { name: "Show photo 1" })).toHaveAttribute(
-    "aria-pressed",
-    "true",
-  );
-  const images = container.querySelectorAll(".carousel-window img");
-  expect(images).toHaveLength(3);
-  Object.defineProperty(images[1], "naturalWidth", { value: 960 });
-  fireEvent.load(images[1]);
-  await waitFor(() =>
-    expect(
-      screen.getByRole("button", { name: "Show photo 2" }),
-    ).toHaveAttribute("aria-pressed", "true"),
-  );
-  expect(container.querySelectorAll(".carousel-window img")[0]).toBe(images[0]);
-  expect(screen.getByRole("button", { name: "Show photo 2" })).toHaveAttribute(
-    "aria-pressed",
-    "true",
-  );
-  fireEvent.click(screen.getByRole("button", { name: "Pause slideshow" }));
+  await deck.findByRole("heading", { name: "ML for Weather Forecasting" });
+  fireEvent.wheel(stage, { shiftKey: true, deltaY: -100 });
   expect(
-    screen.getByRole("button", { name: "Play slideshow" }),
-  ).toHaveAttribute("aria-pressed", "true");
+    await deck.findByRole("link", { name: "Explore OverWater" }),
+  ).toBeInTheDocument();
 });
+
+test("the hero presents all three personal photos together", () => {
+  render(
+    <MemoryRouter>
+      <AppContent />
+    </MemoryRouter>,
+  );
+  const photos = within(screen.getByRole("group", { name: "Personal photos" }));
+  expect(photos.getAllByRole("img")).toHaveLength(3);
+  expect(
+    photos.getByRole("img", { name: /friends at the beach/ }),
+  ).toBeInTheDocument();
+  const travel = photos.getByRole("button", { name: /coastal viewpoint/ });
+  const beach = photos.getByRole("button", { name: /friends at the beach/ });
+  fireEvent.click(travel);
+  expect(travel).toHaveAttribute("aria-pressed", "true");
+  fireEvent.click(beach);
+  expect(travel).toHaveAttribute("aria-pressed", "false");
+  expect(beach).toHaveAttribute("aria-pressed", "true");
+  fireEvent.keyDown(beach, { key: "Escape" });
+  expect(beach).toHaveAttribute("aria-pressed", "false");
+});
+
 test("menu exposes state, closes on Escape and restores focus", () => {
   render(
     <MemoryRouter>

@@ -1,4 +1,19 @@
+import { ArrowUpRight } from "lucide-react";
 import ChapterViewer from "./ChapterViewer";
+
+const neptuneNorth = {
+  brand: "neptune",
+  image: "/photos/neptune-north-wordmark.webp",
+  url: "https://www.neptunenorth.co.uk/",
+};
+
+const rokos = {
+  name: "Rokos Capital Management",
+  brand: "rokos",
+  image: "/photos/rokos-capital-management.svg",
+  url: "https://www.rokoscapital.com/",
+};
+
 const timelineItems = [
   {
     title: "St Mary's Catholic School",
@@ -7,7 +22,10 @@ const timelineItems = [
     longDescription:
       "Excelled in academic studies, particularly in sciences and mathematics. Scored A*A*A* in Physics, Maths, and Further Maths in addition to AA in EPQ and Thinking Skills. Attained 12 GCSEs: four 9's, seven 8's, and one 7.",
     isActive: true,
-    image: "/photos/marys.png",
+    organisation: {
+      brand: "st-marys",
+      image: "/photos/marys.png",
+    },
     icon: (
       <svg
         className="fill-current"
@@ -29,7 +47,10 @@ const timelineItems = [
     longDescription:
       "A summer job to help fund my university studies. Responsible for groups of 15‑20 children aged 5‑12 as part of sports summer camps across Newcastle, coaching a range of sports and activities. ",
     isActive: true,
-    image: "/photos/shapeperformance.jpg",
+    organisation: {
+      brand: "shape",
+      image: "/photos/shapeperformance.jpg",
+    },
     icon: (
       <svg
         className="fill-current"
@@ -51,7 +72,11 @@ const timelineItems = [
     longDescription:
       "Summer internship during Summer 2023. Responsible for SEO and produced a data scraper to efficiently retrieve up to date information.",
     isActive: true,
-    image: "/photos/nhq.png",
+    organisation: {
+      brand: "noggin",
+      image: "/photos/nhq.png",
+      url: "https://www.nogginhq.com/business",
+    },
     icon: (
       <svg
         className="fill-current"
@@ -73,7 +98,11 @@ const timelineItems = [
     longDescription:
       "Attained a high 2:1 with honours (67%), achieving outstanding results in software engineering, data science, and machine learning. Participated in various extracurricular activities including the engineering football team.",
     isActive: true,
-    image: "/photos/bris.png",
+    organisation: {
+      brand: "bristol",
+      image: "/photos/bris.png",
+      url: "https://www.bristol.ac.uk/",
+    },
     icon: (
       <svg
         className="fill-current"
@@ -95,8 +124,8 @@ const timelineItems = [
     longDescription:
       "Worked on the Rokos Capital Management account in reference data technology, developing with .NET/C#, Python, React and MS SQL Server. Additionally, deployed full-stack AI applications used company-wide.",
     isActive: true,
-    image: "/photos/neptune2.png",
-    clientImage: "/photos/rokos-capital-management.svg",
+    organisation: neptuneNorth,
+    client: rokos,
     icon: (
       <svg
         className="fill-current"
@@ -118,12 +147,34 @@ const timelineItems = [
     longDescription:
       "Working on the Rokos Capital Management account in reference data technology, developing across the full stack with .NET, Python, React and SQL. I am involved in independent end-to-end delivery, design decisions and system architecture.",
     isActive: false,
-    image: "/photos/neptune2.png",
-    clientImage: "/photos/rokos-capital-management.svg",
+    organisation: neptuneNorth,
+    client: rokos,
     icon: "...",
   },
 ];
 const newestFirst = [...timelineItems].reverse();
+
+function OrganisationLogo({ brand, image, url, name }) {
+  if (!url) {
+    return (
+      <div className="career-logo" data-brand={brand}>
+        <img src={image} alt={name} loading="lazy" />
+      </div>
+    );
+  }
+
+  return (
+    <a
+      className="career-logo"
+      data-brand={brand}
+      href={url}
+      aria-label={`Visit ${name} website`}
+    >
+      <img src={image} alt="" loading="lazy" />
+      <ArrowUpRight size={16} aria-hidden="true" />
+    </a>
+  );
+}
 
 export default function Experience() {
   return (
@@ -132,9 +183,12 @@ export default function Experience() {
       className="timeline-section section shell"
       aria-labelledby="experience-title"
     >
-      <h2 id="experience-title" className="section-title">
-        Experience &amp; Education
-      </h2>
+      <div className="portfolio-section-heading">
+        <h2 id="experience-title" className="section-title">
+          Experience &amp; Education
+        </h2>
+        <p>From Bristol to reference data engineering.</p>
+      </div>
       <ChapterViewer label="career entry" timeline entries={newestFirst}>
         {newestFirst.map((item) => (
           <article key={item.title + item.date} className="career-chapter">
@@ -145,23 +199,11 @@ export default function Experience() {
                   : "EARLIER CHAPTER"}
               </span>
               <div className="timeline-logos">
-                <img
-                  src={item.image}
-                  alt={item.title}
-                  width="180"
-                  height="180"
-                  loading="lazy"
-                />
-                {item.clientImage && (
+                <OrganisationLogo {...item.organisation} name={item.title} />
+                {item.client && (
                   <div className="timeline-client">
                     <span>Client account</span>
-                    <img
-                      src={item.clientImage}
-                      alt="Rokos Capital Management"
-                      width="180"
-                      height="70"
-                      loading="lazy"
-                    />
+                    <OrganisationLogo {...item.client} />
                   </div>
                 )}
               </div>

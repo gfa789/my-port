@@ -1,173 +1,91 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useState } from "react";
 import { Link } from "react-router-dom";
-import { motion, useReducedMotion } from "framer-motion";
 import {
-  ChevronLeft,
-  ChevronRight,
-  Pause,
-  Play,
-  ArrowDown,
-} from "lucide-react";
+  motion,
+  useMotionValue,
+  useReducedMotion,
+  useSpring,
+} from "framer-motion";
+import { ArrowDown } from "lucide-react";
+
 const photos = [
   {
     src: "/photos/graduation.webp",
     alt: "George Atkinson in his graduation gown",
   },
   {
-    src: "/photos/portrait-960.webp",
-    alt: "George Atkinson at his University of Bristol graduation",
+    src: "/photos/coastal-travel.webp",
+    alt: "George Atkinson at a coastal viewpoint",
   },
   {
     src: "/photos/beach.webp",
     alt: "George Atkinson with friends at the beach",
   },
 ];
-export function ImageCarousel() {
-  const [index, setIndex] = useState(0);
-  const [requested, setRequested] = useState(0);
-  const [loaded, setLoaded] = useState(photos.map(() => false));
-  const imageRefs = useRef([]);
-  const markLoaded = useCallback((photoIndex) => {
-    const image = imageRefs.current[photoIndex];
-    if (!image?.naturalWidth) return;
-    Promise.resolve(image.decode?.())
-      .then(() => {
-        setLoaded((previous) =>
-          previous[photoIndex]
-            ? previous
-            : previous.map((ready, i) => i === photoIndex || ready),
-        );
-      })
-      .catch(() => {});
-  }, []);
-  useEffect(() => {
-    imageRefs.current.forEach((image, i) => {
-      if (image?.complete) markLoaded(i);
-    });
-  }, [markLoaded]);
-  useEffect(() => {
-    if (loaded[requested]) setIndex(requested);
-  }, [requested, loaded]);
-  const [paused, setPaused] = useState(false);
-  const [hovered, setHovered] = useState(false);
-  const [focused, setFocused] = useState(false);
-  const [hidden, setHidden] = useState(false);
-  const reduce = useReducedMotion();
-  useEffect(() => {
-    const check = () => setHidden(document.hidden);
-    document.addEventListener("visibilitychange", check);
-    return () => document.removeEventListener("visibilitychange", check);
-  }, []);
-  useEffect(() => {
-    if (paused || hovered || focused || hidden || reduce) return;
-    const timer = setInterval(
-      () => setRequested((index + 1) % photos.length),
-      5000,
-    );
-    return () => clearInterval(timer);
-  }, [paused, hovered, focused, hidden, reduce, index]);
-  function next(delta) {
-    setRequested((requested + delta + photos.length) % photos.length);
-  }
+function PhotoComposition() {
+  const [featured, setFeatured] = useState(null);
+  const reducedMotion = useReducedMotion();
+  const pointerX = useMotionValue(0);
+  const pointerY = useMotionValue(0);
+  const x = useSpring(pointerX, { stiffness: 240, damping: 28 });
+  const y = useSpring(pointerY, { stiffness: 240, damping: 28 });
+
   return (
     <div
-      className="personal-carousel"
-      role="region"
-      aria-roledescription="carousel"
+      className="hero-photo-composition"
+      role="group"
       aria-label="Personal photos"
-      onMouseEnter={() => setHovered(true)}
-      onMouseLeave={() => setHovered(false)}
-      onFocusCapture={() => setFocused(true)}
-      onBlurCapture={(event) => {
-        if (!event.currentTarget.contains(event.relatedTarget))
-          setFocused(false);
+      onKeyDown={(event) => {
+        if (event.key === "Escape") setFeatured(null);
+      }}
+      onPointerMove={(event) => {
+        if (reducedMotion || event.pointerType !== "mouse") return;
+        const bounds = event.currentTarget.getBoundingClientRect();
+        pointerX.set(((event.clientX - bounds.left) / bounds.width - 0.5) * 24);
+        pointerY.set(((event.clientY - bounds.top) / bounds.height - 0.5) * 18);
+      }}
+      onPointerLeave={() => {
+        pointerX.set(0);
+        pointerY.set(0);
       }}
     >
-      <button
-        className="carousel-window"
-        type="button"
-        aria-label="Show next photo"
-        onClick={() => next(1)}
-      >
-        {photos.map((photo, photoIndex) => (
-          <img
-            key={photo.src}
-            ref={(element) => {
-              imageRefs.current[photoIndex] = element;
-            }}
-            src={photo.src}
-            alt={photoIndex === index ? photo.alt : ""}
-            aria-hidden={photoIndex !== index}
-            className={photoIndex === index ? "is-active" : ""}
-            width="960"
-            height="720"
-            onLoad={() => markLoaded(photoIndex)}
-            fetchpriority={photoIndex === 0 ? "high" : "low"}
-            draggable="false"
-          />
-        ))}
-      </button>
-      <button
-        className="carousel-arrow previous"
-        type="button"
-        onClick={() => next(-1)}
-        aria-label="Previous photo"
-      >
-        <ChevronLeft aria-hidden="true" size={20} />
-      </button>
-      <button
-        className="carousel-arrow next"
-        type="button"
-        onClick={() => next(1)}
-        aria-label="Next photo"
-      >
-        <ChevronRight aria-hidden="true" size={20} />
-      </button>
-      <div className="carousel-controls">
-        <div className="carousel-dots">
-          {photos.map((photo, i) => (
-            <button
-              type="button"
-              key={photo.src}
-              onClick={() => setRequested(i)}
-              aria-label={`Show photo ${i + 1}`}
-              aria-pressed={index === i}
-            >
-              <span className={index === i ? "active" : ""} />
-            </button>
-          ))}
-        </div>
-        <button
-          className="carousel-pause"
-          type="button"
-          aria-label={paused ? "Play slideshow" : "Pause slideshow"}
-          aria-pressed={paused}
-          onClick={() => setPaused(!paused)}
+      <motion.div className="hero-photo-arch" style={{ x, y }}>
+        <img src={photos[0].src} alt={photos[0].alt} fetchpriority="high" />
+      </motion.div>
+      {photos.slice(1).map((photo, index) => (
+        <div
+          key={photo.src}
+          className={`hero-photo-print-position hero-photo-print-position-${index === 0 ? "left" : "right"}`}
+          data-featured={featured === index}
         >
-          {paused ? (
-            <Play size={15} aria-hidden="true" />
-          ) : (
-            <Pause size={15} aria-hidden="true" />
-          )}
-        </button>
-      </div>
+          <button
+            className="hero-photo-print"
+            type="button"
+            aria-pressed={featured === index}
+            onClick={() => setFeatured(featured === index ? null : index)}
+          >
+            <img src={photo.src} alt={photo.alt} />
+          </button>
+        </div>
+      ))}
     </div>
   );
 }
 export default function Header() {
   return (
     <section id="home" className="hero shell" aria-labelledby="hero-title">
-      <motion.div className="hero-copy" initial={false} animate={{ y: 0 }}>
+      <div className="hero-copy">
         <h1 id="hero-title">George Atkinson</h1>
         <p className="hero-role">Software Engineer</p>
         <p className="hero-description">
-          I’m George Atkinson, a software engineer building full-stack applications
-          and exploring machine learning and computer vision.
+          I build full-stack applications and explore machine learning and
+          computer vision.
         </p>
         <p className="hero-detail">
-          At Neptune North, I work in reference data technology with .NET, Python,
-          React and SQL. I studied Computer Science at the University of Bristol,
-          where my dissertation explored underwater image enhancement with GANs.
+          At Neptune North, I work in reference data technology with .NET,
+          Python, React and SQL. I studied Computer Science at the University of
+          Bristol, where my dissertation explored underwater image enhancement
+          with GANs.
         </p>
         <div className="hero-actions">
           <Link className="button button-primary shine" to="/#projects">
@@ -177,9 +95,9 @@ export default function Header() {
             Contact me <span aria-hidden="true">↗</span>
           </Link>
         </div>
-      </motion.div>
+      </div>
       <div className="hero-photos">
-        <ImageCarousel />
+        <PhotoComposition />
       </div>
       <Link
         to="/#experience"

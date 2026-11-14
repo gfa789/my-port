@@ -1,12 +1,12 @@
 import { Link } from "react-router-dom";
 
-const details = {
+export const projectDetails = {
   overwater: {
     context: "BSc dissertation",
     summary:
       "I trained generative adversarial networks in PyTorch to enhance underwater images. The full showcase explains the model and lets you compare the original and enhanced footage.",
-    image: "/overwater/0.webp",
-    alt: "Underwater imagery from the OverWater project",
+    image: "/overwater/7.webp",
+    alt: "Enhanced underwater image showing the seabed in blue water",
   },
   "weather-forecasting": {
     context: "Met Office group project",
@@ -44,48 +44,34 @@ const details = {
   },
 };
 
-export default function ProjectDetail({ project }) {
-  const detail = details[project.id];
+export default function ProjectDetail({ project, active }) {
+  const detail = projectDetails[project.id];
   return (
     <article
       id={project.id}
-      className="project-detail section"
+      className="project-detail"
       aria-labelledby={project.id + "-title"}
+      aria-hidden={!active}
+      inert={active ? undefined : ""}
+      data-active={active}
     >
-      <div className="shell project-detail-layout">
-        <div>
-          <p className="eyebrow">{detail.context}</p>
-          <h3 id={project.id + "-title"}>{project.title}</h3>
-          <p className="project-detail-summary">{detail.summary}</p>
-          <ul className="project-detail-tags" aria-label="Technologies">
-            {project.tags.map((tag) => (
-              <li key={tag}>{tag}</li>
-            ))}
-          </ul>
-          {project.route ? (
-            <Link className="project-detail-link" to={project.route}>
-              {project.label} <span aria-hidden="true">→</span>
-            </Link>
-          ) : (
-            <a className="project-detail-link" href={project.href}>
-              {project.label} <span aria-hidden="true">↗</span>
-            </a>
-          )}
-        </div>
-        {detail.image ? (
-          <img
-            className="project-detail-image"
-            src={detail.image}
-            alt={detail.alt}
-          />
-        ) : (
-          <ol className="project-method" aria-label="Project workflow">
-            {detail.steps.map((step) => (
-              <li key={step}>{step}</li>
-            ))}
-          </ol>
-        )}
-      </div>
+      <p className="eyebrow">{detail.context}</p>
+      <h3 id={project.id + "-title"}>{project.title}</h3>
+      <p className="project-detail-summary">{detail.summary}</p>
+      <ul className="project-detail-tags" aria-label="Technologies">
+        {project.tags.map((tag) => (
+          <li key={tag}>{tag}</li>
+        ))}
+      </ul>
+      {project.route ? (
+        <Link className="project-detail-link" to={project.route}>
+          {project.label} <span aria-hidden="true">→</span>
+        </Link>
+      ) : (
+        <a className="project-detail-link" href={project.href}>
+          {project.label} <span aria-hidden="true">↗</span>
+        </a>
+      )}
     </article>
   );
 }
