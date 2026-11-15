@@ -1,14 +1,13 @@
+import { useEffect, useState } from "react";
+import { useLocation } from "react-router-dom";
 import ProjectWheel from "./ProjectWheel";
 
 const projects = [
   {
-    id: "overwater",
+    id: "underwater-image-enhancement",
     title: "Underwater Image Enhancement",
     date: "Jan–May 2024",
     tags: ["PyTorch", "GANs"],
-    indexTitle: "OverWater",
-    label: "Explore OverWater",
-    route: "/overwater",
   },
   {
     id: "weather-forecasting",
@@ -16,35 +15,38 @@ const projects = [
     indexTitle: "Weather Forecasting",
     date: "Jan–May 2024",
     tags: ["TensorFlow", "Time series"],
-    href: "https://drive.google.com/file/d/111cPGMAF14W8wbxG88lhSIKxDMPB1ul9/view",
-    label: "Read forecasting report",
   },
   {
     id: "model-analysis",
     title: "ML Model Analysis",
     date: "Nov–Dec 2023",
     tags: ["Python", "scikit-learn"],
-    href: "https://github.com/gfa789/ml-cw",
-    label: "View model analysis code",
   },
   {
     id: "dartboard-detector",
     title: "Dartboard Detector",
     date: "Nov–Dec 2023",
-    tags: ["Computer vision", "YOLO"],
-    href: "https://github.com/gfa789/darts-cw/tree/main/Part1",
-    label: "View detector code",
+    tags: ["OpenCV", "Hough transform"],
   },
   {
     id: "stereo-vision",
     title: "Stereo Vision",
     date: "Nov–Dec 2023",
     tags: ["Python", "Computer vision"],
-    href: "https://github.com/gfa789/darts-cw/tree/main/Part2",
-    label: "View stereo vision code",
   },
 ];
 export default function Projects() {
+  const { search } = useLocation();
+  const [initialIndex, setInitialIndex] = useState(0);
+  useEffect(() => {
+    const selected = new URLSearchParams(search).get("project");
+    setInitialIndex(
+      Math.max(
+        0,
+        projects.findIndex((project) => project.id === selected),
+      ),
+    );
+  }, [search]);
   return (
     <section
       id="projects"
@@ -57,7 +59,11 @@ export default function Projects() {
         </h2>
         <p>Five projects across machine learning and computer vision.</p>
       </div>
-      <ProjectWheel projects={projects} />
+      <ProjectWheel
+        key={initialIndex}
+        projects={projects}
+        initialIndex={initialIndex}
+      />
     </section>
   );
 }

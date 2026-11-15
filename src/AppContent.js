@@ -7,15 +7,28 @@ import Footer from "./components/Footer";
 import Projects from "./components/Projects";
 import Experience from "./components/Experience";
 import Contact from "./components/Contact";
-import OverWater from "./pages/OverWater/OverWater";
+import Underwater from "./pages/Underwater/Underwater";
+import ProjectStudy from "./pages/ProjectStudy/ProjectStudy";
+import WeatherStudy from "./pages/ProjectStudy/WeatherStudy";
+import ModelDemo from "./pages/ProjectStudy/ModelDemo";
+import DartDemo from "./pages/ProjectStudy/DartDemo";
+import StereoDemo from "./pages/ProjectStudy/StereoDemo";
+import ProjectExhibit from "./pages/ProjectStudy/ProjectExhibit";
+import { projectRoutes } from "./projectRoutes";
 import PageMetadata from "./components/PageMetadata";
 import NotFound from "./components/NotFound";
+
+const caseStudyDemos = {
+  "model-analysis": ModelDemo,
+  "dartboard-detector": DartDemo,
+  "stereo-vision": StereoDemo,
+};
 
 export default function AppContent() {
   const { pathname, hash, key } = useLocation();
   useEffect(() => {
     if (hash) document.getElementById(hash.slice(1))?.scrollIntoView();
-    else window.scrollTo(0, 0);
+    else window.scrollTo({ top: 0, behavior: "instant" });
   }, [pathname, hash, key]);
   return (
     <>
@@ -24,7 +37,28 @@ export default function AppContent() {
         Skip to content
       </a>
       <Routes>
-        <Route path="/overwater" element={<OverWater />} />
+        <Route
+          path={projectRoutes["underwater-image-enhancement"]}
+          element={<Underwater />}
+        />
+        <Route
+          path={projectRoutes["weather-forecasting"]}
+          element={<WeatherStudy />}
+        />
+        {Object.entries(caseStudyDemos).map(([id, Demo]) => (
+          <Route
+            key={id}
+            path={projectRoutes[id]}
+            element={
+              <ProjectStudy
+                key={id}
+                id={id}
+                approachLink="Explore the exhibit"
+                approach={<ProjectExhibit id={id} Visual={Demo} />}
+              />
+            }
+          />
+        ))}
         <Route
           path="/"
           element={

@@ -1,13 +1,20 @@
+import { projectRoutes } from "./projectRoutes";
+import { studies } from "./pages/ProjectStudy/studies";
+
 export const origin = "https://georgeatkinson.co.uk";
 export function pageMetadata(pathname) {
-  if (pathname.replace(/\/$/, "") === "/overwater")
+  const match = Object.entries(projectRoutes).find(
+    ([, route]) => route === pathname.replace(/\/$/, ""),
+  );
+  if (match) {
+    const [id, path] = match;
     return {
-      title: "OverWater | Underwater Image Enhancement — George Atkinson",
-      description:
-        "Explore OverWater, George Atkinson’s undergraduate research into enhancing underwater imagery with GANs and PyTorch, including before-and-after examples.",
-      path: "/overwater",
-      image: "/social/overwater.png",
+      title: studies[id].title + " | George Atkinson",
+      description: studies[id].description,
+      path,
+      image: "/social/" + id + ".png",
     };
+  }
   if (pathname === "/")
     return {
       title: "George Atkinson | Software Engineer",

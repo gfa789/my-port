@@ -8,7 +8,6 @@ import {
   Mail,
   ChevronRight,
   ChevronLeft,
-  Waves,
   ArrowUp,
 } from "lucide-react";
 const items = [
@@ -16,7 +15,6 @@ const items = [
   { id: "experience", label: "Timeline", icon: History },
   { id: "projects", label: "Projects", icon: FolderGit },
   { id: "contact", label: "Contact", icon: Mail },
-  { id: "overwater", label: "OverWater", icon: Waves },
 ];
 export default function Sidebar() {
   const [open, setOpen] = useState(false),
@@ -49,7 +47,6 @@ export default function Sidebar() {
       for (const item of items) {
         const element = document.getElementById(item.id);
         if (
-          item.id !== "overwater" &&
           element &&
           element.getBoundingClientRect().top < window.innerHeight * 0.4
         )
@@ -140,14 +137,9 @@ export default function Sidebar() {
                   {items.map((item) => (
                     <li key={item.id}>
                       <Link
-                        to={
-                          item.id === "overwater"
-                            ? "/overwater"
-                            : `/#${item.id}`
-                        }
+                        to={`/#${item.id}`}
                         aria-current={
-                          (pathname === "/" && active === item.id) ||
-                          (pathname === "/overwater" && item.id === "overwater")
+                          pathname === "/" && active === item.id
                             ? "location"
                             : undefined
                         }

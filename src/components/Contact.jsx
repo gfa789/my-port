@@ -62,17 +62,19 @@ export default function Contact() {
     >
       <div className="shell contact-layout">
         <div>
-          <p className="eyebrow">Get in touch</p>
           <h2 id="contact-title">Contact Me</h2>
           <p>
             Have a project in mind, a question about my work, or just want to
             say hello?
           </p>
           <a
-            className="button button-primary"
+            className="button button-primary contact-primary-action"
             href="https://linkedin.com/in/georgeatki"
           >
-            Connect on LinkedIn <span aria-hidden="true">↗</span>
+            Connect on LinkedIn{" "}
+            <span className="contact-action-arrow" aria-hidden="true">
+              ↗
+            </span>
           </a>
         </div>
         {contactEnabled ? (
@@ -144,17 +146,19 @@ export default function Contact() {
             )}
           </form>
         ) : (
-          <div className="contact-note">
-            <span aria-hidden="true">↗</span>
-            <h3>Let’s connect</h3>
-            <p>
-              LinkedIn is the best place to reach me. You can also explore more
-              of my code on GitHub.
-            </p>
-            <a className="text-link" href="https://github.com/gfa789">
-              Explore GitHub <span aria-hidden="true">↗</span>
-            </a>
-          </div>
+          <a
+            className="contact-repository"
+            href="https://github.com/gfa789"
+            aria-labelledby="contact-repository-title"
+          >
+            <div>
+              <h3 id="contact-repository-title">Explore GitHub</h3>
+              <p>Browse the code behind my projects.</p>
+            </div>
+            <span className="contact-repository-icon" aria-hidden="true">
+              <span className="contact-action-arrow">↗</span>
+            </span>
+          </a>
         )}
       </div>
     </section>

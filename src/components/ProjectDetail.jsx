@@ -1,46 +1,31 @@
 import { Link } from "react-router-dom";
+import { projectRoutes } from "../projectRoutes";
 
-export const projectDetails = {
-  overwater: {
+const projectDetails = {
+  "underwater-image-enhancement": {
     context: "BSc dissertation",
     summary:
       "I trained generative adversarial networks in PyTorch to enhance underwater images. The full showcase explains the model and lets you compare the original and enhanced footage.",
-    image: "/overwater/7.webp",
-    alt: "Enhanced underwater image showing the seabed in blue water",
   },
   "weather-forecasting": {
     context: "Met Office group project",
     summary:
       "We turned weather observations into time-series inputs and used them to build forecasting models with scikit-learn and TensorFlow.",
-    steps: [
-      "Prepare weather observations",
-      "Build time-series inputs",
-      "Train forecasting models",
-    ],
   },
   "model-analysis": {
     context: "Machine learning coursework",
     summary:
       "I explored different ways to fit models in scikit-learn, then compared their performance to see how the choice of approach affected the result.",
-    steps: [
-      "Fit candidate models",
-      "Evaluate their predictions",
-      "Compare performance",
-    ],
   },
   "dartboard-detector": {
     context: "Computer vision coursework",
     summary:
-      "I used Hough transforms and YOLO to detect dartboards and locate them in images.",
-    image: "/projects/dartboard.webp",
-    alt: "Dartboard detection coursework output",
+      "I combined a Viola–Jones detector with Hough line geometry to locate dartboards and filter out false positives.",
   },
   "stereo-vision": {
     context: "Computer vision coursework",
     summary:
       "I matched corresponding points across two viewpoints and used epipolar geometry to reconstruct the scene in three dimensions.",
-    image: "/projects/stereo.webp",
-    alt: "Stereo vision coursework output",
   },
 };
 
@@ -63,15 +48,13 @@ export default function ProjectDetail({ project, active }) {
           <li key={tag}>{tag}</li>
         ))}
       </ul>
-      {project.route ? (
-        <Link className="project-detail-link" to={project.route}>
-          {project.label} <span aria-hidden="true">→</span>
-        </Link>
-      ) : (
-        <a className="project-detail-link" href={project.href}>
-          {project.label} <span aria-hidden="true">↗</span>
-        </a>
-      )}
+      <Link
+        className="project-detail-link"
+        to={projectRoutes[project.id]}
+        aria-label={`View project: ${project.indexTitle ?? project.title}`}
+      >
+        View project <span aria-hidden="true">→</span>
+      </Link>
     </article>
   );
 }

@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url><loc>https://georgeatkinson.co.uk/</loc></url>
-  <url><loc>https://georgeatkinson.co.uk/overwater</loc></url>
+  <url><loc>https://georgeatkinson.co.uk/projects/underwater-image-enhancement</loc></url>
+  <url><loc>https://georgeatkinson.co.uk/projects/weather-forecasting</loc></url>
+  <url><loc>https://georgeatkinson.co.uk/projects/model-analysis</loc></url>
+  <url><loc>https://georgeatkinson.co.uk/projects/dartboard-detector</loc></url>
+  <url><loc>https://georgeatkinson.co.uk/projects/stereo-vision</loc></url>
 </urlset>

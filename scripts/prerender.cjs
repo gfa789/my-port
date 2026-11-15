@@ -25,7 +25,12 @@ esbuild.buildSync({
   loader: { ".js": "jsx", ".css": "empty" },
   define,
 });
-const { render, pageMetadata, origin } = require("../.cache/render.cjs");
+const {
+  render,
+  pageMetadata,
+  origin,
+  projectRoutes,
+} = require("../.cache/render.cjs");
 const template = fs.readFileSync("build/index.html", "utf8");
 const escape = (value) =>
   String(value)
@@ -35,7 +40,10 @@ const escape = (value) =>
     .replaceAll(">", "&gt;");
 for (const [route, file] of [
   ["/", "index.html"],
-  ["/overwater", "overwater.html"],
+  ...Object.values(projectRoutes).map((route) => [
+    route,
+    route.slice(1) + ".html",
+  ]),
   ["/404", "404.html"],
 ]) {
   const page = pageMetadata(route);
@@ -66,6 +74,16 @@ for (const [route, file] of [
     .replace(/<title>.*?<\/title>/, `<title>${escape(page.title)}</title>`)
     .replace("</head>", head + "</head>")
     .replace('<div id="root"></div>', `<div id="root">${render(route)}</div>`);
-  fs.writeFileSync(path.join("build", file), html);
+  const output = path.join("build", file);
+  fs.mkdirSync(path.dirname(output), { recursive: true });
+  fs.writeFileSync(output, html);
   console.log(`Prerendered ${route} → ${file}`);
 }
+
+// Firebase handles the old URL live. Give the static preview the same link.
+const [underwaterRedirect] = require("../firebase.json").hosting.redirects;
+const { source, destination } = underwaterRedirect;
+fs.writeFileSync(
+  path.join("build", `${source.slice(1)}.html`),
+  `<!doctype html><html lang="en"><head><meta charset="utf-8"><title>Underwater Image Enhancement</title><meta name="robots" content="noindex"><link rel="canonical" href="${origin}${escape(destination)}"><script>location.replace(${JSON.stringify(destination)} + location.search + location.hash)</script></head><body><a href="${escape(destination)}">Underwater Image Enhancement</a></body></html>`,
+);

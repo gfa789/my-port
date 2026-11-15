@@ -1,4 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from "react";
+import { flushSync } from "react-dom";
+import { Link, useNavigate } from "react-router-dom";
 import {
   animate,
   motion,
@@ -6,13 +8,9 @@ import {
   useReducedMotion,
   useTransform,
 } from "framer-motion";
-import {
-  ChartNoAxesCombined,
-  ChevronDown,
-  ChevronUp,
-  CloudSun,
-} from "lucide-react";
-import ProjectDetail, { projectDetails } from "./ProjectDetail";
+import { ArrowUpRight, ChevronDown, ChevronUp } from "lucide-react";
+import ProjectDetail from "./ProjectDetail";
+import { projectRoutes } from "../projectRoutes";
 import "./ProjectWheel.css";
 
 const fullTurn = 2 * Math.PI;
@@ -30,7 +28,15 @@ const clamp = (value, maximum) => Math.max(-maximum, Math.min(maximum, value));
 const dragStep = (stage, count) =>
   ((stage.firstElementChild?.offsetHeight || 150) * radius * fullTurn) / count;
 
-function WheelCard({ project, index, count, position, active, onSelect }) {
+function WheelCard({
+  project,
+  index,
+  count,
+  position,
+  active,
+  onSelect,
+  onOpen,
+}) {
   const angle = useTransform(
     position,
     (value) => ((index - value) * fullTurn) / count,
@@ -45,9 +51,11 @@ function WheelCard({ project, index, count, position, active, onSelect }) {
   const zIndex = useTransform(facing, (value) => Math.round((value + 1) * 100));
   const offset = offsetFrom(index, active, count);
   const name = project.indexTitle ?? project.title;
-  const detail = projectDetails[project.id];
-  const WorkflowIcon =
-    project.id === "weather-forecasting" ? CloudSun : ChartNoAxesCombined;
+  const path = projectRoutes[project.id];
+
+  function select() {
+    onSelect(index);
+  }
 
   return (
     <motion.div
@@ -57,47 +65,56 @@ function WheelCard({ project, index, count, position, active, onSelect }) {
       aria-hidden={Math.abs(offset) > 1}
       style={{ transform, opacity, zIndex }}
     >
-      {Math.abs(offset) === 1 && (
+      <Link
+        className="project-wheel-art"
+        to={path}
+        tabIndex={offset === 0 ? 0 : -1}
+        aria-label={`Open ${name}`}
+        draggable={false}
+        onClick={(event) => onOpen(event, path)}
+      >
+        <img
+          src={`/projects/previews/${project.id}.webp`}
+          alt=""
+          draggable={false}
+          decoding="async"
+        />
+        <span className="project-wheel-open" aria-hidden="true">
+          <ArrowUpRight size={17} />
+        </span>
+      </Link>
+      {Math.abs(offset) === 1 ? (
         <button
-          className="project-wheel-peek"
+          className="project-wheel-label project-wheel-peek"
           type="button"
           tabIndex={-1}
           aria-label={`Show ${name}`}
-          onClick={() => onSelect(index)}
-        />
+          onClick={select}
+        >
+          <span>{name}</span>
+          <span>{project.date}</span>
+        </button>
+      ) : (
+        <div className="project-wheel-label">
+          <span>{name}</span>
+          <span>{project.date}</span>
+        </div>
       )}
-      <div className="project-wheel-art">
-        {detail.image ? (
-          <img src={detail.image} alt={detail.alt} draggable="false" />
-        ) : (
-          <div className="project-wheel-workflow">
-            <WorkflowIcon size={38} aria-hidden="true" />
-            <ol aria-label="Project workflow">
-              {detail.steps.map((step) => (
-                <li key={step}>{step}</li>
-              ))}
-            </ol>
-          </div>
-        )}
-      </div>
-      <div className="project-wheel-label">
-        <span>{name}</span>
-        <span>{project.date}</span>
-      </div>
     </motion.div>
   );
 }
 
-export default function ProjectWheel({ projects }) {
-  const [active, setActive] = useState(0);
+export default function ProjectWheel({ projects, initialIndex = 0 }) {
+  const navigate = useNavigate();
+  const [active, setActive] = useState(initialIndex);
   const [dragging, setDragging] = useState(false);
-  const position = useMotionValue(0);
+  const position = useMotionValue(initialIndex);
   const reduced = useReducedMotion();
   const wheel = useRef(null);
   const stage = useRef(null);
   const gesture = useRef(null);
   const wheelTimer = useRef(null);
-  const destination = useRef(0);
+  const destination = useRef(initialIndex);
   const suppressClick = useRef(false);
   const count = projects.length;
 
@@ -120,6 +137,41 @@ export default function ProjectWheel({ projects }) {
   function pick(index) {
     const nearest = Math.round(position.get());
     snapTo(nearest + offsetFrom(index, nearest, count));
+  }
+
+  function openPreview(event, path) {
+    if (
+      event.defaultPrevented ||
+      event.button !== 0 ||
+      event.detail === 0 ||
+      event.metaKey ||
+      event.altKey ||
+      event.ctrlKey ||
+      event.shiftKey ||
+      reduced ||
+      !document.startViewTransition
+    )
+      return;
+
+    event.preventDefault();
+    const root = document.documentElement;
+    if (root.classList.contains("project-preview-transition")) return;
+
+    const preview = event.currentTarget.querySelector("img");
+    if (!preview.naturalWidth) {
+      navigate(path);
+      return;
+    }
+
+    preview.style.viewTransitionName = "project-preview";
+    root.classList.add("project-preview-transition");
+    const transition = document.startViewTransition(() => {
+      preview.style.viewTransitionName = "";
+      flushSync(() => navigate(path));
+      window.scrollTo({ top: 0, behavior: "instant" });
+    });
+    const reset = () => root.classList.remove("project-preview-transition");
+    transition.finished.then(reset, reset);
   }
 
   useEffect(() => {
@@ -175,6 +227,7 @@ export default function ProjectWheel({ projects }) {
   return (
     <div
       className="project-wheel-layout"
+      data-project={projects[active].id}
       role="region"
       aria-label="Browse projects"
       ref={wheel}
@@ -253,6 +306,7 @@ export default function ProjectWheel({ projects }) {
               key={project.id}
               {...{ project, index, count, position, active }}
               onSelect={pick}
+              onOpen={openPreview}
             />
           ))}
         </div>

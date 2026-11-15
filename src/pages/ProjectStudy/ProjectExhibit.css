@@ -1,0 +1,226 @@
+.case-demo.project-exhibit {
+  padding-block: clamp(22px, 4vw, 56px);
+  scroll-margin-top: 55px;
+}
+.exhibit-feature {
+  min-width: 0;
+}
+.exhibit-lead {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 8px 22px;
+  margin-bottom: clamp(8px, 2vw, 25px);
+}
+.exhibit-lead h2,
+.project-exhibit .exhibit-lead h2 {
+  font:
+    400 clamp(1.65rem, 3vw, 3.2rem) / 1 Georgia,
+    serif;
+  letter-spacing: -0.045em;
+}
+.exhibit-lead p {
+  color: var(--case-muted);
+  max-width: 53ch;
+  font-size: clamp(0.91rem, 1.2vw, 1.05rem);
+  line-height: 1.55;
+}
+.exhibit-scrub {
+  min-width: 0;
+  position: relative;
+  scroll-margin-top: 60px;
+}
+.exhibit-scrub svg {
+  user-select: none;
+}
+.exhibit-scrub .demo-gesture-hint {
+  margin: 0 0 8px;
+}
+.exhibit-sources {
+  margin-top: clamp(25px, 4vw, 55px);
+}
+.exhibit-notes,
+.model-method {
+  margin-block: clamp(15px, 2vw, 28px) 0;
+}
+.exhibit-notes {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: clamp(12px, 4vw, 48px);
+}
+.exhibit-notes article,
+.model-method {
+  border-top: 1px solid var(--case-line);
+  padding-top: 12px;
+  scroll-margin-top: 66px;
+}
+.exhibit-notes h3 {
+  color: var(--case-ink);
+  font-size: 0.88rem;
+  font-weight: 650;
+  margin-bottom: 5px;
+}
+.exhibit-notes p,
+.model-method p {
+  color: var(--case-muted);
+  font-size: 0.9rem;
+  max-width: 62ch;
+  line-height: 1.55;
+}
+.exhibit-readout,
+.model-footnote {
+  color: var(--case-muted);
+  font:
+    650 0.77rem/1.35 Consolas,
+    ui-monospace,
+    monospace;
+}
+.exhibit-readout {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 4px 12px;
+  padding-block: 6px;
+}
+.exhibit-readout strong {
+  color: var(--case-accent);
+  font-variant-numeric: tabular-nums;
+}
+.exhibit-svg {
+  display: block;
+  width: 100%;
+  color: var(--case-muted);
+}
+.exhibit-svg text {
+  fill: currentColor;
+  font:
+    15px Consolas,
+    monospace;
+}
+.exhibit-trace {
+  fill: none;
+  stroke-width: 2.7;
+  vector-effect: non-scaling-stroke;
+}
+.case-demo.project-exhibit .demo-panel svg {
+  display: block;
+  width: 100%;
+  border: 0;
+  background: transparent;
+}
+.project-exhibit figure {
+  min-width: 0;
+}
+
+.model-kernels .demo-pair {
+  gap: clamp(12px, 3vw, 42px);
+}
+.case-demo.project-exhibit .model-exhibit .demo-pair svg {
+  height: auto;
+  max-height: none;
+}
+.model-sequence {
+  background: var(--case-hit);
+  margin-block: clamp(28px, 5vw, 76px);
+  padding-block: clamp(22px, 4vw, 58px);
+}
+.model-experiment {
+  min-width: 0;
+}
+.activity-chart {
+  height: clamp(210px, 48svh, 450px);
+}
+.activity-preview {
+  stroke: var(--case-line);
+  opacity: 0.46;
+}
+.activity-cursor {
+  stroke: var(--case-line);
+  stroke-dasharray: 3 4;
+  vector-effect: non-scaling-stroke;
+}
+.bayes-plot {
+  height: clamp(210px, 46svh, 470px);
+}
+
+.dart-exhibit .demo-split {
+  align-items: end;
+  grid-template-columns: minmax(0, 1.65fr) minmax(0, 1fr);
+  gap: clamp(12px, 3vw, 42px);
+}
+.dart-exhibit .demo-panel {
+  align-self: end;
+}
+.dart-exhibit .demo-panel svg {
+  height: min(53svh, 540px);
+}
+.dart-exhibit .demo-panel:first-child svg {
+  object-fit: contain;
+}
+
+.stereo-exhibit {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(200px, 29%);
+  column-gap: clamp(10px, 3vw, 36px);
+  align-items: center;
+}
+.stereo-exhibit > .exhibit-readout {
+  grid-column: 1 / -1;
+}
+.stereo-exhibit > .demo-panel:nth-child(2) {
+  grid-column: 2;
+  grid-row: 2;
+}
+.stereo-exhibit > .demo-panel:nth-child(3) {
+  grid-column: 1;
+  grid-row: 2;
+}
+.stereo-exhibit .stereo-views {
+  grid-template-columns: minmax(0, 1fr);
+}
+.stereo-exhibit .stereo-views svg {
+  height: min(19svh, 178px);
+}
+.case-demo.project-exhibit .stereo-orbit {
+  height: min(52svh, 500px);
+  max-height: none;
+}
+
+@media (max-width: 760px) {
+  .exhibit-notes {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 14px;
+  }
+  .exhibit-readout,
+  .model-footnote {
+    font-size: 0.7rem;
+  }
+  .exhibit-svg text,
+  .model-exhibit .demo-chart text {
+    font-size: 22px;
+  }
+  .activity-chart {
+    height: auto;
+  }
+  .activity-chart text {
+    font-size: 21px;
+  }
+  .dart-exhibit .demo-panel svg {
+    height: auto;
+  }
+  .stereo-exhibit {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .stereo-exhibit > .demo-panel:nth-child(2) {
+    grid-column: 1;
+    grid-row: 3;
+  }
+  .stereo-exhibit .stereo-views {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .case-demo.project-exhibit .stereo-orbit {
+    height: auto;
+  }
+}

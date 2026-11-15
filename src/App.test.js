@@ -1,10 +1,4 @@
-import {
-  render,
-  screen,
-  fireEvent,
-  waitFor,
-  within,
-} from "@testing-library/react";
+import { render, screen, fireEvent, within } from "@testing-library/react";
 import { MemoryRouter } from "react-router-dom";
 import AppContent from "./AppContent";
 beforeEach(() => {
@@ -23,14 +17,16 @@ test("the original journey layout retains private contact details and one main h
   expect(sections).toEqual(["home", "experience", "projects", "contact"]);
   expect(container.querySelectorAll("#contact")).toHaveLength(1);
   expect(
-    screen.getByRole("link", { name: "Explore OverWater" }),
-  ).toHaveAttribute("href", "/overwater");
+    screen.getByRole("link", {
+      name: "View project: Underwater Image Enhancement",
+    }),
+  ).toHaveAttribute("href", "/projects/underwater-image-enhancement");
   expect(container.textContent).not.toMatch(/georgeatki1@gmail/);
   expect(screen.getAllByRole("heading", { level: 1 })).toHaveLength(1);
   expect(
     within(
       screen.getByRole("navigation", { name: "Main navigation" }),
-    ).queryByRole("link", { name: "OverWater" }),
+    ).queryByRole("link", { name: "Underwater Image Enhancement" }),
   ).not.toBeInTheDocument();
 });
 test("the project wheel wraps in both directions with keyboard and buttons", () => {
@@ -47,9 +43,30 @@ test("the project wheel wraps in both directions with keyboard and buttons", () 
     deck.getByRole("heading", { name: "Stereo Vision" }),
   ).toBeInTheDocument();
   fireEvent.click(deck.getByRole("button", { name: "Next project" }));
-  expect(deck.getByRole("link", { name: "Explore OverWater" })).toHaveAttribute(
-    "href",
-    "/overwater",
+  expect(
+    deck.getByRole("link", {
+      name: "View project: Underwater Image Enhancement",
+    }),
+  ).toHaveAttribute("href", "/projects/underwater-image-enhancement");
+});
+
+test("a project image opens its own case study", () => {
+  render(
+    <MemoryRouter>
+      <AppContent />
+    </MemoryRouter>,
+  );
+  const preview = screen.getByRole("link", {
+    name: "Open Weather Forecasting",
+  });
+  expect(preview).toHaveAttribute("href", "/projects/weather-forecasting");
+  expect(preview.querySelector("img")).toHaveAttribute(
+    "src",
+    "/projects/previews/weather-forecasting.webp",
+  );
+  fireEvent.click(preview);
+  expect(screen.getByRole("heading", { level: 1 })).toHaveTextContent(
+    "Weather Forecasting",
   );
 });
 
@@ -65,12 +82,16 @@ test("horizontal scroll rotates the project wheel and vertical scroll passes thr
   expect(fireEvent.wheel(stage, { deltaX: 12, deltaY: 120 })).toBe(true);
   expect(fireEvent.wheel(stage, { deltaX: 100 })).toBe(false);
   expect(
-    deck.getByRole("link", { name: "Explore OverWater" }),
+    deck.getByRole("link", {
+      name: "View project: Underwater Image Enhancement",
+    }),
   ).toBeInTheDocument();
   await deck.findByRole("heading", { name: "ML for Weather Forecasting" });
   fireEvent.wheel(stage, { shiftKey: true, deltaY: -100 });
   expect(
-    await deck.findByRole("link", { name: "Explore OverWater" }),
+    await deck.findByRole("link", {
+      name: "View project: Underwater Image Enhancement",
+    }),
   ).toBeInTheDocument();
 });
 
@@ -109,30 +130,18 @@ test("menu exposes state, closes on Escape and restores focus", () => {
   expect(toggle).toHaveAttribute("aria-expanded", "false");
   expect(toggle).toHaveFocus();
 });
-test("OverWater comparison responds to keyboard-compatible range values without autoplay", () => {
-  const { container } = render(
-    <MemoryRouter initialEntries={["/overwater"]}>
-      <AppContent />
-    </MemoryRouter>,
-  );
-  const sliders = screen.getAllByRole("slider");
-  fireEvent.keyDown(sliders[0], { key: "ArrowRight", shiftKey: true });
-  fireEvent.keyDown(sliders[0], { key: "ArrowRight", shiftKey: true });
-  expect(sliders[0]).toHaveAttribute(
-    "aria-valuetext",
-    "70% original, 30% enhanced",
-  );
-  container.querySelectorAll("video").forEach((video) => {
-    expect(video).toHaveAttribute("preload", "none");
-    expect(video).not.toHaveAttribute("autoplay");
-  });
-  expect(screen.queryByText("About the project")).not.toBeInTheDocument();
-  expect(
-    screen.queryByText("Compare original and enhanced footage"),
-  ).not.toBeInTheDocument();
-});
-
-test("the integrated playback control plays and pauses both comparison layers", async () => {
+test("the dive log keeps both diagrams visible and plays both clips on sight", async () => {
+  const previousObserver = window.IntersectionObserver;
+  const observed = new Map();
+  window.IntersectionObserver = class {
+    constructor(notify) {
+      this.notify = notify;
+    }
+    observe(element) {
+      observed.set(element, this.notify);
+    }
+    disconnect() {}
+  };
   const play = jest
     .spyOn(HTMLMediaElement.prototype, "play")
     .mockResolvedValue();
@@ -140,26 +149,61 @@ test("the integrated playback control plays and pauses both comparison layers", 
     .spyOn(HTMLMediaElement.prototype, "pause")
     .mockImplementation(() => {});
   try {
-    render(
-      <MemoryRouter initialEntries={["/overwater"]}>
+    const { container, unmount } = render(
+      <MemoryRouter initialEntries={["/projects/underwater-image-enhancement"]}>
         <AppContent />
       </MemoryRouter>,
     );
-    fireEvent.click(screen.getByRole("button", { name: "Play comparison 1" }));
-    await waitFor(() =>
-      expect(
-        screen.getByRole("button", { name: "Pause comparison 1" }),
-      ).toBeInTheDocument(),
-    );
-    expect(play).toHaveBeenCalledTimes(2);
-    fireEvent.click(screen.getByRole("button", { name: "Pause comparison 1" }));
-    expect(pause).toHaveBeenCalledTimes(2);
+    const log = screen.getByRole("region", { name: "Dive log" });
+    const clips = container.querySelector(".dive-frames");
+    const videos = Array.from(clips.querySelectorAll("video"));
+    expect(videos.every((video) => video.muted && video.loop)).toBe(true);
+    expect(play).not.toHaveBeenCalled();
     expect(
-      screen.getByRole("button", { name: "Play comparison 1" }),
-    ).toBeInTheDocument();
+      within(log).getByRole("img", { name: /Illustrative RGB curves/ }),
+    ).toBeVisible();
+    expect(
+      within(log).getByRole("img", { name: /schematic of two experiments/ }),
+    ).toBeVisible();
+    expect(
+      within(log).queryByRole("button", { name: /play/i }),
+    ).not.toBeInTheDocument();
+
+    observed.get(clips)([{ isIntersecting: true, intersectionRatio: 1 }]);
+    expect(play).toHaveBeenCalledTimes(2);
+    videos.forEach((video) =>
+      Object.defineProperty(video, "paused", { get: () => false }),
+    );
+    observed.get(clips)([{ isIntersecting: false, intersectionRatio: 0 }]);
+    expect(pause).toHaveBeenCalledTimes(2);
+    unmount();
   } finally {
+    window.IntersectionObserver = previousObserver;
     play.mockRestore();
     pause.mockRestore();
+  }
+});
+test("all three ML experiments are in the page and link to adjacent projects", () => {
+  render(
+    <MemoryRouter initialEntries={["/projects/model-analysis"]}>
+      <AppContent />
+    </MemoryRouter>,
+  );
+  const navigation = screen.getByRole("navigation", {
+    name: "Browse project pages",
+  });
+  expect(
+    within(navigation).getByRole("link", { name: /previous project/i }),
+  ).toHaveAttribute("href", "/projects/weather-forecasting");
+  expect(
+    within(navigation).getByRole("link", { name: /next project/i }),
+  ).toHaveAttribute("href", "/projects/dartboard-detector");
+  for (const name of [
+    "PCA and kernels",
+    "Activity recognition",
+    "Bayesian regression",
+  ]) {
+    expect(screen.getByRole("heading", { name, level: 2 })).toBeVisible();
   }
 });
 test("unknown routes provide a useful recovery link", () => {
