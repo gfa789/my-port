@@ -12,6 +12,7 @@ import ProjectStudy from "./pages/ProjectStudy/ProjectStudy";
 import WeatherStudy from "./pages/ProjectStudy/WeatherStudy";
 import ModelDemo from "./pages/ProjectStudy/ModelDemo";
 import DartDemo from "./pages/ProjectStudy/DartDemo";
+import LifeDemo from "./pages/ProjectStudy/LifeDemo";
 import StereoDemo from "./pages/ProjectStudy/StereoDemo";
 import ProjectExhibit from "./pages/ProjectStudy/ProjectExhibit";
 import { projectRoutes } from "./projectRoutes";
@@ -22,13 +23,23 @@ const caseStudyDemos = {
   "model-analysis": ModelDemo,
   "dartboard-detector": DartDemo,
   "stereo-vision": StereoDemo,
+  "distributed-game-of-life": LifeDemo,
 };
 
 export default function AppContent() {
   const { pathname, hash, key } = useLocation();
   useEffect(() => {
-    if (hash) document.getElementById(hash.slice(1))?.scrollIntoView();
-    else window.scrollTo({ top: 0, behavior: "instant" });
+    if (!hash) {
+      window.scrollTo({ top: 0, behavior: "instant" });
+      return;
+    }
+
+    const section = document.getElementById(hash.slice(1));
+    const heading = section?.querySelector(
+      ".portfolio-section-heading h2, #contact-title",
+    );
+    const target = heading?.getBoundingClientRect().top > 0 ? heading : section;
+    target?.scrollIntoView({ block: "start" });
   }, [pathname, hash, key]);
   return (
     <>

@@ -2,6 +2,11 @@ import { Link } from "react-router-dom";
 import { projectRoutes } from "../projectRoutes";
 
 const projectDetails = {
+  "distributed-game-of-life": {
+    context: "Concurrent computing coursework",
+    summary:
+      "I implemented Conway’s Game of Life in Go, using RPC to send computation to a server and assign row ranges to workers.",
+  },
   "underwater-image-enhancement": {
     context: "BSc dissertation",
     summary:

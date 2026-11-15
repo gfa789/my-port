@@ -1,0 +1,64 @@
+.halo-exchange {
+  margin-block: clamp(32px, 6vw, 80px);
+  padding-top: 20px;
+  border-top: 1px solid var(--case-line);
+}
+
+.halo-diagram {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) clamp(24px, 12vw, 130px) minmax(0, 1fr);
+  align-items: end;
+  gap: 9px clamp(6px, 2.5vw, 24px);
+  max-width: 54rem;
+  margin-inline: auto;
+}
+
+.halo-diagram span {
+  color: var(--case-muted);
+  font-size: 0.8rem;
+}
+
+.halo-cells {
+  display: grid;
+  grid-template-columns: repeat(8, minmax(0, 1fr));
+  padding: 3px;
+  gap: 2px;
+  margin-top: 4px;
+  border: 1px solid #192f28;
+  background: #192f28;
+}
+
+.halo-copy .halo-cells {
+  border: 1px dashed var(--case-accent);
+  background: var(--case-hit);
+}
+
+.halo-cells span {
+  aspect-ratio: 1;
+  background: #a2e8aa23;
+}
+
+.halo-cells span[data-live="true"] {
+  background: #a2e8aa;
+}
+
+.halo-copy span[data-live="true"] {
+  background: var(--case-accent);
+}
+
+.halo-transfer {
+  position: relative;
+  display: grid;
+  place-items: center;
+  color: var(--case-accent);
+  padding-bottom: 4px;
+}
+
+.halo-transfer i {
+  position: absolute;
+  bottom: 1px;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: currentColor;
+}

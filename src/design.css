@@ -2778,6 +2778,9 @@ main[id] {
 }
 
 .portfolio-page .hero-actions .hero-action {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
   min-height: 48px;
   gap: 1rem;
   padding-inline: 1.1rem;
@@ -2785,6 +2788,16 @@ main[id] {
   font-size: 0.9rem;
   font-weight: 650;
   box-shadow: none;
+}
+
+.portfolio-page .hero-action::after {
+  position: absolute;
+  inset: 0;
+  content: "";
+  pointer-events: none;
+  background: linear-gradient(115deg, transparent 22%, #ffffff63 50%, transparent 78%);
+  opacity: 0;
+  transform: translateX(-105%);
 }
 
 .portfolio-page .hero-action-primary {
@@ -2809,6 +2822,22 @@ main[id] {
   color: var(--olive);
   border-color: var(--panel-line);
   box-shadow: none;
+}
+
+.portfolio-page .section > .journey-cue {
+  position: relative;
+  inset: auto;
+  margin: clamp(24px, 5vw, 50px) auto 0;
+  transform: none;
+}
+
+.portfolio-page .contact-section {
+  min-height: 100svh;
+  padding-top: clamp(24px, 4vw, 48px);
+}
+
+.portfolio-page :is(.portfolio-section-heading h2, #contact-title) {
+  scroll-margin-top: 20px;
 }
 
 .portfolio-page :is(.hero-action, .journey-cue, .heritage-sidebar a):focus-visible {
@@ -2907,6 +2936,16 @@ main[id] {
     transition: background-color 150ms ease, scale 130ms cubic-bezier(0.23, 1, 0.32, 1);
   }
 
+  .portfolio-page .hero-action svg {
+    transition: transform 180ms cubic-bezier(0.23, 1, 0.32, 1);
+  }
+
+  @keyframes hero-button-glint {
+    0% { opacity: 0; transform: translateX(-105%); }
+    22%, 72% { opacity: 0.85; }
+    100% { opacity: 0; transform: translateX(105%); }
+  }
+
   .portfolio-page .journey-cue {
     transition: background-color 150ms ease;
   }
@@ -2920,6 +2959,18 @@ main[id] {
   }
 
   @media (hover: hover) and (pointer: fine) {
+    .portfolio-page .hero-action:hover::after {
+      animation: hero-button-glint 480ms cubic-bezier(0.23, 1, 0.32, 1);
+    }
+
+    .portfolio-page .hero-action-primary:hover svg {
+      transform: translateY(2px);
+    }
+
+    .portfolio-page .hero-action-secondary:hover svg {
+      transform: translate(2px, -2px);
+    }
+
     .portfolio-page .journey-cue:hover svg {
       transform: translateY(3px);
     }

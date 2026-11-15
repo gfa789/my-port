@@ -1,3 +1,4 @@
+import SectionCue from "./SectionCue";
 import { ArrowUpRight } from "lucide-react";
 import ChapterViewer from "./ChapterViewer";
 
@@ -218,6 +219,7 @@ export default function Experience() {
           </article>
         ))}
       </ChapterViewer>
+      <SectionCue target="projects" label="Scroll to selected work" />
     </section>
   );
 }

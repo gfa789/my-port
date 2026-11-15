@@ -1,6 +1,7 @@
 import { ArrowUpRight } from "lucide-react";
 import InteractiveFigure from "./InteractiveFigure";
 import ModelDemo from "./ModelDemo";
+import HaloExchange from "./HaloExchange";
 import { studies } from "./studies";
 import { exhibits } from "./exhibits";
 import "./ProjectExhibit.css";
@@ -41,6 +42,7 @@ export default function ProjectExhibit({ id, Visual }) {
           >
             {(step) => <Visual step={step} />}
           </InteractiveFigure>
+          {id === "distributed-game-of-life" && <HaloExchange />}
           <ProjectNotes sections={study.sections} />
         </section>
       )}

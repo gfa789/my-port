@@ -4,7 +4,7 @@ const sitemap = fs.readFileSync("build/sitemap.xml", "utf8");
 const urls = [...sitemap.matchAll(/<loc>([^<]+)<\/loc>/g)].map(
   (entry) => new URL(entry[1]),
 );
-assert.equal(urls.length, 6, "Homepage and five case studies");
+assert.equal(urls.length, 7, "Homepage and six case studies");
 for (const url of urls) {
   const route = url.pathname;
   const file = route === "/" ? "index" : route.slice(1);

@@ -40,7 +40,7 @@ test("the project wheel wraps in both directions with keyboard and buttons", () 
     key: "ArrowUp",
   });
   expect(
-    deck.getByRole("heading", { name: "Stereo Vision" }),
+    deck.getByRole("heading", { name: "Distributed Game of Life" }),
   ).toBeInTheDocument();
   fireEvent.click(deck.getByRole("button", { name: "Next project" }));
   expect(

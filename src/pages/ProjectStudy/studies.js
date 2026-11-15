@@ -1,4 +1,29 @@
 export const studies = {
+  "distributed-game-of-life": {
+    title: "Distributed Game of Life",
+    context: "Concurrent computing coursework · 2022",
+    intro:
+      "I implemented Conway’s Game of Life in Go and deployed it on AWS. The client sent the board over RPC, and the server calculated updates for assigned row ranges.",
+    sections: [
+      [
+        "Read the previous generation",
+        "A cell’s eight neighbours determine its next state. The exhibit reads every row from the same generation and wraps the edges, so patterns can cross both strip boundaries and the edge of the board.",
+      ],
+      [
+        "Send work over RPC",
+        "The Go client sends the board, a worker number and the requested turn count. The server uses the worker number and thread count to determine which rows to calculate.",
+      ],
+      [
+        "Make progress visible",
+        "The client queries the running server for live-cell counts while it waits for the turn request to finish. The browser exhibit illustrates the row calculations and shows its own generation and population counters.",
+      ],
+    ],
+    sources: [
+      ["View the Go coursework", "https://github.com/gfa789/cw-game-of-life"],
+    ],
+    description:
+      "A Go coursework case study with an interactive Conway’s Game of Life board illustrating how the server assigns rows to workers.",
+  },
   "underwater-image-enhancement": {
     title: "Underwater Image Enhancement",
     context: "BSc dissertation · 2024",

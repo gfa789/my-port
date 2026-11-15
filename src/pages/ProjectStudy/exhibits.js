@@ -1,4 +1,11 @@
 export const exhibits = {
+  "distributed-game-of-life": {
+    name: "One board, three row ranges",
+    intro:
+      "Scrub through the generations. The rules use neighbours from the whole board, including cells across the highlighted row boundaries.",
+    end: 24,
+    duration: 5200,
+  },
   "dartboard-detector": {
     name: "Edges and Hough votes",
     intro:

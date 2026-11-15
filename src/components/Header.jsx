@@ -6,7 +6,8 @@ import {
   useReducedMotion,
   useSpring,
 } from "framer-motion";
-import { ArrowDown, ArrowUpRight, ChevronDown } from "lucide-react";
+import { ArrowDown, ArrowUpRight } from "lucide-react";
+import SectionCue from "./SectionCue";
 
 const photos = [
   {
@@ -105,13 +106,7 @@ export default function Header() {
       <div className="hero-photos">
         <PhotoComposition />
       </div>
-      <Link
-        to="/#experience"
-        className="journey-cue"
-        aria-label="Scroll to experience"
-      >
-        <ChevronDown size={21} aria-hidden="true" />
-      </Link>
+      <SectionCue target="experience" label="Scroll to experience" />
     </section>
   );
 }

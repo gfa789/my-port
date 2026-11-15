@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import ProjectWheel from "./ProjectWheel";
+import SectionCue from "./SectionCue";
 
 const projects = [
   {
@@ -34,6 +35,12 @@ const projects = [
     date: "Nov–Dec 2023",
     tags: ["Python", "Computer vision"],
   },
+  {
+    id: "distributed-game-of-life",
+    title: "Distributed Game of Life",
+    date: "2022",
+    tags: ["Go", "RPC"],
+  },
 ];
 export default function Projects() {
   const { search } = useLocation();
@@ -57,13 +64,17 @@ export default function Projects() {
         <h2 id="work-title" className="section-title">
           Selected work
         </h2>
-        <p>Five projects across machine learning and computer vision.</p>
+        <p>
+          Six projects across machine learning, computer vision and distributed
+          systems.
+        </p>
       </div>
       <ProjectWheel
         key={initialIndex}
         projects={projects}
         initialIndex={initialIndex}
       />
+      <SectionCue target="contact" label="Scroll to contact" />
     </section>
   );
 }
