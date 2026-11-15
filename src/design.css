@@ -2592,6 +2592,10 @@ main[id] {
   --ink: #282c24;
   --muted-ink: #4d5547;
   --olive: #344c39;
+  --olive-hover: #293f2e;
+  --panel-paper: #f5f3e9;
+  --panel-sage: #e2e4d4;
+  --panel-line: #a4aa95;
   --display-type: Georgia, serif;
   background: var(--paper);
   color: var(--ink);
@@ -2600,8 +2604,8 @@ main[id] {
   background: #e4e5d5;
 }
 .portfolio-page .heritage-sidebar {
-  background: #e2e4d4;
-  border-right-color: #a4aa95;
+  background: var(--panel-sage);
+  border-right-color: var(--panel-line);
   color: var(--ink);
 }
 .portfolio-page .heritage-sidebar nav a[aria-current] {
@@ -2654,26 +2658,24 @@ main[id] {
   background: var(--paper);
 }
 .portfolio-page .contact-layout {
-  --contact-ink: #f6f2e5;
-  --contact-muted: #d8e4d5;
-  background: #243b32;
-  border-color: #243b32;
-  color: var(--contact-ink);
+  background: var(--panel-paper);
+  border-color: var(--panel-line);
+  color: var(--ink);
   box-shadow: none;
 }
 
 .portfolio-page .contact-layout > div > p {
-  color: var(--contact-muted);
+  color: var(--muted-ink);
 }
 
 .portfolio-page .contact-layout .button-primary {
-  background: #e8eedc;
-  border-color: #e8eedc;
-  color: #20372d;
+  background: var(--olive);
+  border-color: var(--olive);
+  color: var(--panel-paper);
 }
 
 .portfolio-page .contact-layout :is(a, button, input, textarea):focus-visible {
-  outline: 2px solid #e3edc3;
+  outline: 2px solid var(--olive);
   outline-offset: 4px;
 }
 
@@ -2683,10 +2685,10 @@ main[id] {
   justify-content: space-between;
   gap: 14px;
   padding: clamp(1rem, 3vw, 1.9rem);
-  border: 1px solid #6c8677;
+  border: 1px solid var(--panel-line);
   border-radius: 0.65rem;
-  background: #2e493d;
-  color: var(--contact-ink);
+  background: var(--panel-sage);
+  color: var(--ink);
   text-decoration: none;
 }
 
@@ -2697,7 +2699,7 @@ main[id] {
 
 .contact-repository p {
   margin-top: 5px;
-  color: var(--contact-muted);
+  color: var(--muted-ink);
   font-size: 0.9rem;
   line-height: 1.45;
 }
@@ -2707,9 +2709,9 @@ main[id] {
   flex: 0 0 44px;
   place-items: center;
   height: 44px;
-  border: 1px solid #8da799;
+  border: 1px solid var(--panel-line);
   border-radius: 50%;
-  color: #ecf2df;
+  color: var(--olive);
 }
 
 .contact-action-arrow {
@@ -2717,46 +2719,51 @@ main[id] {
 }
 
 .portfolio-page .contact-form :is(input, textarea) {
-  background: #faf7ee;
-  border-color: #a7b9a8;
-  color: #20372d;
+  background: #fffdf6;
+  border-color: var(--panel-line);
+  color: var(--ink);
 }
 
 .portfolio-page .contact-form .form-note {
-  color: var(--contact-muted);
+  color: var(--muted-ink);
 }
 
 .portfolio-page .contact-layout .contact-primary-action:focus-visible {
-  background: #f7f5e8;
+  background: var(--olive-hover);
 }
 
 .contact-repository:focus-visible {
-  background: #375648;
+  background: #d6decb;
 }
 
 @media (hover: hover) and (pointer: fine) {
   .portfolio-page .contact-layout .contact-primary-action:hover {
-    background: #f7f5e8;
+    background: var(--olive-hover);
   }
 
   .contact-repository:hover {
-    background: #375648;
-    border-color: #b3c7b3;
+    background: #d6decb;
+    border-color: var(--olive);
   }
 }
 
 @media (prefers-reduced-motion: no-preference) {
-  .contact-repository {
+  .portfolio-page .contact-layout .button-primary,
+  .portfolio-page .contact-repository {
     transition: background-color 150ms ease-out, border-color 150ms ease-out,
       transform 130ms cubic-bezier(0.23, 1, 0.32, 1);
   }
 
-  .contact-repository:active {
+  .portfolio-page .contact-repository:active {
     transform: scale(0.985);
   }
 
+  .portfolio-page .contact-layout :is(.button-primary, .contact-repository):focus-visible {
+    transition: none;
+  }
+
   @media (hover: hover) and (pointer: fine) {
-    .contact-action-arrow {
+    .portfolio-page .contact-action-arrow {
       transition: transform 160ms cubic-bezier(0.23, 1, 0.32, 1);
     }
 
@@ -2767,5 +2774,164 @@ main[id] {
 }
 
 .portfolio-page .site-footer {
-  background: #e2e4d4;
+  background: var(--panel-sage);
+}
+
+.portfolio-page .hero-actions .hero-action {
+  min-height: 48px;
+  gap: 1rem;
+  padding-inline: 1.1rem;
+  border-radius: 99px;
+  font-size: 0.9rem;
+  font-weight: 650;
+  box-shadow: none;
+}
+
+.portfolio-page .hero-action-primary {
+  border-color: var(--olive);
+  background: var(--olive);
+  color: var(--panel-paper);
+}
+
+.portfolio-page .hero-action-secondary {
+  border-color: var(--panel-line);
+  background: var(--panel-paper);
+  color: var(--olive);
+}
+
+.portfolio-page .journey-cue {
+  width: 46px;
+  height: 46px;
+  bottom: 1.2rem;
+  transform: translateX(-50%);
+  animation: none;
+  background: var(--panel-paper);
+  color: var(--olive);
+  border-color: var(--panel-line);
+  box-shadow: none;
+}
+
+.portfolio-page :is(.hero-action, .journey-cue, .heritage-sidebar a):focus-visible {
+  outline: 2px solid var(--olive);
+  outline-offset: 3px;
+}
+
+@media (max-width: 1023px) {
+  .portfolio-page {
+    --bottom-nav-inset: max(12px, env(safe-area-inset-bottom, 0px));
+    padding-bottom: calc(76px + var(--bottom-nav-inset));
+  }
+
+  html:has(.portfolio-page) {
+    scroll-padding-bottom: calc(88px + env(safe-area-inset-bottom, 0px));
+  }
+
+  .portfolio-page .heritage-sidebar {
+    top: auto;
+    right: 0;
+    bottom: var(--bottom-nav-inset);
+    left: 0;
+    width: min(calc(100% - 28px), 27rem);
+    height: auto;
+    padding: 5px;
+    margin-inline: auto;
+    overflow: visible;
+    border: 1px solid #ffffffc4;
+    border-radius: 27px;
+    background: var(--panel-paper);
+    box-shadow: 0 10px 28px #344c392b, inset 0 1px #fff, inset 0 -1px #344c392b;
+    transition: none;
+  }
+
+  @supports (backdrop-filter: blur(18px)) or (-webkit-backdrop-filter: blur(18px)) {
+    .portfolio-page .heritage-sidebar {
+      background: linear-gradient(175deg, #fdfaf0e6, #e2e4d4c9);
+      -webkit-backdrop-filter: blur(18px) saturate(145%);
+      backdrop-filter: blur(18px) saturate(145%);
+    }
+  }
+
+  .portfolio-page .heritage-sidebar :is(.sidebar-top, .sidebar-social) {
+    display: none;
+  }
+
+  .portfolio-page .heritage-sidebar nav ul {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 3px;
+  }
+
+  .portfolio-page .heritage-sidebar nav a {
+    flex-direction: column;
+    justify-content: center;
+    gap: 4px;
+    min-height: 54px;
+    padding: 5px 2px;
+    border-radius: 21px;
+    color: var(--muted-ink);
+    font-size: 0.7rem;
+    font-weight: 600;
+    line-height: 1;
+    transform: none;
+    transition: none;
+  }
+
+  .portfolio-page .heritage-sidebar nav a[aria-current] {
+    border-color: #fff9;
+    background: #f9f8eddd;
+    box-shadow: 0 2px 6px #344c391a, inset 0 1px #fff;
+    color: var(--olive);
+  }
+
+  .portfolio-page .heritage-sidebar nav a:focus-visible {
+    outline-offset: -2px;
+  }
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .portfolio-page .hero-actions .hero-action:hover {
+    transform: none;
+    box-shadow: none;
+  }
+
+  .portfolio-page .hero-action-primary:hover {
+    background: var(--olive-hover);
+  }
+
+  .portfolio-page :is(.hero-action-secondary, .journey-cue):hover {
+    background: var(--panel-sage);
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .portfolio-page .hero-actions .hero-action {
+    transition: background-color 150ms ease, scale 130ms cubic-bezier(0.23, 1, 0.32, 1);
+  }
+
+  .portfolio-page .journey-cue {
+    transition: background-color 150ms ease;
+  }
+
+  .portfolio-page .journey-cue svg {
+    transition: transform 170ms cubic-bezier(0.23, 1, 0.32, 1);
+  }
+
+  .portfolio-page .hero-action:active {
+    scale: 0.97;
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    .portfolio-page .journey-cue:hover svg {
+      transform: translateY(3px);
+    }
+  }
+
+  @media (max-width: 1023px) {
+    .portfolio-page .heritage-sidebar nav a {
+      transition: scale 130ms cubic-bezier(0.23, 1, 0.32, 1);
+    }
+
+    .portfolio-page .heritage-sidebar nav a:active {
+      scale: 0.96;
+    }
+  }
 }

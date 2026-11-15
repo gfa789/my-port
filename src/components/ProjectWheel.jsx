@@ -227,7 +227,6 @@ export default function ProjectWheel({ projects, initialIndex = 0 }) {
   return (
     <div
       className="project-wheel-layout"
-      data-project={projects[active].id}
       role="region"
       aria-label="Browse projects"
       ref={wheel}

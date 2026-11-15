@@ -13,7 +13,7 @@ export const studies = {
         "Read the dissertation",
         "https://drive.google.com/file/d/1n85HyTZDCYAQlW12iAW1lgoUPREGd93h/view",
       ],
-      ["View research code", "https://github.com/gfa789/finalproject"],
+      ["View research code", "https://github.com/gfa789/bsc-dissertation"],
     ],
     description:
       "An interactive case study of George Atkinson’s underwater image enhancement dissertation and its experiments on temporal consistency.",
@@ -59,11 +59,11 @@ export const studies = {
     sources: [
       [
         "Read the coursework report",
-        "https://github.com/gfa789/ml-cw/blob/main/machine_learning.pdf",
+        "https://github.com/gfa789/cw-machine-learning/blob/main/machine_learning.pdf",
       ],
       [
         "View the notebook",
-        "https://github.com/gfa789/ml-cw/blob/main/coursework.ipynb",
+        "https://github.com/gfa789/cw-machine-learning/blob/main/coursework.ipynb",
       ],
     ],
     sections: [
@@ -95,11 +95,11 @@ export const studies = {
     sources: [
       [
         "Read the coursework report",
-        "https://github.com/gfa789/darts-cw/blob/main/Part1/rp21039_Part1.pdf",
+        "https://github.com/gfa789/cw-computer-vision/blob/main/Part1/rp21039_Part1.pdf",
       ],
       [
         "View the detection code",
-        "https://github.com/gfa789/darts-cw/tree/main/Part1",
+        "https://github.com/gfa789/cw-computer-vision/tree/main/Part1",
       ],
     ],
     sections: [
@@ -131,11 +131,11 @@ export const studies = {
     sources: [
       [
         "Read the coursework report",
-        "https://github.com/gfa789/darts-cw/blob/main/Part2/rp21039_Part2.pdf",
+        "https://github.com/gfa789/cw-computer-vision/blob/main/Part2/rp21039_Part2.pdf",
       ],
       [
         "View the reconstruction code",
-        "https://github.com/gfa789/darts-cw/tree/main/Part2",
+        "https://github.com/gfa789/cw-computer-vision/tree/main/Part2",
       ],
     ],
     sections: [

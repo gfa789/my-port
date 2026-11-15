@@ -6,7 +6,7 @@ import {
   useReducedMotion,
   useSpring,
 } from "framer-motion";
-import { ArrowDown } from "lucide-react";
+import { ArrowDown, ArrowUpRight, ChevronDown } from "lucide-react";
 
 const photos = [
   {
@@ -88,11 +88,17 @@ export default function Header() {
           with GANs.
         </p>
         <div className="hero-actions">
-          <Link className="button button-primary shine" to="/#projects">
-            My projects <ArrowDown size={16} aria-hidden="true" />
+          <Link
+            className="button hero-action hero-action-primary"
+            to="/#experience"
+          >
+            My experience <ArrowDown size={16} aria-hidden="true" />
           </Link>
-          <Link className="button button-soft shine" to="/#contact">
-            Contact me <span aria-hidden="true">↗</span>
+          <Link
+            className="button hero-action hero-action-secondary"
+            to="/#contact"
+          >
+            Contact me <ArrowUpRight size={16} aria-hidden="true" />
           </Link>
         </div>
       </div>
@@ -102,9 +108,9 @@ export default function Header() {
       <Link
         to="/#experience"
         className="journey-cue"
-        aria-label="Explore my timeline"
+        aria-label="Scroll to experience"
       >
-        <ArrowDown size={20} aria-hidden="true" />
+        <ChevronDown size={21} aria-hidden="true" />
       </Link>
     </section>
   );

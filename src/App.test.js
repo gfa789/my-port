@@ -117,18 +117,22 @@ test("the hero presents all three personal photos together", () => {
   expect(beach).toHaveAttribute("aria-pressed", "false");
 });
 
-test("menu exposes state, closes on Escape and restores focus", () => {
+test("hero and section navigation expose direct experience links", () => {
   render(
     <MemoryRouter>
       <AppContent />
     </MemoryRouter>,
   );
-  const toggle = screen.getByRole("button", { name: /menu/i });
-  fireEvent.click(toggle);
-  expect(toggle).toHaveAttribute("aria-expanded", "true");
-  fireEvent.keyDown(document, { key: "Escape" });
-  expect(toggle).toHaveAttribute("aria-expanded", "false");
-  expect(toggle).toHaveFocus();
+  const navigation = within(
+    screen.getByRole("navigation", { name: "Section navigation" }),
+  );
+  expect(navigation.getAllByRole("link")).toHaveLength(4);
+  for (const link of [
+    navigation.getByRole("link", { name: "Experience" }),
+    screen.getByRole("link", { name: "My experience" }),
+    screen.getByRole("link", { name: "Scroll to experience" }),
+  ])
+    expect(link).toHaveAttribute("href", "/#experience");
 });
 test("the dive log keeps both diagrams visible and plays both clips on sight", async () => {
   const previousObserver = window.IntersectionObserver;

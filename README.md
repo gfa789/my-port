@@ -27,4 +27,4 @@ The existing GitHub workflows deploy hosting only. Function changes and secrets 
 
 ## Content and assets
 
-The current role copy is based on George’s supplied responsibilities. Project descriptions avoid unverified performance claims. Stereo vision lives in `gfa789/darts-cw/Part2`; dartboard detection is in `Part1`. Underwater Image Enhancement research code is in `gfa789/finalproject`.
+The current role copy is based on George’s supplied responsibilities. Project descriptions avoid unverified performance claims. Stereo vision lives in `gfa789/cw-computer-vision/Part2`; dartboard detection is in `Part1`. Underwater Image Enhancement research code is in `gfa789/bsc-dissertation`.

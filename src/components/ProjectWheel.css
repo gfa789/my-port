@@ -40,16 +40,6 @@
   cursor: grabbing;
 }
 
-:is(
-  .project-wheel-layout,
-  .project-wheel-card
-)[data-project="underwater-image-enhancement"] {
-  --card: #d5e5eb;
-  --mat: #0b1c2c;
-  --card-ink: #193c50;
-  --wheel-accent: #235b74;
-}
-
 .project-wheel-card {
   grid-area: 1 / 1;
   position: relative;
@@ -58,52 +48,38 @@
   width: min(90%, 31rem);
   aspect-ratio: 1.62;
   padding: clamp(0.36rem, 1vw, 0.75rem);
-  color: var(--card-ink);
-  background: var(--card);
-  border: 1px solid color-mix(in srgb, var(--card-ink) 28%, transparent);
+  color: var(--ink);
+  background: var(--panel-paper);
+  border: 1px solid var(--panel-line);
   border-radius: 0.9rem;
-  box-shadow: 0 12px 24px #34372826;
+  box-shadow: 0 12px 24px #3437281a;
   pointer-events: none;
   backface-visibility: hidden;
 }
 
-:is(
-  .project-wheel-layout,
-  .project-wheel-card
-)[data-project="weather-forecasting"] {
-  --card: #e2ead7;
+.project-wheel-card[data-project="underwater-image-enhancement"] {
+  --mat: #0b1c2c;
+}
+
+.project-wheel-card[data-project="weather-forecasting"] {
   --mat: #f7f4ea;
-  --card-ink: #2d4936;
-  --wheel-accent: #416346;
 }
 
 .project-wheel-card[data-active="true"] {
   pointer-events: auto;
-  border-color: color-mix(in srgb, var(--wheel-accent) 68%, var(--card));
+  border-color: color-mix(in srgb, var(--olive) 62%, var(--panel-line));
 }
 
-:is(.project-wheel-layout, .project-wheel-card)[data-project="model-analysis"] {
-  --card: #eee0c8;
+.project-wheel-card[data-project="model-analysis"] {
   --mat: #f2e9dc;
-  --card-ink: #523b25;
-  --wheel-accent: #7a542a;
 }
 
-:is(
-  .project-wheel-layout,
-  .project-wheel-card
-)[data-project="dartboard-detector"] {
-  --card: #f2dcd0;
+.project-wheel-card[data-project="dartboard-detector"] {
   --mat: #222021;
-  --card-ink: #5b3b2e;
-  --wheel-accent: #834632;
 }
 
-:is(.project-wheel-layout, .project-wheel-card)[data-project="stereo-vision"] {
-  --card: #d5e5dc;
+.project-wheel-card[data-project="stereo-vision"] {
   --mat: #102e35;
-  --card-ink: #244e46;
-  --wheel-accent: #2b655a;
 }
 
 .project-wheel-peek {
@@ -119,8 +95,8 @@
   position: relative;
   display: block;
   overflow: hidden;
-  background: var(--mat);
-  border: 1px solid color-mix(in srgb, var(--card-ink) 18%, transparent);
+  background: var(--mat, var(--paper));
+  border: 1px solid var(--panel-line);
   border-radius: 0.48rem;
 }
 
@@ -128,8 +104,8 @@
   pointer-events: auto;
 }
 
-.project-wheel-art:focus-visible {
-  outline: 2px solid var(--card-ink);
+:is(.project-wheel-art, .project-wheel-controls button):focus-visible {
+  outline: 2px solid var(--olive);
   outline-offset: 2px;
 }
 
@@ -156,10 +132,10 @@
   place-items: center;
   width: 2rem;
   height: 2rem;
-  border: 1px solid color-mix(in srgb, var(--card-ink) 20%, transparent);
+  border: 1px solid var(--olive);
   border-radius: 50%;
-  background: var(--wheel-accent);
-  color: #fffaf0;
+  background: var(--olive);
+  color: var(--panel-paper);
   pointer-events: none;
   transition: transform 170ms cubic-bezier(0.2, 0.75, 0.25, 1);
 }
@@ -190,7 +166,7 @@
   display: grid;
   justify-items: center;
   gap: 0.45rem;
-  color: var(--card-ink);
+  color: var(--olive);
 }
 
 .project-wheel-controls button {
@@ -198,16 +174,28 @@
   place-items: center;
   width: 44px;
   height: 44px;
-  border: 1px solid color-mix(in srgb, var(--wheel-accent) 48%, var(--card));
+  border: 1px solid var(--panel-line);
   border-radius: 50%;
-  background: color-mix(in srgb, var(--card) 52%, var(--paper));
+  background: var(--panel-paper);
   color: inherit;
   cursor: pointer;
 }
 
+@media (prefers-reduced-motion: no-preference) {
+  .project-wheel-controls button {
+    transition:
+      background-color 150ms ease-out,
+      transform 130ms cubic-bezier(0.23, 1, 0.32, 1);
+  }
+
+  .project-wheel-controls button:active {
+    transform: scale(0.97);
+  }
+}
+
 @media (hover: hover) and (pointer: fine) {
   .project-wheel-controls button:hover {
-    background: var(--card);
+    background: var(--panel-sage);
   }
   .project-wheel-peek:hover {
     text-decoration: underline;
